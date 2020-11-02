@@ -13,6 +13,8 @@
 		EA637DFD254B821200FCC983 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637DFC254B821200FCC983 /* Response.swift */; };
 		EA637E022550B00200FCC983 /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637E012550B00200FCC983 /* VideoTableViewCell.swift */; };
 		EAE431442550B6F700E5AEBF /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE431432550B6F700E5AEBF /* CacheManager.swift */; };
+		EAE431492550B95800E5AEBF /* DetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE431482550B95800E5AEBF /* DetailViewController.swift */; };
+		EAE4314E2550BD4C00E5AEBF /* DateHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE4314D2550BD4C00E5AEBF /* DateHelper.swift */; };
 		EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920E12548DA1200D22ACF /* AppDelegate.swift */; };
 		EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920E32548DA1200D22ACF /* SceneDelegate.swift */; };
 		EAF920E62548DA1200D22ACF /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920E52548DA1200D22ACF /* ViewController.swift */; };
@@ -47,6 +49,8 @@
 		EA637DFC254B821200FCC983 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		EA637E012550B00200FCC983 /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
 		EAE431432550B6F700E5AEBF /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
+		EAE431482550B95800E5AEBF /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
+		EAE4314D2550BD4C00E5AEBF /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
 		EAF920DE2548DA1200D22ACF /* youtube-onedaybuild.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "youtube-onedaybuild.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAF920E12548DA1200D22ACF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAF920E32548DA1200D22ACF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -92,6 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				EAF920E52548DA1200D22ACF /* ViewController.swift */,
+				EAE431482550B95800E5AEBF /* DetailViewController.swift */,
 			);
 			path = "View Controllers";
 			sourceTree = "<group>";
@@ -128,6 +133,7 @@
 			children = (
 				EA637DEA254B3EF200FCC983 /* Constants.swift */,
 				EAE431432550B6F700E5AEBF /* CacheManager.swift */,
+				EAE4314D2550BD4C00E5AEBF /* DateHelper.swift */,
 			);
 			path = Helpers;
 			sourceTree = "<group>";
@@ -321,8 +327,10 @@
 				EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */,
 				EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */,
 				EA637DF5254B408C00FCC983 /* Model.swift in Sources */,
+				EAE4314E2550BD4C00E5AEBF /* DateHelper.swift in Sources */,
 				EA637DEB254B3EF200FCC983 /* Constants.swift in Sources */,
 				EA637E022550B00200FCC983 /* VideoTableViewCell.swift in Sources */,
+				EAE431492550B95800E5AEBF /* DetailViewController.swift in Sources */,
 				EA637DF0254B404B00FCC983 /* Video.swift in Sources */,
 				EA637DFD254B821200FCC983 /* Response.swift in Sources */,
 			);
