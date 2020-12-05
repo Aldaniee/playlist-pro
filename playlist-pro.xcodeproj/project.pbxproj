@@ -26,8 +26,8 @@
 		EAF920E92548DA1200D22ACF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAF920E72548DA1200D22ACF /* Main.storyboard */; };
 		EAF920EB2548DA1400D22ACF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EAF920EA2548DA1400D22ACF /* Assets.xcassets */; };
 		EAF920EE2548DA1400D22ACF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAF920EC2548DA1400D22ACF /* LaunchScreen.storyboard */; };
-		EAF920F92548DA1400D22ACF /* youtube_onedaybuildTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920F82548DA1400D22ACF /* youtube_onedaybuildTests.swift */; };
-		EAF921042548DA1400D22ACF /* youtube_onedaybuildUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF921032548DA1400D22ACF /* youtube_onedaybuildUITests.swift */; };
+		EAF920F92548DA1400D22ACF /* playlist-proTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920F82548DA1400D22ACF /* playlist-proTests.swift */; };
+		EAF921042548DA1400D22ACF /* playlist-proUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF921032548DA1400D22ACF /* playlist-proUITests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,7 +59,7 @@
 		EAE431432550B6F700E5AEBF /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		EAE431482550B95800E5AEBF /* DetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailViewController.swift; sourceTree = "<group>"; };
 		EAE4314D2550BD4C00E5AEBF /* DateHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DateHelper.swift; sourceTree = "<group>"; };
-		EAF920DE2548DA1200D22ACF /* youtube-onedaybuild.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "youtube-onedaybuild.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAF920DE2548DA1200D22ACF /* playlist-pro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playlist-pro.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAF920E12548DA1200D22ACF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAF920E32548DA1200D22ACF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		EAF920E52548DA1200D22ACF /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
@@ -67,11 +67,11 @@
 		EAF920EA2548DA1400D22ACF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EAF920ED2548DA1400D22ACF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EAF920EF2548DA1400D22ACF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EAF920F42548DA1400D22ACF /* youtube-onedaybuildTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "youtube-onedaybuildTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EAF920F82548DA1400D22ACF /* youtube_onedaybuildTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = youtube_onedaybuildTests.swift; sourceTree = "<group>"; };
+		EAF920F42548DA1400D22ACF /* playlist-proTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "playlist-proTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAF920F82548DA1400D22ACF /* playlist-proTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "playlist-proTests.swift"; sourceTree = "<group>"; };
 		EAF920FA2548DA1400D22ACF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		EAF920FF2548DA1400D22ACF /* youtube-onedaybuildUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "youtube-onedaybuildUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		EAF921032548DA1400D22ACF /* youtube_onedaybuildUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = youtube_onedaybuildUITests.swift; sourceTree = "<group>"; };
+		EAF920FF2548DA1400D22ACF /* playlist-proUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "playlist-proUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		EAF921032548DA1400D22ACF /* playlist-proUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "playlist-proUITests.swift"; sourceTree = "<group>"; };
 		EAF921052548DA1400D22ACF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -154,9 +154,9 @@
 		EAF920D52548DA1200D22ACF = {
 			isa = PBXGroup;
 			children = (
-				EAF920E02548DA1200D22ACF /* youtube-onedaybuild */,
-				EAF920F72548DA1400D22ACF /* youtube-onedaybuildTests */,
-				EAF921022548DA1400D22ACF /* youtube-onedaybuildUITests */,
+				EAF920E02548DA1200D22ACF /* playlist-pro */,
+				EAF920F72548DA1400D22ACF /* playlist-proTests */,
+				EAF921022548DA1400D22ACF /* playlist-proUITests */,
 				EAF920DF2548DA1200D22ACF /* Products */,
 			);
 			sourceTree = "<group>";
@@ -164,14 +164,14 @@
 		EAF920DF2548DA1200D22ACF /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				EAF920DE2548DA1200D22ACF /* youtube-onedaybuild.app */,
-				EAF920F42548DA1400D22ACF /* youtube-onedaybuildTests.xctest */,
-				EAF920FF2548DA1400D22ACF /* youtube-onedaybuildUITests.xctest */,
+				EAF920DE2548DA1200D22ACF /* playlist-pro.app */,
+				EAF920F42548DA1400D22ACF /* playlist-proTests.xctest */,
+				EAF920FF2548DA1400D22ACF /* playlist-proUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		EAF920E02548DA1200D22ACF /* youtube-onedaybuild */ = {
+		EAF920E02548DA1200D22ACF /* playlist-pro */ = {
 			isa = PBXGroup;
 			children = (
 				EAF920E12548DA1200D22ACF /* AppDelegate.swift */,
@@ -184,33 +184,33 @@
 				EAF920EA2548DA1400D22ACF /* Assets.xcassets */,
 				EAF920EF2548DA1400D22ACF /* Info.plist */,
 			);
-			path = "youtube-onedaybuild";
+			path = "playlist-pro";
 			sourceTree = "<group>";
 		};
-		EAF920F72548DA1400D22ACF /* youtube-onedaybuildTests */ = {
+		EAF920F72548DA1400D22ACF /* playlist-proTests */ = {
 			isa = PBXGroup;
 			children = (
-				EAF920F82548DA1400D22ACF /* youtube_onedaybuildTests.swift */,
+				EAF920F82548DA1400D22ACF /* playlist-proTests.swift */,
 				EAF920FA2548DA1400D22ACF /* Info.plist */,
 			);
-			path = "youtube-onedaybuildTests";
+			path = "playlist-proTests";
 			sourceTree = "<group>";
 		};
-		EAF921022548DA1400D22ACF /* youtube-onedaybuildUITests */ = {
+		EAF921022548DA1400D22ACF /* playlist-proUITests */ = {
 			isa = PBXGroup;
 			children = (
-				EAF921032548DA1400D22ACF /* youtube_onedaybuildUITests.swift */,
+				EAF921032548DA1400D22ACF /* playlist-proUITests.swift */,
 				EAF921052548DA1400D22ACF /* Info.plist */,
 			);
-			path = "youtube-onedaybuildUITests";
+			path = "playlist-proUITests";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		EAF920DD2548DA1200D22ACF /* youtube-onedaybuild */ = {
+		EAF920DD2548DA1200D22ACF /* playlist-pro */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EAF921082548DA1400D22ACF /* Build configuration list for PBXNativeTarget "youtube-onedaybuild" */;
+			buildConfigurationList = EAF921082548DA1400D22ACF /* Build configuration list for PBXNativeTarget "playlist-pro" */;
 			buildPhases = (
 				EAF920DA2548DA1200D22ACF /* Sources */,
 				EAF920DB2548DA1200D22ACF /* Frameworks */,
@@ -220,18 +220,18 @@
 			);
 			dependencies = (
 			);
-			name = "youtube-onedaybuild";
+			name = "playlist-pro";
 			packageProductDependencies = (
 				EA5FBEAD257BF6D100473B56 /* SpotifyAPI */,
 				EA5FBEBB257C02FA00473B56 /* KeychainAccess */,
 			);
 			productName = "youtube-onedaybuild";
-			productReference = EAF920DE2548DA1200D22ACF /* youtube-onedaybuild.app */;
+			productReference = EAF920DE2548DA1200D22ACF /* playlist-pro.app */;
 			productType = "com.apple.product-type.application";
 		};
-		EAF920F32548DA1400D22ACF /* youtube-onedaybuildTests */ = {
+		EAF920F32548DA1400D22ACF /* playlist-proTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EAF9210B2548DA1400D22ACF /* Build configuration list for PBXNativeTarget "youtube-onedaybuildTests" */;
+			buildConfigurationList = EAF9210B2548DA1400D22ACF /* Build configuration list for PBXNativeTarget "playlist-proTests" */;
 			buildPhases = (
 				EAF920F02548DA1400D22ACF /* Sources */,
 				EAF920F12548DA1400D22ACF /* Frameworks */,
@@ -242,14 +242,14 @@
 			dependencies = (
 				EAF920F62548DA1400D22ACF /* PBXTargetDependency */,
 			);
-			name = "youtube-onedaybuildTests";
+			name = "playlist-proTests";
 			productName = "youtube-onedaybuildTests";
-			productReference = EAF920F42548DA1400D22ACF /* youtube-onedaybuildTests.xctest */;
+			productReference = EAF920F42548DA1400D22ACF /* playlist-proTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		EAF920FE2548DA1400D22ACF /* youtube-onedaybuildUITests */ = {
+		EAF920FE2548DA1400D22ACF /* playlist-proUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = EAF9210E2548DA1400D22ACF /* Build configuration list for PBXNativeTarget "youtube-onedaybuildUITests" */;
+			buildConfigurationList = EAF9210E2548DA1400D22ACF /* Build configuration list for PBXNativeTarget "playlist-proUITests" */;
 			buildPhases = (
 				EAF920FB2548DA1400D22ACF /* Sources */,
 				EAF920FC2548DA1400D22ACF /* Frameworks */,
@@ -260,9 +260,9 @@
 			dependencies = (
 				EAF921012548DA1400D22ACF /* PBXTargetDependency */,
 			);
-			name = "youtube-onedaybuildUITests";
+			name = "playlist-proUITests";
 			productName = "youtube-onedaybuildUITests";
-			productReference = EAF920FF2548DA1400D22ACF /* youtube-onedaybuildUITests.xctest */;
+			productReference = EAF920FF2548DA1400D22ACF /* playlist-proUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -287,7 +287,7 @@
 					};
 				};
 			};
-			buildConfigurationList = EAF920D92548DA1200D22ACF /* Build configuration list for PBXProject "youtube-onedaybuild" */;
+			buildConfigurationList = EAF920D92548DA1200D22ACF /* Build configuration list for PBXProject "playlist-pro" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -304,9 +304,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				EAF920DD2548DA1200D22ACF /* youtube-onedaybuild */,
-				EAF920F32548DA1400D22ACF /* youtube-onedaybuildTests */,
-				EAF920FE2548DA1400D22ACF /* youtube-onedaybuildUITests */,
+				EAF920DD2548DA1200D22ACF /* playlist-pro */,
+				EAF920F32548DA1400D22ACF /* playlist-proTests */,
+				EAF920FE2548DA1400D22ACF /* playlist-proUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -364,7 +364,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EAF920F92548DA1400D22ACF /* youtube_onedaybuildTests.swift in Sources */,
+				EAF920F92548DA1400D22ACF /* playlist-proTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -372,7 +372,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EAF921042548DA1400D22ACF /* youtube_onedaybuildUITests.swift in Sources */,
+				EAF921042548DA1400D22ACF /* playlist-proUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -381,12 +381,12 @@
 /* Begin PBXTargetDependency section */
 		EAF920F62548DA1400D22ACF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EAF920DD2548DA1200D22ACF /* youtube-onedaybuild */;
+			target = EAF920DD2548DA1200D22ACF /* playlist-pro */;
 			targetProxy = EAF920F52548DA1400D22ACF /* PBXContainerItemProxy */;
 		};
 		EAF921012548DA1400D22ACF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = EAF920DD2548DA1200D22ACF /* youtube-onedaybuild */;
+			target = EAF920DD2548DA1200D22ACF /* playlist-pro */;
 			targetProxy = EAF921002548DA1400D22ACF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -462,6 +462,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "playlist-pro/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
@@ -517,6 +518,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				INFOPLIST_FILE = "playlist-pro/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
@@ -534,12 +536,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AZ2X8YV7UR;
-				INFOPLIST_FILE = "youtube-onedaybuild/Info.plist";
+				INFOPLIST_FILE = "playlist-pro/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.youtube-onedaybuild";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.playlist-pro";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -553,12 +555,12 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AZ2X8YV7UR;
-				INFOPLIST_FILE = "youtube-onedaybuild/Info.plist";
+				INFOPLIST_FILE = "playlist-pro/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.youtube-onedaybuild";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.playlist-pro";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -572,18 +574,18 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AZ2X8YV7UR;
-				INFOPLIST_FILE = "youtube-onedaybuildTests/Info.plist";
+				INFOPLIST_FILE = "playlist-pro/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.youtube-onedaybuildTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.playlist-pro";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/youtube-onedaybuild.app/youtube-onedaybuild";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/playlist-pro.app/playlist-pro";
 			};
 			name = Debug;
 		};
@@ -594,18 +596,18 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AZ2X8YV7UR;
-				INFOPLIST_FILE = "youtube-onedaybuildTests/Info.plist";
+				INFOPLIST_FILE = "playlist-pro/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.youtube-onedaybuildTests";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.playlist-pro";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/youtube-onedaybuild.app/youtube-onedaybuild";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/playlist-pro.app/playlist-pro";
 			};
 			name = Release;
 		};
@@ -615,17 +617,17 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AZ2X8YV7UR;
-				INFOPLIST_FILE = "youtube-onedaybuildUITests/Info.plist";
+				INFOPLIST_FILE = "playlist-proUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.youtube-onedaybuildUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "playlist-proUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "youtube-onedaybuild";
+				TEST_TARGET_NAME = "playlist-pro";
 			};
 			name = Debug;
 		};
@@ -635,24 +637,24 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = AZ2X8YV7UR;
-				INFOPLIST_FILE = "youtube-onedaybuildUITests/Info.plist";
+				INFOPLIST_FILE = "playlist-proUITests/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "com.leeaidan.youtube-onedaybuildUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = "playlist-proUITests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "youtube-onedaybuild";
+				TEST_TARGET_NAME = "playlist-pro";
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		EAF920D92548DA1200D22ACF /* Build configuration list for PBXProject "youtube-onedaybuild" */ = {
+		EAF920D92548DA1200D22ACF /* Build configuration list for PBXProject "playlist-pro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EAF921062548DA1400D22ACF /* Debug */,
@@ -661,7 +663,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EAF921082548DA1400D22ACF /* Build configuration list for PBXNativeTarget "youtube-onedaybuild" */ = {
+		EAF921082548DA1400D22ACF /* Build configuration list for PBXNativeTarget "playlist-pro" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EAF921092548DA1400D22ACF /* Debug */,
@@ -670,7 +672,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EAF9210B2548DA1400D22ACF /* Build configuration list for PBXNativeTarget "youtube-onedaybuildTests" */ = {
+		EAF9210B2548DA1400D22ACF /* Build configuration list for PBXNativeTarget "playlist-proTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EAF9210C2548DA1400D22ACF /* Debug */,
@@ -679,7 +681,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		EAF9210E2548DA1400D22ACF /* Build configuration list for PBXNativeTarget "youtube-onedaybuildUITests" */ = {
+		EAF9210E2548DA1400D22ACF /* Build configuration list for PBXNativeTarget "playlist-proUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				EAF9210F2548DA1400D22ACF /* Debug */,

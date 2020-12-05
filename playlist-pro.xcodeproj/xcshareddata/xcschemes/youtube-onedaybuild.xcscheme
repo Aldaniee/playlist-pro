@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EAF920DD2548DA1200D22ACF"
-               BuildableName = "youtube-onedaybuild.app"
-               BlueprintName = "youtube-onedaybuild"
-               ReferencedContainer = "container:youtube-onedaybuild.xcodeproj">
+               BuildableName = "playlist-pro.app"
+               BlueprintName = "playlist-pro"
+               ReferencedContainer = "container:playlist-pro.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EAF920F32548DA1400D22ACF"
-               BuildableName = "youtube-onedaybuildTests.xctest"
-               BlueprintName = "youtube-onedaybuildTests"
-               ReferencedContainer = "container:youtube-onedaybuild.xcodeproj">
+               BuildableName = "playlist-proTests.xctest"
+               BlueprintName = "playlist-proTests"
+               ReferencedContainer = "container:playlist-pro.xcodeproj">
             </BuildableReference>
          </TestableReference>
          <TestableReference
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "EAF920FE2548DA1400D22ACF"
-               BuildableName = "youtube-onedaybuildUITests.xctest"
-               BlueprintName = "youtube-onedaybuildUITests"
-               ReferencedContainer = "container:youtube-onedaybuild.xcodeproj">
+               BuildableName = "playlist-proUITests.xctest"
+               BlueprintName = "playlist-proUITests"
+               ReferencedContainer = "container:playlist-pro.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -65,9 +65,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EAF920DD2548DA1200D22ACF"
-            BuildableName = "youtube-onedaybuild.app"
-            BlueprintName = "youtube-onedaybuild"
-            ReferencedContainer = "container:youtube-onedaybuild.xcodeproj">
+            BuildableName = "playlist-pro.app"
+            BlueprintName = "playlist-pro"
+            ReferencedContainer = "container:playlist-pro.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -82,9 +82,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "EAF920DD2548DA1200D22ACF"
-            BuildableName = "youtube-onedaybuild.app"
-            BlueprintName = "youtube-onedaybuild"
-            ReferencedContainer = "container:youtube-onedaybuild.xcodeproj">
+            BuildableName = "playlist-pro.app"
+            BlueprintName = "playlist-pro"
+            ReferencedContainer = "container:playlist-pro.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
@@ -93,6 +93,7 @@
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "playlist-pro"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>
