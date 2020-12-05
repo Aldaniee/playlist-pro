@@ -7,19 +7,21 @@
 
 import UIKit
 
-class ViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, ModelDelegate {
+class SearchViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, ModelDelegate {
 
+    @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
     
     var model = Model()
+    
     var videos = [Video]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // Set itself as the datasource and the delegate
         tableView.dataSource = self
         tableView.delegate = self
+        searchBar.delegate = self
         
         model.delegate = self
         
@@ -48,6 +50,11 @@ class ViewController: UIViewController,  UITableViewDataSource, UITableViewDeleg
         self.videos = videos
         tableView.reloadData()
     }
+    // MARK: - Search Delegate Methods
+    func searchResultsFetched(_ searchResults: [Video]) {
+        self.videos = searchResults
+        tableView.reloadData()
+    }
     
     // MARK: – TableView Methods
     
@@ -67,6 +74,21 @@ class ViewController: UIViewController,  UITableViewDataSource, UITableViewDeleg
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
+    }
+    // MARK: - SearchBar Methods
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        if searchBar.text != "" {
+            model.search(searchText: searchBar.text!)
+        }
+        else {
+            
+        }
+    }
+    
+    @IBAction func didTapSpotifyImport() {
+        let vc = storyboard?.instantiateViewController(identifier: "import") as! SpotifyImportViewController
+        vc.modalPresentationStyle = .overCurrentContext
+        present(vc, animated: true)
     }
 
 }

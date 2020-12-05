@@ -9,11 +9,11 @@ import UIKit
 
 class VideoTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var thumbnailImageView: UIImageView!
+    //@IBOutlet weak var thumbnailImageView: UIImageView!
     
     @IBOutlet weak var titleLabel: UILabel!
     
-    @IBOutlet weak var dateLabel: UILabel!
+    //@IBOutlet weak var dateLabel: UILabel!
     
     var video: Video?
     
@@ -39,21 +39,13 @@ class VideoTableViewCell: UITableViewCell {
         
         // Set the title label
         self.titleLabel.text = self.video?.title
-        self.dateLabel.text = self.video?.title
         
-        // Set the date label
-        self.dateLabel.text = DateHelper.getFormattedDate(self.video!.published)
-        
-        // Check if there is a thumbnail
-        guard self.video!.thumbnail != "" else {
-            return
-        }
         
         // Check cache before downloadiong data
         if let cachedData = CacheManager.getVideoCache(self.video!.thumbnail) {
             // if we are in here we know we found the data in cache
             
-            self.thumbnailImageView.image = UIImage(data: cachedData)
+            //self.thumbnailImageView.image = UIImage(data: cachedData)
             return
         }
         
@@ -80,9 +72,9 @@ class VideoTableViewCell: UITableViewCell {
             let image = UIImage(data: data!)
             
             // Set the imageview
-            DispatchQueue.main.async {
-                self.thumbnailImageView.image = image
-            }
+            //DispatchQueue.main.async {
+            //    self.thumbnailImageView.image = image
+            //}
         }
         // Start data task
         dataTask.resume()
