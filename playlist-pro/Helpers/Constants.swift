@@ -23,5 +23,5 @@ struct Constants {
     static let SPOTIFY_PLAYLIST_TRACKLIST_PT2 = "/tracks?market=US&fields=items(track(name%2Chref))"
     static let SPOTIFY_CLIENT_ID = "15eb8b3ef017469a9db02a7bbfcc2457"
     static let SPOTIFY_SECRET_ID = "9896ab3a7e8f454b82ef7d2fd43344a0"
-    static let SPOTIFY_REDIRECT_URL = "youtube-onedaybuild://login-callback"
+    static let SPOTIFY_REDIRECT_URL = "playlist-pro://login-callback"
 }
