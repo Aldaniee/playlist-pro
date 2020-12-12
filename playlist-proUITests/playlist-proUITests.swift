@@ -1,6 +1,6 @@
 //
-//  youtube_onedaybuildUITests.swift
-//  youtube-onedaybuildUITests
+//  playlist-proUITests.swift
+//  playlist-proUITests
 //
 //  Created by Aidan Lee on 10/27/20.
 //

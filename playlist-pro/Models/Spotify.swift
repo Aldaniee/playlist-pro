@@ -5,6 +5,7 @@ import SwiftUI
 import KeychainAccess
 import SpotifyWebAPI
 
+
 /**
  A helper class that wraps around an instance of `SpotifyAPI`
  and provides convenience methods for authorizing your application.
@@ -12,11 +13,13 @@ import SpotifyWebAPI
  Its most important role is to handle changes to the authorzation
  information and save them to persistent storage in the keychain.
  */
-final class Spotify: ObservableObject {
-    
+class Spotify : ObservableObject{
+        
     private static let clientId =  Constants.SPOTIFY_CLIENT_ID
     
     private static let clientSecret = Constants.SPOTIFY_SECRET_ID
+    
+    static let shared = Spotify()
     
     /// The key in the keychain that is used to store the authorization
     /// information: "authorizationManager".
@@ -60,7 +63,7 @@ final class Spotify: ObservableObject {
     @Published var isRetrievingTokens = false
     
     /// The keychain to store the authorization information in.
-    let keychain = Keychain(service: "com.Peter-Schorn.SpotifyAPIExampleApp")
+    let keychain = Keychain(service: "com.leeaidan.playlist-pro")
     
     /// An instance of `SpotifyAPI` that you use to make requests to
     /// the Spotify web API.
@@ -150,19 +153,25 @@ final class Spotify: ObservableObject {
             // Otherwise, an error will be thrown.
             state: authorizationState,
             scopes: [
-                .userReadPlaybackState,
-                .userModifyPlaybackState,
                 .userLibraryRead,
-                .userLibraryModify,
-                .userReadEmail
+                .userReadEmail,
+                .playlistReadPrivate,
+                .playlistReadCollaborative
             ]
         )!
         
+        print("URL:")
+        print(url)
         // You can open the URL however you like. For example, you could open
         // it in a web view instead of the browser.
         // See https://developer.apple.com/documentation/webkit/wkwebview
-        UIApplication.shared.open(url)
-        
+        UIApplication.shared.open(url) { success in
+            if success {
+                print("HERE")
+            } else {
+              // What now?! TODO: Handle errors
+            }
+        }
     }
     
     /**
@@ -181,7 +190,7 @@ final class Spotify: ObservableObject {
      */
     func handleChangesToAuthorizationManager() {
         
-        withAnimation(SpotifyImportViewController.animation) {
+        withAnimation(PlaylistsListView.animation) {
             // Update the @Published `isAuthorized` property.
             // When set to `true`, `LoginView` is dismissed, allowing the
             // user to interact with the rest of the app.

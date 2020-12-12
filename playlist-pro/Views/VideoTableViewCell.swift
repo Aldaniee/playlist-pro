@@ -1,6 +1,6 @@
 //
 //  VideoTableViewCell.swift
-//  youtube-onedaybuild
+//  playlist-pro
 //
 //  Created by Aidan Lee on 11/2/20.
 //

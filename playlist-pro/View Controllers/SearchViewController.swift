@@ -1,21 +1,23 @@
 //
 //  ViewController.swift
-//  youtube-onedaybuild
+//  playlist-pro
 //
 //  Created by Aidan Lee on 10/27/20.
 //
 
 import UIKit
+import SwiftUI
+import Combine
+
 
 class SearchViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, ModelDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
-    
+        
     var model = Model()
-    
     var videos = [Video]()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         // Set itself as the datasource and the delegate
@@ -84,12 +86,13 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
             
         }
     }
-    
-    @IBAction func didTapSpotifyImport() {
-        let vc = storyboard?.instantiateViewController(identifier: "import") as! SpotifyImportViewController
-        vc.modalPresentationStyle = .overCurrentContext
-        present(vc, animated: true)
-    }
 
+    @IBAction func didTapImportSpotify(_ sender: Any) {
+        self.performSegue(withIdentifier: "import", sender: sender)
+    }
+    
+    @IBSegueAction func showPlaylistImport(_ coder: NSCoder) -> UIViewController? {
+        return UIHostingController(coder: coder, rootView: PlaylistsListView().environmentObject(Spotify()))    }
+    
 }
 
