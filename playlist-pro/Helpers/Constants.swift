@@ -1,6 +1,6 @@
 //
 //  Constants.swift
-//  youtube-onedaybuild
+//  playlist-pro
 //
 //  Created by Aidan Lee on 10/29/20.
 //
@@ -18,9 +18,6 @@ struct Constants {
     static let API_SEARCHLIST_URL_PT1 = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=\(Constants.MAX_RESULTS)&order=relevance&q="
     static let API_SEARCHLIST_URL_PT2 = "&type=video&key=\(Constants.YT_API_KEY)"
     
-    
-    static let SPOTIFY_PLAYLIST_TRACKLIST_PT1 = "https://api.spotify.com/v1/playlists/"
-    static let SPOTIFY_PLAYLIST_TRACKLIST_PT2 = "/tracks?market=US&fields=items(track(name%2Chref))"
     static let SPOTIFY_CLIENT_ID = "***REMOVED***"
     static let SPOTIFY_SECRET_ID = "***REMOVED***"
     static let SPOTIFY_REDIRECT_URL = "playlist-pro://login-callback"

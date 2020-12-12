@@ -1,12 +1,12 @@
 //
-//  youtube_onedaybuildTests.swift
-//  youtube-onedaybuildTests
+//  playlist-proTests.swift
+//  playlist-proTests
 //
 //  Created by Aidan Lee on 10/27/20.
 //
 
 import XCTest
-@testable import youtube_onedaybuild
+@testable import playlist-pro
 
 class youtube_onedaybuildTests: XCTestCase {
 

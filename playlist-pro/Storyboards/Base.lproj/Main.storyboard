@@ -10,7 +10,7 @@
         <!--Search View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="SearchViewController" customModule="youtube_onedaybuild" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="SearchViewController" customModule="playlist_pro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -27,7 +27,7 @@
                                 <rect key="frame" x="0.0" y="100" width="414" height="732"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VideoCell" id="XNg-yQ-kZL" customClass="VideoTableViewCell" customModule="youtube_onedaybuild" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="VideoCell" id="XNg-yQ-kZL" customClass="VideoTableViewCell" customModule="playlist_pro" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="61"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="XNg-yQ-kZL" id="7CW-dx-agu">
@@ -65,7 +65,7 @@
                                 <rect key="frame" x="20" y="832" width="374" height="30"/>
                                 <state key="normal" title="Import Spotify Playlists"/>
                                 <connections>
-                                    <action selector="didTapSpotifyImport" destination="BYZ-38-t0r" eventType="touchUpInside" id="AYo-CT-jnw"/>
+                                    <action selector="didTapImportSpotify:" destination="BYZ-38-t0r" eventType="touchUpInside" id="dLF-9s-Gq9"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -89,6 +89,7 @@
                     <connections>
                         <outlet property="searchBar" destination="4ia-lZ-nGJ" id="BPf-HP-vy6"/>
                         <outlet property="tableView" destination="y7F-2F-yRL" id="38c-Xf-D8k"/>
+                        <segue destination="x3M-mc-7bU" kind="show" identifier="import" destinationCreationSelector="showPlaylistImport:" id="j3S-v9-8uv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
@@ -98,7 +99,7 @@
         <!--Detail View Controller-->
         <scene sceneID="jv7-LD-KlU">
             <objects>
-                <viewController id="bM5-3u-YG3" customClass="DetailViewController" customModule="youtube_onedaybuild" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="bM5-3u-YG3" customClass="DetailViewController" customModule="playlist_pro" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="LtP-qv-OgU">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -161,20 +162,15 @@
             </objects>
             <point key="canvasLocation" x="609" y="80"/>
         </scene>
-        <!--Spotify Import View Controller-->
-        <scene sceneID="y71-eW-xP8">
+        <!--Hosting Controller-->
+        <scene sceneID="liE-d6-O07">
             <objects>
-                <viewController storyboardIdentifier="import" useStoryboardIdentifierAsRestorationIdentifier="YES" id="Ch7-7l-Ndi" customClass="SpotifyImportViewController" customModule="youtube_onedaybuild" customModuleProvider="target" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="dcv-io-wUb">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <viewLayoutGuide key="safeArea" id="1DB-rJ-PVY"/>
-                        <color key="backgroundColor" white="0.095703125" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="Yw3-2T-A1Z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <hostingController id="x3M-mc-7bU" sceneMemberID="viewController">
+                    <navigationItem key="navigationItem" id="YJn-2v-ZHD"/>
+                </hostingController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Jfu-2A-sSG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1322" y="80"/>
+            <point key="canvasLocation" x="-210" y="836"/>
         </scene>
     </scenes>
 </document>

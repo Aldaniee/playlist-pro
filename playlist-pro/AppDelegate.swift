@@ -1,6 +1,6 @@
 //
 //  AppDelegate.swift
-//  youtube-onedaybuild
+//  playlist-pro
 //
 //  Created by Aidan Lee on 10/27/20.
 //
