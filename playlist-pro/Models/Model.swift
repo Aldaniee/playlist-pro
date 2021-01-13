@@ -96,7 +96,7 @@ class Model {
     
     private func getSearchURL(withText text : String) -> URL {
         let searchableText = text.replacingOccurrences(of: " ", with: "+", options: .literal, range: nil)
-        let url = URL(string: Constants.API_SEARCHLIST_URL_PT1 + searchableText + Constants.API_SEARCHLIST_URL_PT2)!
+        let url = URL(string: Constants.YT.SEARCHLIST_URL_PT1 + searchableText + Constants.YT.SEARCHLIST_URL_PT2)!
         return url
     }
     
