@@ -42,12 +42,12 @@ class VideoTableViewCell: UITableViewCell {
         
         
         // Check cache before downloadiong data
-        if let cachedData = CacheManager.getVideoCache(self.video!.thumbnail) {
-            // if we are in here we know we found the data in cache
-            
-            //self.thumbnailImageView.image = UIImage(data: cachedData)
-            return
-        }
+//        if let cachedData = CacheManager.getVideoCache(self.video!.thumbnail) {
+//            // if we are in here we know we found the data in cache
+//
+//            //self.thumbnailImageView.image = UIImage(data: cachedData)
+//            return
+//        }
         
         // Download the thumbnail data
         let url = URL(string: self.video!.thumbnail)
@@ -69,7 +69,7 @@ class VideoTableViewCell: UITableViewCell {
             }
             
             // Create the image object
-            let image = UIImage(data: data!)
+            //let image = UIImage(data: data!)
             
             // Set the imageview
             //DispatchQueue.main.async {
