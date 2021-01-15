@@ -208,6 +208,16 @@
 			path = Audio;
 			sourceTree = "<group>";
 		};
+		EA0558D225B11EBE00B1FF85 /* Search Stuff */ = {
+			isa = PBXGroup;
+			children = (
+				EA5FBE76257AAD4A00473B56 /* Video.swift */,
+				EA637DFC254B821200FCC983 /* Response.swift */,
+				EA637DF4254B408C00FCC983 /* Model.swift */,
+			);
+			path = "Search Stuff";
+			sourceTree = "<group>";
+		};
 		EA637E062550B01200FCC983 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -238,10 +248,8 @@
 		EA637E082550B02300FCC983 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				EA0558D225B11EBE00B1FF85 /* Search Stuff */,
 				EA05589A25B118DF00B1FF85 /* Audio */,
-				EA5FBE76257AAD4A00473B56 /* Video.swift */,
-				EA637DFC254B821200FCC983 /* Response.swift */,
-				EA637DF4254B408C00FCC983 /* Model.swift */,
 				EA0558A425B118EA00B1FF85 /* LibraryCell.swift */,
 				EA0558A725B118EA00B1FF85 /* LibraryManager.swift */,
 				EA0558A525B118EA00B1FF85 /* PlaylistManager.swift */,
