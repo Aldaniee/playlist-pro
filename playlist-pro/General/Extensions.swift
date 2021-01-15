@@ -9,28 +9,6 @@ import UIKit
 import Foundation
 import AVFoundation
 
-extension UIView {
-    public var width: CGFloat {
-        return frame.size.width
-    }
-    
-    public var height: CGFloat {
-        return frame.size.height
-    }
-    public var top: CGFloat {
-        return frame.origin.y
-    }
-    public var bottom: CGFloat {
-        return top + height
-    }
-    public var left: CGFloat {
-        return frame.origin.x
-    }
-    public var right: CGFloat {
-        return left + width
-    }
-}
-
 extension String {
     func safeDatabaseKey() -> String {
         return replacingOccurrences(of: ".", with: "-").replacingOccurrences(of: "@", with: "-")
@@ -206,6 +184,26 @@ extension UIViewController {
 // MARK: UIView
 extension UIView {
 
+    public var width: CGFloat {
+        return frame.size.width
+    }
+    
+    public var height: CGFloat {
+        return frame.size.height
+    }
+    public var top: CGFloat {
+        return frame.origin.y
+    }
+    public var bottom: CGFloat {
+        return top + height
+    }
+    public var left: CGFloat {
+        return frame.origin.x
+    }
+    public var right: CGFloat {
+        return left + width
+    }
+    
     enum BorderSide {
         case top, bottom, left, right
     }
