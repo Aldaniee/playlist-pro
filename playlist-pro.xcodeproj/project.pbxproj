@@ -19,7 +19,6 @@
 		EA0558A025B118DF00B1FF85 /* YYTAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA05589D25B118DF00B1FF85 /* YYTAudioPlayer.swift */; };
 		EA0558A925B118EA00B1FF85 /* LibraryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558A425B118EA00B1FF85 /* LibraryCell.swift */; };
 		EA0558AA25B118EA00B1FF85 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558A525B118EA00B1FF85 /* PlaylistManager.swift */; };
-		EA0558AB25B118EA00B1FF85 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558A625B118EA00B1FF85 /* Song.swift */; };
 		EA0558AC25B118EA00B1FF85 /* LibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558A725B118EA00B1FF85 /* LibraryManager.swift */; };
 		EA0558B425B1190500B1FF85 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558B125B1190500B1FF85 /* HomeViewController.swift */; };
 		EA0558B525B1190500B1FF85 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558B225B1190500B1FF85 /* LibraryViewController.swift */; };
@@ -27,6 +26,7 @@
 		EA0558BD25B1191700B1FF85 /* LibraryTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558BA25B1191700B1FF85 /* LibraryTableView.swift */; };
 		EA0558BE25B1191700B1FF85 /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558BB25B1191700B1FF85 /* NowPlayingView.swift */; };
 		EA0558BF25B1191700B1FF85 /* PlaylistLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558BC25B1191700B1FF85 /* PlaylistLibraryView.swift */; };
+		EA5E9E5625B23CFD0026E9AE /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5E9E5525B23CFD0026E9AE /* Song.swift */; };
 		EA5FBE77257AAD4A00473B56 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5FBE76257AAD4A00473B56 /* Video.swift */; };
 		EA5FBEAE257BF6D100473B56 /* SpotifyAPI in Frameworks */ = {isa = PBXBuildFile; productRef = EA5FBEAD257BF6D100473B56 /* SpotifyAPI */; };
 		EA5FBEBC257C02FA00473B56 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = EA5FBEBB257C02FA00473B56 /* KeychainAccess */; };
@@ -97,7 +97,6 @@
 		EA05589D25B118DF00B1FF85 /* YYTAudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YYTAudioPlayer.swift; sourceTree = "<group>"; };
 		EA0558A425B118EA00B1FF85 /* LibraryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryCell.swift; sourceTree = "<group>"; };
 		EA0558A525B118EA00B1FF85 /* PlaylistManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
-		EA0558A625B118EA00B1FF85 /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Song.swift; path = ../../../YouTag/YouTag/Models/Song.swift; sourceTree = "<group>"; };
 		EA0558A725B118EA00B1FF85 /* LibraryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryManager.swift; sourceTree = "<group>"; };
 		EA0558B125B1190500B1FF85 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomeViewController.swift; path = ../General/HomeViewController.swift; sourceTree = "<group>"; };
 		EA0558B225B1190500B1FF85 /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
@@ -105,6 +104,7 @@
 		EA0558BA25B1191700B1FF85 /* LibraryTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableView.swift; sourceTree = "<group>"; };
 		EA0558BB25B1191700B1FF85 /* NowPlayingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
 		EA0558BC25B1191700B1FF85 /* PlaylistLibraryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistLibraryView.swift; sourceTree = "<group>"; };
+		EA5E9E5525B23CFD0026E9AE /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
 		EA5FBE76257AAD4A00473B56 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		EA637DEA254B3EF200FCC983 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		EA637DF4254B408C00FCC983 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
@@ -253,7 +253,7 @@
 				EA0558A425B118EA00B1FF85 /* LibraryCell.swift */,
 				EA0558A725B118EA00B1FF85 /* LibraryManager.swift */,
 				EA0558A525B118EA00B1FF85 /* PlaylistManager.swift */,
-				EA0558A625B118EA00B1FF85 /* Song.swift */,
+				EA5E9E5525B23CFD0026E9AE /* Song.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -633,6 +633,7 @@
 				EAF920E62548DA1200D22ACF /* SearchViewController.swift in Sources */,
 				EA5FBE77257AAD4A00473B56 /* Video.swift in Sources */,
 				EA9D945E259395C40057493D /* VCConstants.swift in Sources */,
+				EA5E9E5625B23CFD0026E9AE /* Song.swift in Sources */,
 				EA9D945025938AA80057493D /* SplashScreenViewController.swift in Sources */,
 				EA05585425AFA39600B1FF85 /* LocalFilesManager.swift in Sources */,
 				EAE145FF2585976C00C09FE9 /* StorageManager.swift in Sources */,
@@ -642,7 +643,6 @@
 				EA0558BE25B1191700B1FF85 /* NowPlayingView.swift in Sources */,
 				EA0558A925B118EA00B1FF85 /* LibraryCell.swift in Sources */,
 				EA637DF5254B408C00FCC983 /* Model.swift in Sources */,
-				EA0558AB25B118EA00B1FF85 /* Song.swift in Sources */,
 				EA8F5AD625926BC50081E9AB /* Extensions.swift in Sources */,
 				EA0558BD25B1191700B1FF85 /* LibraryTableView.swift in Sources */,
 				EAE145FA2585970200C09FE9 /* AuthManager.swift in Sources */,
