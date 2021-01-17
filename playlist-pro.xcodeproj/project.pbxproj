@@ -39,7 +39,6 @@
 		EA9D945E259395C40057493D /* VCConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D945D259395C40057493D /* VCConstants.swift */; };
 		EAC2DC9025AB862A006EA7AF /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC8F25AB862A006EA7AF /* Alamofire */; };
 		EAC2DC9625AB86F5006EA7AF /* XCDYouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC9525AB86F5006EA7AF /* XCDYouTubeKit */; };
-		EAC2DCB425AB8DE5006EA7AF /* Style.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC2DCB325AB8DE5006EA7AF /* Style.swift */; };
 		EAE1459C2585858800C09FE9 /* ImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE1459B2585858800C09FE9 /* ImportViewController.swift */; };
 		EAE145B025858AFE00C09FE9 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145AF25858AFE00C09FE9 /* AccountViewController.swift */; };
 		EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */; };
@@ -111,7 +110,6 @@
 		EA8F5AD525926BC50081E9AB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA9D944F25938AA80057493D /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		EA9D945D259395C40057493D /* VCConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCConstants.swift; sourceTree = "<group>"; };
-		EAC2DCB325AB8DE5006EA7AF /* Style.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Style.swift; sourceTree = "<group>"; };
 		EAE1459B2585858800C09FE9 /* ImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportViewController.swift; sourceTree = "<group>"; };
 		EAE145AF25858AFE00C09FE9 /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
@@ -228,7 +226,6 @@
 		EA637E062550B01200FCC983 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				EAC2DCB325AB8DE5006EA7AF /* Style.swift */,
 				EA0558B325B1190500B1FF85 /* DownloadWebViewController.swift */,
 				EA0558B225B1190500B1FF85 /* LibraryViewController.swift */,
 				EAE145B425858BF500C09FE9 /* Core Tabs */,
@@ -655,7 +652,6 @@
 				EA637DFD254B821200FCC983 /* Response.swift in Sources */,
 				EA05589625B118D500B1FF85 /* SearchTextField.swift in Sources */,
 				EAE1459C2585858800C09FE9 /* ImportViewController.swift in Sources */,
-				EAC2DCB425AB8DE5006EA7AF /* Style.swift in Sources */,
 				EA05583725AFA18200B1FF85 /* GraphicColors.swift in Sources */,
 				EA7E3FE325A67646009A4DAE /* SettingsViewController.swift in Sources */,
 				EA0558AA25B118EA00B1FF85 /* PlaylistManager.swift in Sources */,
