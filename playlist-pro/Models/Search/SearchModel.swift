@@ -7,16 +7,16 @@
 
 import Foundation
 
-protocol ModelDelegate {
+protocol SearchModelDelegate {
      
     func videosFetched(_ video:[Video])
     func searchResultsFetched(_ searchResults: [Video])
 
 }
 
-class Model {
+class SearchModel {
     
-    var delegate: ModelDelegate?
+    var delegate: SearchModelDelegate?
     
     func getVideos() {
         

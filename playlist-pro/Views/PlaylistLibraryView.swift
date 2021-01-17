@@ -121,28 +121,6 @@ class PlaylistLibraryView: LibraryTableView {
 
 				if (indexPath != LongPressPersistentValues.indexPath) {
 
-//					//AutoScroll
-//					if (locationInView.y - self.contentOffset.y < self.frame.height*0.2 && indexPath.row > 1) {
-//
-//						print("move up")
-////						var p = self.contentOffset
-////						p.y -= (self.cellForRow(at: self.indexPathsForVisibleRows![1])?.frame.height)!
-////						self.setContentOffset(p, animated: true)
-//						var indexP = indexPath
-//						indexP.row -= 1
-//						self.scrollToRow(at: indexPath, at: .top, animated: true)
-//					}
-//					else if (locationInView.y - self.contentOffset.y > self.frame.height*0.8 && indexPath.row < playlistArray.count) {
-//
-//						print("move down")
-////						var p = self.contentOffset
-////						p.y += (self.cellForRow(at: self.indexPathsForVisibleRows!.last!)?.frame.height)!
-////						self.setContentOffset(p, animated: true)
-//						var indexP = indexPath
-//						indexP.row += 1
-//						self.scrollToRow(at: indexPath, at: .bottom, animated: true)
-//					}
-
 					playlistArray.exchangeObject(at: playlistArray.count-indexPath.row-2, withObjectAt: playlistArray.count-(LongPressPersistentValues.indexPath?.row)!-2)
 					self.moveRow(at: LongPressPersistentValues.indexPath!, to: self.indexPathForRow(at: center!)!)
 

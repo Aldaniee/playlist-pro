@@ -131,6 +131,7 @@ class DownloadWebViewController: UIViewController, UITextFieldDelegate, WKNaviga
 
 	@objc func downloadBtn(_ sender: UIBarButtonItem) {
 		let url = webView.url!.absoluteString
+        print(url)
 		if supportedMIME.keys.contains(currentMIMEType) {
 			loadUrl("about:blank")
 			self.dismiss(animated: false, completion: {

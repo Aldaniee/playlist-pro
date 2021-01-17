@@ -7,14 +7,15 @@
 
 import UIKit
 import Combine
+import XCDYouTubeKit
 
-
-class SearchViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, ModelDelegate {
+class SearchViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, SearchModelDelegate {
 
     @IBOutlet weak var searchBar: UISearchBar!
     @IBOutlet weak var tableView: UITableView!
-        
-    var model = Model()
+    
+    let LM = LibraryManager()
+    var model = SearchModel()
     var videos = [Video]()
 
     override func viewDidLoad() {
@@ -29,21 +30,21 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
         model.getVideos()
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        
-        // Confirm that a video was selected
-        guard tableView.indexPathForSelectedRow != nil else {
-            return
+    func loadYouTubeVideo(videoID: String) {
+        print("Loading url: https://www.youtube.com/embed/\(videoID)")
+        self.showSpinner(onView: self.view, withTitle: "Loading...")
+        XCDYouTubeClient.default().getVideoWithIdentifier(videoID) { (video, error) in
+            guard video != nil else {
+                print(error?.localizedDescription as Any)
+                self.removeSpinner()
+                let alert = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
+                self.present(alert, animated: true, completion: nil)
+                return
+            }
+            self.removeSpinner()
+            self.LM.addSongToLibrary(songTitle: video!.title, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, completion: nil)
         }
-        
-        // Get a reference to the video taht was tapped on
-        let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
-        
-        // Get a reference to the detail view controller
-        let detailVC = segue.destination as! DetailViewController
-        
-        // Set the video property of the detail view controller
-        detailVC.video = selectedVideo
     }
     
     // MARK: – Model Delegate Methods
@@ -74,7 +75,16 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Confirm that a video was selected
+        guard tableView.indexPathForSelectedRow != nil else {
+            return
+        }
         
+        // Get a reference to the video that was tapped on
+        let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
+        
+        // Download the selected video
+        loadYouTubeVideo(videoID: selectedVideo.videoId)
     }
     // MARK: - SearchBar Methods
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
