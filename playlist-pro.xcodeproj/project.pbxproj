@@ -19,20 +19,20 @@
 		EA0558A925B118EA00B1FF85 /* LibraryCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558A425B118EA00B1FF85 /* LibraryCell.swift */; };
 		EA0558AA25B118EA00B1FF85 /* PlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558A525B118EA00B1FF85 /* PlaylistManager.swift */; };
 		EA0558AC25B118EA00B1FF85 /* LibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558A725B118EA00B1FF85 /* LibraryManager.swift */; };
-		EA0558B425B1190500B1FF85 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558B125B1190500B1FF85 /* HomeViewController.swift */; };
 		EA0558B525B1190500B1FF85 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558B225B1190500B1FF85 /* LibraryViewController.swift */; };
 		EA0558B625B1190500B1FF85 /* DownloadWebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558B325B1190500B1FF85 /* DownloadWebViewController.swift */; };
 		EA0558BD25B1191700B1FF85 /* LibraryTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558BA25B1191700B1FF85 /* LibraryTableView.swift */; };
 		EA0558BE25B1191700B1FF85 /* NowPlayingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558BB25B1191700B1FF85 /* NowPlayingView.swift */; };
 		EA0558BF25B1191700B1FF85 /* PlaylistLibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558BC25B1191700B1FF85 /* PlaylistLibraryView.swift */; };
 		EA5E9E5625B23CFD0026E9AE /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5E9E5525B23CFD0026E9AE /* Song.swift */; };
+		EA5E9E8925B4BC560026E9AE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */; };
 		EA5FBE77257AAD4A00473B56 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5FBE76257AAD4A00473B56 /* Video.swift */; };
 		EA5FBEAE257BF6D100473B56 /* SpotifyAPI in Frameworks */ = {isa = PBXBuildFile; productRef = EA5FBEAD257BF6D100473B56 /* SpotifyAPI */; };
 		EA5FBEBC257C02FA00473B56 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = EA5FBEBB257C02FA00473B56 /* KeychainAccess */; };
 		EA637DEB254B3EF200FCC983 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637DEA254B3EF200FCC983 /* Constants.swift */; };
 		EA637DF5254B408C00FCC983 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637DF4254B408C00FCC983 /* SearchModel.swift */; };
 		EA637DFD254B821200FCC983 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637DFC254B821200FCC983 /* Response.swift */; };
-		EA637E022550B00200FCC983 /* VideoTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637E012550B00200FCC983 /* VideoTableViewCell.swift */; };
+		EA637E022550B00200FCC983 /* SearchTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637E012550B00200FCC983 /* SearchTableViewCell.swift */; };
 		EA7E3FE325A67646009A4DAE /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7E3FE225A67646009A4DAE /* SettingsViewController.swift */; };
 		EA8F5AD625926BC50081E9AB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F5AD525926BC50081E9AB /* Extensions.swift */; };
 		EA9D945025938AA80057493D /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D944F25938AA80057493D /* SplashScreenViewController.swift */; };
@@ -94,18 +94,18 @@
 		EA0558A425B118EA00B1FF85 /* LibraryCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryCell.swift; sourceTree = "<group>"; };
 		EA0558A525B118EA00B1FF85 /* PlaylistManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistManager.swift; sourceTree = "<group>"; };
 		EA0558A725B118EA00B1FF85 /* LibraryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryManager.swift; sourceTree = "<group>"; };
-		EA0558B125B1190500B1FF85 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HomeViewController.swift; path = ../General/HomeViewController.swift; sourceTree = "<group>"; };
 		EA0558B225B1190500B1FF85 /* LibraryViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		EA0558B325B1190500B1FF85 /* DownloadWebViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DownloadWebViewController.swift; sourceTree = "<group>"; };
 		EA0558BA25B1191700B1FF85 /* LibraryTableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryTableView.swift; sourceTree = "<group>"; };
 		EA0558BB25B1191700B1FF85 /* NowPlayingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NowPlayingView.swift; sourceTree = "<group>"; };
 		EA0558BC25B1191700B1FF85 /* PlaylistLibraryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistLibraryView.swift; sourceTree = "<group>"; };
 		EA5E9E5525B23CFD0026E9AE /* Song.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		EA5FBE76257AAD4A00473B56 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
 		EA637DEA254B3EF200FCC983 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		EA637DF4254B408C00FCC983 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		EA637DFC254B821200FCC983 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
-		EA637E012550B00200FCC983 /* VideoTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoTableViewCell.swift; sourceTree = "<group>"; };
+		EA637E012550B00200FCC983 /* SearchTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchTableViewCell.swift; sourceTree = "<group>"; };
 		EA7E3FE225A67646009A4DAE /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		EA8F5AD525926BC50081E9AB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA9D944F25938AA80057493D /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
@@ -238,7 +238,6 @@
 		EA637E072550B01D00FCC983 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				EA637E012550B00200FCC983 /* VideoTableViewCell.swift */,
 				EA0558BA25B1191700B1FF85 /* LibraryTableView.swift */,
 				EA0558BB25B1191700B1FF85 /* NowPlayingView.swift */,
 				EA0558BC25B1191700B1FF85 /* PlaylistLibraryView.swift */,
@@ -292,7 +291,8 @@
 			children = (
 				EAE145AF25858AFE00C09FE9 /* AccountViewController.swift */,
 				EAF920E52548DA1200D22ACF /* SearchViewController.swift */,
-				EA0558B125B1190500B1FF85 /* HomeViewController.swift */,
+				EA637E012550B00200FCC983 /* SearchTableViewCell.swift */,
+				EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */,
 			);
 			path = "Core Tabs";
 			sourceTree = "<group>";
@@ -623,6 +623,7 @@
 				EAE145E7258593A600C09FE9 /* LoginViewController.swift in Sources */,
 				EAF920E62548DA1200D22ACF /* SearchViewController.swift in Sources */,
 				EA5FBE77257AAD4A00473B56 /* Video.swift in Sources */,
+				EA5E9E8925B4BC560026E9AE /* HomeViewController.swift in Sources */,
 				EA9D945E259395C40057493D /* VCConstants.swift in Sources */,
 				EA5E9E5625B23CFD0026E9AE /* Song.swift in Sources */,
 				EA9D945025938AA80057493D /* SplashScreenViewController.swift in Sources */,
@@ -639,13 +640,12 @@
 				EAE145FA2585970200C09FE9 /* AuthManager.swift in Sources */,
 				EA05589F25B118DF00B1FF85 /* YYTRangeSlider.swift in Sources */,
 				EA05589E25B118DF00B1FF85 /* YYTRangeSliderTrackLayer.swift in Sources */,
-				EA0558B425B1190500B1FF85 /* HomeViewController.swift in Sources */,
 				EAE4314E2550BD4C00E5AEBF /* DateHelper.swift in Sources */,
 				EA637DEB254B3EF200FCC983 /* Constants.swift in Sources */,
 				EA0558A025B118DF00B1FF85 /* YYTAudioPlayer.swift in Sources */,
 				EA0558B525B1190500B1FF85 /* LibraryViewController.swift in Sources */,
 				EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */,
-				EA637E022550B00200FCC983 /* VideoTableViewCell.swift in Sources */,
+				EA637E022550B00200FCC983 /* SearchTableViewCell.swift in Sources */,
 				EAE145F52585966D00C09FE9 /* DatabaseManager.swift in Sources */,
 				EAE145B025858AFE00C09FE9 /* AccountViewController.swift in Sources */,
 				EA0558B625B1190500B1FF85 /* DownloadWebViewController.swift in Sources */,

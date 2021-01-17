@@ -11,8 +11,16 @@ import XCDYouTubeKit
 
 class SearchViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, SearchModelDelegate {
 
-    @IBOutlet weak var searchBar: UISearchBar!
-    @IBOutlet weak var tableView: UITableView!
+    private let searchBar = UISearchBar()
+    
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(SearchTableViewCell.self,
+                           forCellReuseIdentifier: SearchTableViewCell.identifier)
+        tableView.rowHeight = 80
+        return tableView
+    }()
+
     
     let LM = LibraryManager()
     var model = SearchModel()
@@ -23,13 +31,34 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
         // Set itself as the datasource and the delegate
         tableView.dataSource = self
         tableView.delegate = self
+        model.delegate = self
         searchBar.delegate = self
         
-        model.delegate = self
+        searchBar.sizeToFit()
         
+        view.backgroundColor = .white
+        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.title = "Search"
+
+        navigationController?.navigationBar.isTranslucent = false
+        navigationController?.navigationBar.barStyle = .black
+        navigationController?.navigationBar.tintColor = .white
+        
+        navigationItem.titleView = searchBar
+        
+        view.addSubview(tableView)
+
         model.getVideos()
     }
-    
+
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = CGRect(x: 0,
+                                 y: 0,
+                                 width: view.width,
+                                 height: view.height)
+    }
+
     func loadYouTubeVideo(videoID: String) {
         print("Loading url: https://www.youtube.com/embed/\(videoID)")
         self.showSpinner(onView: self.view, withTitle: "Loading...")
@@ -65,12 +94,12 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.YT.VIDEOCELL_ID, for: indexPath) as! VideoTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier,
+                                                 for: indexPath) as! SearchTableViewCell
         
         // Configure the cell with the data
         let video = self.videos[indexPath.row]
         cell.setCell(video)
-        
         // Return the cell
         return cell
     }
@@ -95,14 +124,16 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
             
         }
     }
-/*
-    @IBAction func didTapImportSpotify(_ sender: Any) {
-        self.performSegue(withIdentifier: "import", sender: sender)
-    }
     
-    @IBSegueAction func showPlaylistImport(_ coder: NSCoder) -> UIViewController? {
-        return UIHostingController(coder: coder, rootView: ImportViewController())
+    func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+        print("search bar opened")
+        searchBar.showsCancelButton = true
+        searchBar.becomeFirstResponder()
     }
-    */
+    func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
+        print("cancel pressed")
+        searchBar.text = ""
+        searchBar.showsCancelButton = false
+        searchBar.endEditing(true)
+    }
 }
-
