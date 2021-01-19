@@ -32,6 +32,7 @@
 		EA8F5AD625926BC50081E9AB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F5AD525926BC50081E9AB /* Extensions.swift */; };
 		EA9D945025938AA80057493D /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D944F25938AA80057493D /* SplashScreenViewController.swift */; };
 		EABA041B25B68CA1000BF883 /* LibraryTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA041A25B68CA1000BF883 /* LibraryTableView.swift */; };
+		EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */; };
 		EAC2DC9025AB862A006EA7AF /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC8F25AB862A006EA7AF /* Alamofire */; };
 		EAC2DC9625AB86F5006EA7AF /* XCDYouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC9525AB86F5006EA7AF /* XCDYouTubeKit */; };
 		EAE1459C2585858800C09FE9 /* ImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE1459B2585858800C09FE9 /* ImportViewController.swift */; };
@@ -99,6 +100,7 @@
 		EA8F5AD525926BC50081E9AB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA9D944F25938AA80057493D /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		EABA041A25B68CA1000BF883 /* LibraryTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryTableView.swift; sourceTree = "<group>"; };
+		EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyImportViewController.swift; sourceTree = "<group>"; };
 		EAE1459B2585858800C09FE9 /* ImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportViewController.swift; sourceTree = "<group>"; };
 		EAE145AF25858AFE00C09FE9 /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
@@ -211,24 +213,12 @@
 			path = Library;
 			sourceTree = "<group>";
 		};
-		EA637E062550B01200FCC983 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				EAE145B425858BF500C09FE9 /* Core Tabs */,
-				EAE145EC258593B400C09FE9 /* Onboarding */,
-				EA7E3FE225A67646009A4DAE /* SettingsViewController.swift */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
 		EA637E072550B01D00FCC983 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				EA0558BB25B1191700B1FF85 /* NowPlayingView.swift */,
-				EA0558BC25B1191700B1FF85 /* PlaylistLibraryView.swift */,
-				EABA041A25B68CA1000BF883 /* LibraryTableView.swift */,
-				EAF920EA2548DA1400D22ACF /* Assets.xcassets */,
-				EA637E092550B02800FCC983 /* Storyboards */,
+				EABA044025B73530000BF883 /* Search Tab */,
+				EABA043925B7350A000BF883 /* Home Tab */,
+				EABA044125B73552000BF883 /* Other */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -252,6 +242,70 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
+		EABA042825B72FDC000BF883 /* Account Tab */ = {
+			isa = PBXGroup;
+			children = (
+				EAE145AF25858AFE00C09FE9 /* AccountViewController.swift */,
+				EA7E3FE225A67646009A4DAE /* SettingsViewController.swift */,
+			);
+			path = "Account Tab";
+			sourceTree = "<group>";
+		};
+		EABA042925B73073000BF883 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				EABA042825B72FDC000BF883 /* Account Tab */,
+				EABA044225B7355F000BF883 /* Search Tab */,
+				EABA043025B73189000BF883 /* Home Tab */,
+				EAE145EC258593B400C09FE9 /* Onboarding */,
+			);
+			path = Controllers;
+			sourceTree = "<group>";
+		};
+		EABA043025B73189000BF883 /* Home Tab */ = {
+			isa = PBXGroup;
+			children = (
+				EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */,
+				EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */,
+			);
+			path = "Home Tab";
+			sourceTree = "<group>";
+		};
+		EABA043925B7350A000BF883 /* Home Tab */ = {
+			isa = PBXGroup;
+			children = (
+				EA0558BB25B1191700B1FF85 /* NowPlayingView.swift */,
+				EA0558BC25B1191700B1FF85 /* PlaylistLibraryView.swift */,
+				EABA041A25B68CA1000BF883 /* LibraryTableView.swift */,
+			);
+			path = "Home Tab";
+			sourceTree = "<group>";
+		};
+		EABA044025B73530000BF883 /* Search Tab */ = {
+			isa = PBXGroup;
+			children = (
+				EA637E012550B00200FCC983 /* SearchTableViewCell.swift */,
+			);
+			path = "Search Tab";
+			sourceTree = "<group>";
+		};
+		EABA044125B73552000BF883 /* Other */ = {
+			isa = PBXGroup;
+			children = (
+				EAF920EA2548DA1400D22ACF /* Assets.xcassets */,
+				EA637E092550B02800FCC983 /* Storyboards */,
+			);
+			path = Other;
+			sourceTree = "<group>";
+		};
+		EABA044225B7355F000BF883 /* Search Tab */ = {
+			isa = PBXGroup;
+			children = (
+				EAF920E52548DA1200D22ACF /* SearchViewController.swift */,
+			);
+			path = "Search Tab";
+			sourceTree = "<group>";
+		};
 		EAE145A32585890800C09FE9 /* General */ = {
 			isa = PBXGroup;
 			children = (
@@ -269,22 +323,11 @@
 			path = General;
 			sourceTree = "<group>";
 		};
-		EAE145B425858BF500C09FE9 /* Core Tabs */ = {
-			isa = PBXGroup;
-			children = (
-				EAE145AF25858AFE00C09FE9 /* AccountViewController.swift */,
-				EAF920E52548DA1200D22ACF /* SearchViewController.swift */,
-				EA637E012550B00200FCC983 /* SearchTableViewCell.swift */,
-				EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */,
-			);
-			path = "Core Tabs";
-			sourceTree = "<group>";
-		};
 		EAE145EC258593B400C09FE9 /* Onboarding */ = {
 			isa = PBXGroup;
 			children = (
-				EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */,
 				EA9D944F25938AA80057493D /* SplashScreenViewController.swift */,
+				EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */,
 				EAE145E6258593A600C09FE9 /* LoginViewController.swift */,
 				EAE1459B2585858800C09FE9 /* ImportViewController.swift */,
 			);
@@ -319,7 +362,7 @@
 				EAE145A32585890800C09FE9 /* General */,
 				EA637E082550B02300FCC983 /* Models */,
 				EA637E072550B01D00FCC983 /* Views */,
-				EA637E062550B01200FCC983 /* Controllers */,
+				EABA042925B73073000BF883 /* Controllers */,
 				EAF920EF2548DA1400D22ACF /* Info.plist */,
 			);
 			path = "playlist-pro";
@@ -606,6 +649,7 @@
 				EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */,
 				EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */,
 				EA0558BE25B1191700B1FF85 /* NowPlayingView.swift in Sources */,
+				EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */,
 				EA0558A925B118EA00B1FF85 /* LibraryCell.swift in Sources */,
 				EA637DF5254B408C00FCC983 /* SearchModel.swift in Sources */,
 				EA8F5AD625926BC50081E9AB /* Extensions.swift in Sources */,

@@ -26,14 +26,14 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 	}()
     let titleLabel: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.boldSystemFont(ofSize: 22)
+        lbl.font = UIFont.boldSystemFont(ofSize: 18)
         lbl.textAlignment = .left
         return lbl
     }()
     let artistLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = Constants.UI.gray
-        lbl.font = UIFont.systemFont(ofSize: 22)
+        lbl.font = UIFont.systemFont(ofSize: 18)
         lbl.textAlignment = .left
         return lbl
     }()
@@ -104,7 +104,6 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
     }
 
     private func addPlaylistControlView() {
-        playlistControlView.addBorder(side: .top, color: .lightGray, width: 1.0)
         self.addSubview(playlistControlView)
         playlistControlView.translatesAutoresizingMaskIntoConstraints = false
         playlistControlView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
@@ -131,12 +130,11 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         shuffleButton.heightAnchor.constraint(equalTo: playlistControlView.heightAnchor).isActive = true
     }
     private func addSongControlView() {
-        songControlView.addBorder(side: .top, color: .lightGray, width: 1.0)
         self.addSubview(songControlView)
         songControlView.translatesAutoresizingMaskIntoConstraints = false
         songControlView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
         songControlView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        songControlView.bottomAnchor.constraint(equalTo: playlistControlView.topAnchor).isActive = true
+        songControlView.bottomAnchor.constraint(equalTo: playlistControlView.bottomAnchor).isActive = true
         songControlView.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
     private func addCurrentTimeLabel() {

@@ -109,9 +109,15 @@ class LibraryManager {
 				print("All async download in the group completed")
 				let duration = LocalFilesManager.extractDurationForSong(songID: sID, songExtension: newExtension)
 				let link = songID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(songID ?? "UNKNOWN_ERROR")"
-				let songDict = ["id": sID, "title": songTitle ?? sID, "artists": "", "album": "",
-								"releaseYear": "", "duration": duration, "lyrics": "",
-								"link": link, "fileExtension": newExtension] as [String : Any]
+				let songDict = ["id": sID,
+                                "title": songTitle ?? sID,
+                                "artists": "",
+                                "album": "",
+								"releaseYear": "",
+                                "duration": duration,
+                                "lyrics": "",
+								"link": link,
+                                "fileExtension": newExtension] as [String : Any]
 				let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
 				let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
 				self.libraryArray.add(enrichedDict)

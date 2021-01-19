@@ -17,11 +17,11 @@ class PlaylistLibraryView: LibraryTableView {
 	weak var PLDelegate: PlaylistLibraryViewDelegate?
 	
 	var playlistArray = NSMutableArray()
+    
 	private struct LongPressPersistentValues {
 		static var indexPath: IndexPath?
 		static var cellSnapShot: UIView?
 	}
-
 	
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
