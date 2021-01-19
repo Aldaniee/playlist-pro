@@ -36,13 +36,9 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
         
         searchBar.sizeToFit()
         
-        view.backgroundColor = .white
+        view.backgroundColor = .systemBackground
         navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Search"
-
-        navigationController?.navigationBar.isTranslucent = false
-        navigationController?.navigationBar.barStyle = .black
-        navigationController?.navigationBar.tintColor = .white
         
         navigationItem.titleView = searchBar
         
@@ -119,10 +115,17 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if searchBar.text != "" {
             model.search(searchText: searchBar.text!)
+            closeSearch()
         }
         else {
             
         }
+    }
+    
+    private func closeSearch() {
+        searchBar.showsCancelButton = false
+        searchBar.endEditing(true)
+        searchBar.resignFirstResponder()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -133,7 +136,6 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         print("cancel pressed")
         searchBar.text = ""
-        searchBar.showsCancelButton = false
-        searchBar.endEditing(true)
+        closeSearch()
     }
 }
