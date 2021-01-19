@@ -45,10 +45,6 @@ class PlaylistManager: NSObject, PlaylistLibraryViewDelegate, NowPlayingViewDele
 		nowPlayingView.titleLabel.text = songDict["title"] as? String ?? ""
 		nowPlayingView.artistLabel.text = ((songDict["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", "))
 		
-		nowPlayingView.lyricsTextView.text = songDict["lyrics"] as? String
-		let isLyricsAvailable = nowPlayingView.lyricsTextView.text != ""
-		nowPlayingView.lyricsTextView.isHidden = !isLyricsAvailable
-		nowPlayingView.lyricsButton.isHidden = isLyricsAvailable
 		let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
 		if let imgData = imageData {
 			nowPlayingView.thumbnailImageView.image = UIImage(data: imgData)

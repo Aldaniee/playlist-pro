@@ -21,7 +21,7 @@ final class AccountViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Log In", for: .normal)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = VCConstants.cornerRadius
+        button.layer.cornerRadius = Constants.UI.cornerRadius
         button.backgroundColor = .systemBlue
         button.setTitleColor(.white, for: .normal)
         return button
@@ -30,7 +30,7 @@ final class AccountViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Create Account", for: .normal)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = VCConstants.cornerRadius
+        button.layer.cornerRadius = Constants.UI.cornerRadius
         button.backgroundColor = .systemBlue
         button.setTitleColor(.white, for: .normal)
         return button

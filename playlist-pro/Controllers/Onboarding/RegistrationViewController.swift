@@ -17,7 +17,7 @@ class RegistrationViewController: UIViewController {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.autocapitalizationType = .none
         field.layer.masksToBounds = true
-        field.layer.cornerRadius = VCConstants.cornerRadius
+        field.layer.cornerRadius = Constants.UI.cornerRadius
         field.backgroundColor = .secondarySystemBackground
         field.layer.borderWidth = 1.0
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
@@ -31,7 +31,7 @@ class RegistrationViewController: UIViewController {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.autocapitalizationType = .none
         field.layer.masksToBounds = true
-        field.layer.cornerRadius = VCConstants.cornerRadius
+        field.layer.cornerRadius = Constants.UI.cornerRadius
         field.backgroundColor = .secondarySystemBackground
         field.layer.borderWidth = 1.0
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
@@ -46,7 +46,7 @@ class RegistrationViewController: UIViewController {
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
         field.autocapitalizationType = .none
         field.layer.masksToBounds = true
-        field.layer.cornerRadius = VCConstants.cornerRadius
+        field.layer.cornerRadius = Constants.UI.cornerRadius
         field.backgroundColor = .secondarySystemBackground
         field.layer.borderWidth = 1.0
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
@@ -57,7 +57,7 @@ class RegistrationViewController: UIViewController {
         let button = UIButton()
         button.setTitle("Sign Up", for: .normal)
         button.layer.masksToBounds = true
-        button.layer.cornerRadius = VCConstants.cornerRadius
+        button.layer.cornerRadius = Constants.UI.cornerRadius
         button.backgroundColor = .systemGreen
         button.setTitleColor(.white, for: .normal)
         return button

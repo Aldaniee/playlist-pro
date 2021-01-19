@@ -22,12 +22,12 @@ class SearchTableViewCell: UITableViewCell {
     
     private let titleLabel: UILabel = {
         let titleLabel = UILabel()
-        titleLabel.font = .systemFont(ofSize: 17, weight: .bold)
+        titleLabel.font = .systemFont(ofSize: 18, weight: .bold)
         return titleLabel
     }()
     private let artistLabel: UILabel = {
         let titleLabel = UILabel()
-        titleLabel.font = .systemFont(ofSize: 14)
+        titleLabel.font = .systemFont(ofSize: 16)
         return titleLabel
     }()
     

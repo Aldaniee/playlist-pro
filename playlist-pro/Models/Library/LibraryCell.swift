@@ -14,27 +14,25 @@ class LibraryCell : UITableViewCell {
 	let thumbnailImageView: UIImageView = {
 		let imgView = UIImageView()
 		imgView.layer.cornerRadius = 5.0
-		imgView.layer.borderWidth = 1.0
-		imgView.layer.borderColor = UIColor.lightGray.cgColor
 		imgView.layer.masksToBounds = true
 		return imgView
 	}()
     let titleLabel: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont(name: "DINAlternate-Bold", size: 22)
+        lbl.font = UIFont.boldSystemFont(ofSize: 16)
         lbl.textAlignment = .left
         return lbl
     }()
     let artistLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = GraphicColors.gray
-        lbl.font = UIFont(name: "DINAlternate-Bold", size: 22 * 0.65)
+        lbl.textColor = Constants.UI.gray
+        lbl.font = UIFont.systemFont(ofSize: 16)
         lbl.textAlignment = .left
         return lbl
     }()
 	let durationLabel: UILabel = {
 		let lbl = UILabel()
-		lbl.font = UIFont(name: "DINAlternate-Bold", size: 22 * 0.65)
+		lbl.font = UIFont.systemFont(ofSize: 12)
 		lbl.textAlignment = .right
 		return lbl
 	}()

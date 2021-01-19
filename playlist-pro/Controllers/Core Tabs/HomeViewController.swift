@@ -21,7 +21,7 @@ class HomeViewController: UIViewController {
     }()
     private let addButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = GraphicColors.orange
+        button.backgroundColor = Constants.UI.orange
         button.titleLabel?.textColor = .white
         button.titleLabel?.font = .boldSystemFont(ofSize: 48)
         button.setTitle("+", for: .normal)
@@ -54,7 +54,6 @@ class HomeViewController: UIViewController {
 		super.viewDidLoad()
         view.backgroundColor = .systemBackground
         configureHeaderView()
-        configureNavigationBar()
 		addPlaylistManager()
 	}
     override func viewDidLayoutSubviews() {
@@ -73,12 +72,6 @@ class HomeViewController: UIViewController {
             return
         }
         backgroundView.frame = headerView.bounds
-    }
-    private func configureNavigationBar() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Library",
-                                                            style: .done,
-                                                            target: self,
-                                                            action: #selector(menuButtonAction))
     }
 	override func viewWillAppear(_ animated: Bool) {
 		playlistManager.computePlaylist()
@@ -103,11 +96,5 @@ class HomeViewController: UIViewController {
             
         }
     }
-	@objc func menuButtonAction(sender: UIButton!) {
-		print("Menu Button tapped")
-		let vc = LibraryViewController()
-        vc.modalPresentationStyle = .fullScreen
-        present(vc, animated: true, completion: nil)
-	}
 	
 }

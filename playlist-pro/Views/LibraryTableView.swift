@@ -10,17 +10,17 @@ import UIKit
 
 class LibraryTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
  
-	var LM: LibraryManager!
-	
+    var LM: LibraryManager!
+    
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-	override init(frame: CGRect, style: UITableView.Style) {
-		super.init(frame: frame, style: style)
+    override init(frame: CGRect, style: UITableView.Style) {
+        super.init(frame: frame, style: style)
         LM = LibraryManager.init()
 
-		self.register(LibraryCell.self, forCellReuseIdentifier: "LibraryCell")
+        self.register(LibraryCell.self, forCellReuseIdentifier: "LibraryCell")
         self.delegate = self
         self.dataSource = self
     }
@@ -37,9 +37,9 @@ class LibraryTableView: UITableView, UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LibraryCell", for: indexPath as IndexPath) as! LibraryCell
         
-		let songDict = LM.libraryArray.object(at: LM.libraryArray.count - 1 - indexPath.row) as! Dictionary<String, Any>
-		cell.songDict = songDict
-		cell.refreshCell()
+        let songDict = LM.libraryArray.object(at: LM.libraryArray.count - 1 - indexPath.row) as! Dictionary<String, Any>
+        cell.songDict = songDict
+        cell.refreshCell()
         return cell
     }
     
@@ -54,12 +54,12 @@ class LibraryTableView: UITableView, UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Selected cell number: \(indexPath.row)")
 //        let storyboard: UIStoryboard = UIStoryboard(name: "Main", bundle: Bundle.main)
-//		let cell = tableView.cellForRow(at: indexPath) as! LibraryCell
-//		let songDetail_vc: SongDetailViewController = storyboard.instantiateViewController(withIdentifier: "SongDetailViewController") as! SongDetailViewController
+//        let cell = tableView.cellForRow(at: indexPath) as! LibraryCell
+//        let songDetail_vc: SongDetailViewController = storyboard.instantiateViewController(withIdentifier: "SongDetailViewController") as! SongDetailViewController
 //        songDetail_vc.modalPresentationStyle = .fullScreen
 //        songDetail_vc.modalTransitionStyle = .coverVertical
 //
-//		songDetail_vc.songDict = cell.songDict
+//        songDetail_vc.songDict = cell.songDict
 //
 //        let currentController = UIApplication.getCurrentViewController()
 //        currentController?.present(songDetail_vc, animated: true, completion: nil)
@@ -68,10 +68,10 @@ class LibraryTableView: UITableView, UITableViewDelegate, UITableViewDataSource 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
             let cell = tableView.cellForRow(at: indexPath) as! LibraryCell
-			LM.deleteSongFromLibrary(songID: cell.songDict["id"] as? String ?? "")
+            LM.deleteSongFromLibrary(songID: cell.songDict["id"] as? String ?? "")
             LM.refreshLibraryArray()
             tableView.reloadData()
         }
     }
-	
+    
 }

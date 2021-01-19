@@ -9,9 +9,11 @@ import UIKit
 import Combine
 import XCDYouTubeKit
 
-class SearchViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, UISearchBarDelegate, SearchModelDelegate {
+class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate, SearchModelDelegate {
 
     private let searchBar = UISearchBar()
+    
+    private var isSearching = false
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -44,7 +46,6 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
         
         view.addSubview(tableView)
 
-        model.getVideos()
     }
 
     override func viewDidLayoutSubviews() {
@@ -83,34 +84,6 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
         tableView.reloadData()
     }
     
-    // MARK: – TableView Methods
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return videos.count
-    }
-    
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier,
-                                                 for: indexPath) as! SearchTableViewCell
-        
-        // Configure the cell with the data
-        let video = self.videos[indexPath.row]
-        cell.setCell(video)
-        // Return the cell
-        return cell
-    }
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        // Confirm that a video was selected
-        guard tableView.indexPathForSelectedRow != nil else {
-            return
-        }
-        
-        // Get a reference to the video that was tapped on
-        let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
-        
-        // Download the selected video
-        loadYouTubeVideo(videoID: selectedVideo.videoId)
-    }
     // MARK: - SearchBar Methods
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
         if searchBar.text != "" {
@@ -126,16 +99,62 @@ class SearchViewController: UIViewController,  UITableViewDataSource, UITableVie
         searchBar.showsCancelButton = false
         searchBar.endEditing(true)
         searchBar.resignFirstResponder()
+        tableView.reloadData()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         print("search bar opened")
         searchBar.showsCancelButton = true
+        isSearching = true
         searchBar.becomeFirstResponder()
     }
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         print("cancel pressed")
         searchBar.text = ""
+        isSearching = false
         closeSearch()
     }
+}
+
+extension SearchViewController: UITableViewDataSource {
+    // MARK: – TableView Methods
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        if(isSearching == true) {
+            return videos.count
+        }
+        else {
+            return 0
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier,
+                                                 for: indexPath) as! SearchTableViewCell
+        
+        // Show search Results
+        if(isSearching == true) {
+            let video = self.videos[indexPath.row]
+            cell.setCell(video)
+        }
+        // Show the previously downloaded videos
+        else {
+            
+        }
+        // Return the cell
+        return cell
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        // Confirm that a video was selected
+        guard tableView.indexPathForSelectedRow != nil else {
+            return
+        }
+        
+        // Get a reference to the video that was tapped on
+        let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
+        
+        // Download the selected video
+        loadYouTubeVideo(videoID: selectedVideo.videoId)
+    }
+    
 }

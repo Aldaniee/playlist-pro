@@ -26,14 +26,14 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 	}()
     let titleLabel: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont(name: "DINAlternate-Bold", size: 22)
+        lbl.font = UIFont.boldSystemFont(ofSize: 22)
         lbl.textAlignment = .left
         return lbl
     }()
     let artistLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = GraphicColors.gray
-        lbl.font = UIFont(name: "DINAlternate-Bold", size: 22 * 0.65)
+        lbl.textColor = Constants.UI.gray
+        lbl.font = UIFont.systemFont(ofSize: 22)
         lbl.textAlignment = .left
         return lbl
     }()
@@ -55,15 +55,15 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 	let songControlView = UIView()
 	let progressBar: UISlider = {
 		let pBar = UISlider()
-		pBar.tintColor = GraphicColors.orange
+        pBar.tintColor = Constants.UI.orange
 		return pBar
 	}()
 	var isProgressBarSliding = false
 	let playbackRateButton: UIButton = {
 		let btn = UIButton()
-		btn.backgroundColor = GraphicColors.orange
+        btn.backgroundColor = Constants.UI.orange
 		btn.titleLabel?.textColor = .white
-		btn.titleLabel?.font = UIFont(name: "DINAlternate-Bold", size: 22 * 0.55)
+		btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11)
 		btn.setTitle("x1", for: .normal)
 		return btn
 	}()
@@ -71,35 +71,17 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		let lbl = UILabel()
 		lbl.text = "00:00"
 		lbl.textAlignment = .center
-		lbl.font = UIFont(name: "DINAlternate-Bold", size: 22 * 0.55)
+		lbl.font = UIFont.boldSystemFont(ofSize: 11)
 		return lbl
 	}()
 	let timeLeftLabel: UILabel = {
 		let lbl = UILabel()
 		lbl.text = "00:00"
 		lbl.textAlignment = .center
-		lbl.font = UIFont(name: "DINAlternate-Bold", size: 22 * 0.55)
+		lbl.font = UIFont.boldSystemFont(ofSize: 11)
 		return lbl
 	}()
 	let playlistControlView = UIView()
-	let lyricsButton: UIButton = {
-		let btn = UIButton()
-		btn.backgroundColor = .clear
-		btn.titleLabel?.font = UIFont(name: "DINAlternate-Bold", size: 24)
-		btn.setTitle("What's next", for: .normal)
-		btn.setTitleColor(GraphicColors.orange, for: .normal)
-		return btn
-	}()
-	let lyricsTextView: UITextView = {
-		let txtView = UITextView()
-		txtView.backgroundColor = .clear
-		txtView.textAlignment = .center
-		txtView.font = UIFont.init(name: "Optima-BoldItalic", size: 15)
-		txtView.isEditable = false
-		txtView.layer.borderWidth = 1.0
-		txtView.layer.borderColor = GraphicColors.orange.withAlphaComponent(0.5).cgColor
-		return txtView
-	}()
 	let repeatButton: UIButton = {
 		let btn = UIButton()
 		btn.backgroundColor = .clear
@@ -158,7 +140,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         songControlView.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
     private func addCurrentTimeLabel() {
-        currentTimeLabel.addBorder(side: .right, color: GraphicColors.orange, width: 0.5)
+        currentTimeLabel.addBorder(side: .right, color: Constants.UI.orange, width: 0.5)
         songControlView.addSubview(currentTimeLabel)
         currentTimeLabel.translatesAutoresizingMaskIntoConstraints = false
         currentTimeLabel.leadingAnchor.constraint(equalTo: progressBar.trailingAnchor, constant: 2.5).isActive = true
@@ -169,7 +151,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
     }
     
     private func addTimeLeftLabel() {
-        timeLeftLabel.addBorder(side: .left, color: GraphicColors.orange, width: 0.5)
+        timeLeftLabel.addBorder(side: .left, color: Constants.UI.orange, width: 0.5)
         songControlView.addSubview(timeLeftLabel)
         timeLeftLabel.translatesAutoresizingMaskIntoConstraints = false
         timeLeftLabel.widthAnchor.constraint(equalTo: songControlView.widthAnchor, multiplier: 0.1, constant: -2.5).isActive = true
@@ -329,14 +311,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		repeatButton.alpha = !audioPlayer.isSongRepeat ? 1 : 0.35
 		audioPlayer.isSongRepeat = !audioPlayer.isSongRepeat
 	}
-	
-	@objc func lyricsButtonAction(sender: UIButton!) {
-		print("lyrics Button tapped")
-		if lyricsTextView.text != "" {
-			lyricsTextView.isHidden = !lyricsTextView.isHidden
-			lyricsButton.isHidden = !lyricsButton.isHidden
-		}
-	}
+
 
 	@objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
 		if let touchEvent = event.allTouches?.first {

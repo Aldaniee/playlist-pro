@@ -7,6 +7,7 @@
 
 import Foundation
 
+// Cache to store thumbnail images in SearchViewController
 class CacheManager {
     
     static var cache = [String:Data]()
