@@ -58,6 +58,7 @@ final class AccountViewController: UIViewController {
         }
     }
     private func configureNavigationBar() {
+        navigationItem.title = Auth.auth().currentUser?.email
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"),
                                                             style: .done,
                                                             target: self,

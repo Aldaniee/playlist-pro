@@ -40,7 +40,6 @@ class LoginViewController: UIViewController {
         field.layer.borderColor = UIColor.secondaryLabel.cgColor
         return field
     }()
-    
     private let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Log In", for: .normal)
@@ -62,7 +61,6 @@ class LoginViewController: UIViewController {
         header.backgroundColor = .systemGray
         return header
     }()
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         usernameEmailField.delegate = self
@@ -124,13 +122,32 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func didTapLoginButton() {
-        print("here")
+        print("Login Tapped")
         // remove keyboards
         passwordField.resignFirstResponder()
         usernameEmailField.resignFirstResponder()
         
-        guard let usernameEmail = usernameEmailField.text, !usernameEmail.isEmpty, let password = passwordField.text, !password.isEmpty, password.count >= 8 else {
-                return
+        guard let usernameEmail = usernameEmailField.text, !usernameEmail.isEmpty else {
+            print("Username Error")
+            let alert = UIAlertController(title: "Log In Error",
+                                          message: "Username is empty.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss",
+                                          style: .cancel,
+                                          handler: nil))
+            self.present(alert, animated: true)
+            return
+        }
+        guard let password = passwordField.text, !password.isEmpty, password.count >= 8 else {
+            print("Password Error")
+            let alert = UIAlertController(title: "Log In Error",
+                                          message: "Password must be 8 or more characters.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss",
+                                          style: .cancel,
+                                          handler: nil))
+            self.present(alert, animated: true)
+            return
         }
         
         var username: String?
@@ -146,8 +163,7 @@ class LoginViewController: UIViewController {
             username = usernameEmail
         }
         
-        
-        
+        print("here")
         AuthManager.shared.loginUser(username: username, email: email, password: password) { success in
             DispatchQueue.main.async {
                 if success {
@@ -156,6 +172,7 @@ class LoginViewController: UIViewController {
                     print("Successfully Logged In")
                 }
                 else {
+                    print("Log In Database Error")
                     // error occurred
                     let alert = UIAlertController(title: "Log In Error",
                                                   message: "We were unable to log you in.",

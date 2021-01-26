@@ -13,9 +13,7 @@ class LibraryCell : UITableViewCell {
 	var songDict = Dictionary<String, Any>()
 	let thumbnailImageView: UIImageView = {
 		let imgView = UIImageView()
-		imgView.layer.cornerRadius = 5.0
-		imgView.layer.masksToBounds = true
-		return imgView
+        return imgView
 	}()
     let titleLabel: UILabel = {
         let lbl = UILabel()
@@ -47,8 +45,9 @@ class LibraryCell : UITableViewCell {
 		thumbnailImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
 		thumbnailImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
 		thumbnailImageView.heightAnchor.constraint(equalTo: self.heightAnchor, constant: -15).isActive = true
-		thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 1.25).isActive = true
-		
+        thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor).isActive = true
+        thumbnailImageView.frame = CGRect(x: 20, y: contentView.width/2, width: 15.0, height: 15.0)
+
         self.contentView.addSubview(titleLabel)
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
 		titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: 10).isActive = true
@@ -80,11 +79,35 @@ class LibraryCell : UITableViewCell {
 		self.artistLabel.text = (songDict["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
 		let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songDict["id"] as? String ?? "").jpg"))
 		if let imgData = imageData {
-			self.thumbnailImageView.image = UIImage(data: imgData)
+            self.thumbnailImageView.image = cropToBounds(image: UIImage(data: imgData)!, height: 15.0)
 		} else {
 			self.thumbnailImageView.image = UIImage(named: "placeholder")
 		}
 		self.durationLabel.text = songDict["duration"] as? String
 		
 	}
+    private func cropToBounds(image: UIImage, height: Double) -> UIImage {
+        
+        let cgimage = image.cgImage!
+        let contextImage = UIImage(cgImage: cgimage)
+        let contextSize = contextImage.size
+        var posX: CGFloat = 0.0
+        var posY: CGFloat = 0.0
+        var cgwidth = CGFloat(height)
+        var cgheight = CGFloat(height)
+
+        posX = ((contextSize.width - contextSize.height) / 2)
+        posY = 0
+        cgwidth = contextSize.height
+        cgheight = contextSize.height
+
+        let rect: CGRect = CGRect(x: posX, y: posY, width: cgwidth, height: cgheight)
+
+        // Create bitmap image from context using the rect
+        let imageRef: CGImage = cgimage.cropping(to: rect)!
+
+        // Create a new image based on the imageRef and rotate back to the original orientation
+        return UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
+        
+    }
 }

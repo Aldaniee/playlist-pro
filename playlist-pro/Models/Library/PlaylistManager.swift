@@ -58,10 +58,10 @@ class PlaylistManager: NSObject, PlaylistLibraryViewDelegate, NowPlayingViewDele
 			_ = audioPlayer.setupPlayer(withPlaylist: NSMutableArray(array: playlistLibraryView.playlistArray.reversed()))
 		}
 
-		nowPlayingView.playbackRateButton.titleLabel?.text = "x\(oldPlaybackRate == 1.0 ? 1 : oldPlaybackRate)"
+		//nowPlayingView.playbackRateButton.titleLabel?.text = "x\(oldPlaybackRate == 1.0 ? 1 : oldPlaybackRate)"
 		nowPlayingView.progressBar.value = 0.0
-		nowPlayingView.currentTimeLabel.text = "00:00"
-		nowPlayingView.timeLeftLabel.text = (songDict["duration"] as? String) ?? "00:00"
+		//nowPlayingView.currentTimeLabel.text = "00:00"
+		//nowPlayingView.timeLeftLabel.text = (songDict["duration"] as? String) ?? "00:00"
 	}
 	
 	func refreshPlaylistLibraryView() {

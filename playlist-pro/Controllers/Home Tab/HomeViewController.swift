@@ -73,8 +73,6 @@ class HomeViewController: UIViewController {
             let loginVC = SplashScreenViewController()
             loginVC.modalPresentationStyle = .fullScreen
             present(loginVC, animated: false)
-            
         }
     }
-	
 }

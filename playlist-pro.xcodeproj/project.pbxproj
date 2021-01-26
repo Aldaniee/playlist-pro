@@ -205,7 +205,6 @@
 		EA5E9E7E25B3363C0026E9AE /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				EA0558A425B118EA00B1FF85 /* LibraryCell.swift */,
 				EA0558A725B118EA00B1FF85 /* LibraryManager.swift */,
 				EA0558A525B118EA00B1FF85 /* PlaylistManager.swift */,
 				EA5E9E5525B23CFD0026E9AE /* Song.swift */,
@@ -277,6 +276,7 @@
 				EA0558BB25B1191700B1FF85 /* NowPlayingView.swift */,
 				EA0558BC25B1191700B1FF85 /* PlaylistLibraryView.swift */,
 				EABA041A25B68CA1000BF883 /* LibraryTableView.swift */,
+				EA0558A425B118EA00B1FF85 /* LibraryCell.swift */,
 			);
 			path = "Home Tab";
 			sourceTree = "<group>";

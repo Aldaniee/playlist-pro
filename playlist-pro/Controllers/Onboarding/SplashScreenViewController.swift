@@ -108,11 +108,8 @@ class SplashScreenViewController: UIViewController {
         Auth.auth().signInAnonymously { (authResult, error) in
             if (error == nil) {
                 print("Signed in with Anonymous auth")
+                self.present(UINavigationController(rootViewController: HomeViewController()), animated: false)
             }
         }
-        // Eventually I will login anonymously and add a make an account part to the account tab
-        let vc = HomeViewController()
-        present(vc, animated: false)
     }
-
 }

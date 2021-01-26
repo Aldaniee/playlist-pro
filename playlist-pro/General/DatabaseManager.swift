@@ -35,6 +35,7 @@ public class DatabaseManager {
                 // succeeded
             }
             else {
+                print(error!)
                 // failed
             }
             

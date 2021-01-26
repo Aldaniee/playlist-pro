@@ -6,6 +6,7 @@
 //  Copyright © 2019 Youstanzr. All rights reserved.
 //
 import UIKit
+
 protocol NowPlayingViewDelegate: class {
 	func shufflePlaylist()
 }
@@ -18,9 +19,6 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 	var songID = ""
 	let thumbnailImageView: UIImageView = {
 		let imgView = UIImageView()
-		imgView.layer.cornerRadius = 5.0
-		imgView.layer.borderWidth = 1.0
-		imgView.layer.borderColor = UIColor.lightGray.cgColor
 		imgView.layer.masksToBounds = true
 		return imgView
 	}()
@@ -37,21 +35,21 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         lbl.textAlignment = .left
         return lbl
     }()
-	let previousButton: UIButton = {
+	/*let previousButton: UIButton = {
 		let btn = UIButton()
 		btn.setImage(UIImage(named: "previous"), for: UIControl.State.normal)
 		return btn
-	}()
+	}()*/
 	let pausePlayButton: UIButton = {
 		let btn = UIButton()
 		btn.setImage(UIImage(named: "play"), for: UIControl.State.normal)
 		return btn
 	}()
-	let nextButton: UIButton = {
+	/*let nextButton: UIButton = {
 		let btn = UIButton()
 		btn.setImage(UIImage(named: "next"), for: UIControl.State.normal)
 		return btn
-	}()
+	}()*/
 	let songControlView = UIView()
 	let progressBar: UISlider = {
 		let pBar = UISlider()
@@ -59,15 +57,15 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		return pBar
 	}()
 	var isProgressBarSliding = false
-	let playbackRateButton: UIButton = {
+	/*let playbackRateButton: UIButton = {
 		let btn = UIButton()
         btn.backgroundColor = Constants.UI.orange
 		btn.titleLabel?.textColor = .white
 		btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11)
 		btn.setTitle("x1", for: .normal)
 		return btn
-	}()
-	let currentTimeLabel: UILabel = {
+	}()*/
+	/*let currentTimeLabel: UILabel = {
 		let lbl = UILabel()
 		lbl.text = "00:00"
 		lbl.textAlignment = .center
@@ -80,9 +78,9 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		lbl.textAlignment = .center
 		lbl.font = UIFont.boldSystemFont(ofSize: 11)
 		return lbl
-	}()
+	}()*/
 	let playlistControlView = UIView()
-	let repeatButton: UIButton = {
+	/*let repeatButton: UIButton = {
 		let btn = UIButton()
 		btn.backgroundColor = .clear
 		btn.imageView!.contentMode = .scaleAspectFit
@@ -96,7 +94,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		btn.imageView!.contentMode = .scaleAspectFit
 		btn.setImage(UIImage(named: "shuffle"), for: UIControl.State.normal)
 		return btn
-	}()
+	}()*/
 
 	
     required init?(coder aDecoder: NSCoder) {
@@ -111,7 +109,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         playlistControlView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         playlistControlView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.375).isActive = true
     }
-    private func addRepeatButton() {
+    /*private func addRepeatButton() {
         repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
         playlistControlView.addSubview(repeatButton)
         repeatButton.translatesAutoresizingMaskIntoConstraints = false
@@ -128,7 +126,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         shuffleButton.widthAnchor.constraint(equalTo: playlistControlView.widthAnchor, multiplier: 0.125).isActive = true
         shuffleButton.centerYAnchor.constraint(equalTo: playlistControlView.centerYAnchor).isActive = true
         shuffleButton.heightAnchor.constraint(equalTo: playlistControlView.heightAnchor).isActive = true
-    }
+    }*/
     private func addSongControlView() {
         self.addSubview(songControlView)
         songControlView.translatesAutoresizingMaskIntoConstraints = false
@@ -137,7 +135,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         songControlView.bottomAnchor.constraint(equalTo: playlistControlView.bottomAnchor).isActive = true
         songControlView.heightAnchor.constraint(equalToConstant: 20).isActive = true
     }
-    private func addCurrentTimeLabel() {
+    /*private func addCurrentTimeLabel() {
         currentTimeLabel.addBorder(side: .right, color: Constants.UI.orange, width: 0.5)
         songControlView.addSubview(currentTimeLabel)
         currentTimeLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -157,7 +155,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         timeLeftLabel.centerYAnchor.constraint(equalTo: songControlView.centerYAnchor).isActive = true
         timeLeftLabel.heightAnchor.constraint(equalTo: songControlView.heightAnchor).isActive = true
 
-    }
+    }*/
     private func addProgressBar() {
 
         progressBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
@@ -169,7 +167,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         progressBar.heightAnchor.constraint(equalTo: songControlView.heightAnchor).isActive = true
         
     }
-    private func addPlaybackRateButton() {
+    /*private func addPlaybackRateButton() {
         playbackRateButton.addTarget(self, action: #selector(playbackRateButtonAction), for: .touchUpInside)
         songControlView.addSubview(playbackRateButton)
         playbackRateButton.translatesAutoresizingMaskIntoConstraints = false
@@ -178,24 +176,24 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         playbackRateButton.centerYAnchor.constraint(equalTo: songControlView.centerYAnchor).isActive = true
         playbackRateButton.heightAnchor.constraint(equalTo: songControlView.heightAnchor).isActive = true
 
-    }
+    }*/
     private func addThumbnailImage() {
-        let thumbImage = makeCircleImage(radius: 15.0, color: .lightGray, borderColor: .clear, borderWidth: 0.0)
-        let selectedThumbImage = makeCircleImage(radius: 20.0, color: .lightGray, borderColor: .clear, borderWidth: 0.0)
+
+        thumbnailImageView.layer.borderColor = UIColor.lightGray.cgColor
+        if let image : UIImage = UIGraphicsGetImageFromCurrentImageContext() {
+            let thumbImage = cropToBounds(image: image, height: 5.0)
+            let selectedThumbImage = cropToBounds(image: image, height: 5.0)
+            progressBar.setThumbImage(thumbImage, for: .normal)
+            progressBar.setThumbImage(selectedThumbImage, for: .highlighted)
+        }
         self.addSubview(thumbnailImageView)
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
         thumbnailImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
         thumbnailImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 3.5).isActive = true
         thumbnailImageView.bottomAnchor.constraint(equalTo: songControlView.topAnchor, constant: -2.5).isActive = true
-        thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 1.25).isActive = true
-
-        thumbnailImageView.layer.cornerRadius = 5.0
-        thumbnailImageView.layer.borderWidth = 1.0
-        thumbnailImageView.layer.borderColor = UIColor.lightGray.cgColor
-        progressBar.setThumbImage(thumbImage, for: .normal)
-        progressBar.setThumbImage(selectedThumbImage, for: .highlighted)
+        thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor).isActive = true
     }
-    private func addNextButton() {
+    /*private func addNextButton() {
         nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
         self.addSubview(nextButton)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
@@ -203,18 +201,18 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         nextButton.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor).isActive = true
         nextButton.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.25).isActive = true
         nextButton.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.25).isActive = true
-    }
+    }*/
     private func addPlayPauseButtton() {
         pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
         self.addSubview(pausePlayButton)
         pausePlayButton.translatesAutoresizingMaskIntoConstraints = false
-        pausePlayButton.trailingAnchor.constraint(equalTo: nextButton.leadingAnchor, constant: -5).isActive = true
-        pausePlayButton.centerYAnchor.constraint(equalTo: nextButton.centerYAnchor).isActive = true
-        pausePlayButton.heightAnchor.constraint(equalTo: nextButton.heightAnchor, multiplier: 1.5).isActive = true
-        pausePlayButton.widthAnchor.constraint(equalTo: nextButton.heightAnchor, multiplier: 1.5).isActive = true
+        pausePlayButton.trailingAnchor.constraint(equalTo: songControlView.trailingAnchor, constant: -40).isActive = true
+        pausePlayButton.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor).isActive = true
+        pausePlayButton.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.4).isActive = true
+        pausePlayButton.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.4).isActive = true
 
     }
-    private func addPreviousButton() {
+    /*private func addPreviousButton() {
         previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
         self.addSubview(previousButton)
         previousButton.translatesAutoresizingMaskIntoConstraints = false
@@ -223,12 +221,12 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         previousButton.heightAnchor.constraint(equalTo: nextButton.heightAnchor).isActive = true
         previousButton.widthAnchor.constraint(equalTo: nextButton.heightAnchor).isActive = true
 
-    }
+    }*/
     private func addTitleLabel() {
         self.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: 10).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: previousButton.leadingAnchor, constant: -5).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: pausePlayButton.leadingAnchor, constant: -5).isActive = true
         titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor, constant: 5).isActive = true
         titleLabel.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.5, constant: -5).isActive = true
     }
@@ -236,7 +234,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         self.addSubview(artistLabel)
         artistLabel.translatesAutoresizingMaskIntoConstraints = false
         artistLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
-        artistLabel.trailingAnchor.constraint(equalTo: previousButton.leadingAnchor, constant: -5).isActive = true
+        artistLabel.trailingAnchor.constraint(equalTo: pausePlayButton.leadingAnchor, constant: -5).isActive = true
         artistLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
         artistLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor).isActive = true
     }
@@ -246,17 +244,17 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		self.audioPlayer.delegate = self
 
         addPlaylistControlView()
-        addRepeatButton()
-		addShuffleButton()
+        //addRepeatButton()
+		//addShuffleButton()
 		addSongControlView()
         addProgressBar()
-        addCurrentTimeLabel()
-		addTimeLeftLabel()
-		addPlaybackRateButton()
+        //addCurrentTimeLabel()
+		//addTimeLeftLabel()
+		//addPlaybackRateButton()
 		addThumbnailImage()
-		addNextButton()
+		//addNextButton()
         addPlayPauseButtton()
-        addPreviousButton()
+        //addPreviousButton()
         addTitleLabel()
         addArtistLabel()
 	}
@@ -298,7 +296,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		}
 	}
 	
-	@objc func shuffleButtonAction(sender: UIButton!) {
+	/*@objc func shuffleButtonAction(sender: UIButton!) {
 		print("shuffle Button tapped")
 		NPDelegate?.shufflePlaylist()
 	}
@@ -308,7 +306,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		print("new repeat status: ", !audioPlayer.isSongRepeat)
 		repeatButton.alpha = !audioPlayer.isSongRepeat ? 1 : 0.35
 		audioPlayer.isSongRepeat = !audioPlayer.isSongRepeat
-	}
+	}*/
 
 
 	@objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
@@ -328,11 +326,11 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 					audioPlayer.setPlayerCurrentTime(withPercentage: slider.value)
 				case .moved:
 				// handle drag moved
-					let songDuration = Float((currentTimeLabel.text?.convertToTimeInterval())! + (timeLeftLabel.text?.convertToTimeInterval())!)
-					let selectedTime = (songDuration * slider.value).rounded(.toNearestOrAwayFromZero)
-					let timeLeft = (songDuration * (1 - slider.value)).rounded(.toNearestOrAwayFromZero)
-					currentTimeLabel.text = TimeInterval(exactly: selectedTime)?.stringFromTimeInterval()
-					timeLeftLabel.text = TimeInterval(exactly: timeLeft)?.stringFromTimeInterval()
+					//let songDuration = Float((currentTimeLabel.text?.convertToTimeInterval())! + (timeLeftLabel.text?.convertToTimeInterval())!)
+					//let selectedTime = (songDuration * slider.value).rounded(.toNearestOrAwayFromZero)
+					//let timeLeft = (songDuration * (1 - slider.value)).rounded(.toNearestOrAwayFromZero)
+					//currentTimeLabel.text = TimeInterval(exactly: selectedTime)?.stringFromTimeInterval()
+					//timeLeftLabel.text = TimeInterval(exactly: timeLeft)?.stringFromTimeInterval()
 				break
 				default:
 					break
@@ -343,13 +341,13 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 	func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float) {
 		if !isProgressBarSliding {
 			if duration == 0 {
-				currentTimeLabel.text = "00:00"
-				timeLeftLabel.text = "00:00"
+				//currentTimeLabel.text = "00:00"
+				//timeLeftLabel.text = "00:00"
 				progressBar.value = 0.0
 				return
 			}
-			currentTimeLabel.text = TimeInterval(exactly: currentTime)?.stringFromTimeInterval()
-			timeLeftLabel.text = TimeInterval(exactly: duration-currentTime)?.stringFromTimeInterval()
+			//currentTimeLabel.text = TimeInterval(exactly: currentTime)?.stringFromTimeInterval()
+			//timeLeftLabel.text = TimeInterval(exactly: duration-currentTime)?.stringFromTimeInterval()
 			self.progressBar.value = currentTime/duration
 		}
 	}
@@ -362,25 +360,29 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		}
 	}
 
-	fileprivate func makeCircleImage(radius: CGFloat, color: UIColor,
-									 borderColor: UIColor, borderWidth: CGFloat) -> UIImage? {
-		let outerSize = CGSize(width: radius, height: radius)
-		let innerSize = CGSize(width: radius - 2.0 * borderWidth, height: radius - 2.0 * borderWidth)
-		UIGraphicsBeginImageContextWithOptions(outerSize, false, 0.0)
-		let context = UIGraphicsGetCurrentContext()
-		let outerBounds = CGRect(origin: .zero, size: outerSize)
-		context?.setFillColor(borderColor.cgColor)
-		context?.setStrokeColor(UIColor.clear.cgColor)
-		context?.addEllipse(in: outerBounds)
-		context?.drawPath(using: .fill)
-		let innerBounds = CGRect(x: borderWidth, y: borderWidth, width: innerSize.width, height: innerSize.height)
-		context?.setFillColor(color.cgColor)
-		context?.setStrokeColor(UIColor.clear.cgColor)
-		context?.addEllipse(in: innerBounds)
-		context?.drawPath(using: .fill)
-		let image = UIGraphicsGetImageFromCurrentImageContext()
-		UIGraphicsEndImageContext()
-		return image
-	}
+    private func cropToBounds(image: UIImage, height: Double) -> UIImage {
+        
+        let cgimage = image.cgImage!
+        let contextImage = UIImage(cgImage: cgimage)
+        let contextSize = contextImage.size
+        var posX: CGFloat = 0.0
+        var posY: CGFloat = 0.0
+        var cgwidth = CGFloat(height)
+        var cgheight = CGFloat(height)
+
+        posX = ((contextSize.width - contextSize.height) / 2)
+        posY = 0
+        cgwidth = contextSize.height
+        cgheight = contextSize.height
+
+        let rect: CGRect = CGRect(x: posX, y: posY, width: cgwidth, height: cgheight)
+
+        // Create bitmap image from context using the rect
+        let imageRef: CGImage = cgimage.cropping(to: rect)!
+
+        // Create a new image based on the imageRef and rotate back to the original orientation
+        return UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
+        
+    }
 	
 }

@@ -91,9 +91,41 @@ class RegistrationViewController: UIViewController {
         usernameField.resignFirstResponder()
         passwordField.resignFirstResponder()
         
-        guard let email = emailField.text, !email.isEmpty, email.contains("@"), email.contains("."),
-              let password = passwordField.text, !password.isEmpty, password.count >= 8,
-              let username = usernameField.text, !username.isEmpty else {
+        guard let username = usernameField.text, !username.isEmpty else {
+            print("Username Insufficient Error")
+            // error occurred
+            let alert = UIAlertController(title: "Username Error",
+                                          message: "Please enter a valid username.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss",
+                                          style: .cancel,
+                                          handler: nil))
+            self.present(alert, animated: true)
+            return
+        }
+        guard let email = emailField.text, !email.isEmpty, email.contains("@"), email.contains(".") else {
+            print("Email Insufficient Error")
+            // error occurred
+            let alert = UIAlertController(title: "Email Error",
+                                          message: "Please enter a valid email address.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss",
+                                          style: .cancel,
+                                          handler: nil))
+            self.present(alert, animated: true)
+            return
+        }
+    
+        guard let password = passwordField.text, !password.isEmpty, password.count >= 8 else {
+            print("Password Insufficient Error")
+            // error occurred
+            let alert = UIAlertController(title: "Password Error",
+                                          message: "Please enter a password of 8 or more characters.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss",
+                                          style: .cancel,
+                                          handler: nil))
+            self.present(alert, animated: true)
             return
         }
         
@@ -101,8 +133,20 @@ class RegistrationViewController: UIViewController {
             DispatchQueue.main.async {
                 if registered {
                     // good to go
+                    print("Registration successful")
+                    let alert = UIAlertController(title: "Registration Successful",
+                                                  message: "Welcome to Playlist Pro!",
+                                                  preferredStyle: .alert)
+                    alert.addAction(UIAlertAction(title: "Dismiss",
+                                                  style: .cancel,
+                                                  handler: nil))
+                    self.present(alert, animated: true)
+                    
+                    //self.dismiss(animated: true, completion: nil)
+                    //self.present(UINavigationController(rootViewController: HomeViewController()), animated: false)
                 }
                 else {
+                    print("Registration error")
                     // failed
                 }
             }
@@ -125,3 +169,4 @@ extension RegistrationViewController: UITextFieldDelegate {
         return true
     }
 }
+
