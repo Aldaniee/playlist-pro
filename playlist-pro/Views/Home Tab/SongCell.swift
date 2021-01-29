@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LibraryCell : UITableViewCell {
+class SongCell : UITableViewCell {
   
 	var songDict = Dictionary<String, Any>()
 	let thumbnailImageView: UIImageView = {

@@ -11,7 +11,7 @@ import FirebaseAuth
 
 class HomeViewController: UIViewController {
 	
-	var playlistManager = PlaylistManager()
+	var playlistManager = QueueManager()
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -32,7 +32,7 @@ class HomeViewController: UIViewController {
         navigationController?.pushViewController(vc, animated: true)
     }
 	override func viewWillAppear(_ animated: Bool) {
-		playlistManager.computePlaylist()
+		playlistManager.computeQueue()
 		playlistManager.playlistLibraryView.scrollToTop()
 	}
 	

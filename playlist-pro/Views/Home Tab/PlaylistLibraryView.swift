@@ -12,7 +12,7 @@ protocol PlaylistLibraryViewDelegate: class {
 	func didSelectSong(songDict: Dictionary<String, Any>)
 }
 
-class PlaylistLibraryView: LibraryTableView {
+class PlaylistLibraryView: PlaylistTableView {
 
 	weak var PLDelegate: PlaylistLibraryViewDelegate?
 	
@@ -29,7 +29,7 @@ class PlaylistLibraryView: LibraryTableView {
 
 	override init(frame: CGRect, style: UITableView.Style) {
 		super.init(frame: frame, style: style)
-		playlistArray = LM.libraryArray
+        playlistArray = LM.songLibraryArray.getSongList()
 		let longpress = UILongPressGestureRecognizer(target: self, action: #selector(longPressGestureRecognized(gestureRecognizer:)))
 		longpress.minimumPressDuration = 0.3
 		self.addGestureRecognizer(longpress)
@@ -44,7 +44,7 @@ class PlaylistLibraryView: LibraryTableView {
     }
     
 	override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-		let cell = tableView.dequeueReusableCell(withIdentifier: "LibraryCell", for: indexPath as IndexPath) as! LibraryCell
+		let cell = tableView.dequeueReusableCell(withIdentifier: "SongCell", for: indexPath as IndexPath) as! SongCell
 
 		let songDict = playlistArray.object(at: (playlistArray.count - 2 - indexPath.row) % playlistArray.count) as! Dictionary<String, Any>
 		cell.songDict = songDict
@@ -53,7 +53,7 @@ class PlaylistLibraryView: LibraryTableView {
 	}
 	
 	override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-		let cell = tableView.cellForRow(at: indexPath) as! LibraryCell
+		let cell = tableView.cellForRow(at: indexPath) as! SongCell
 
 		print("Selected cell number \(indexPath.row) -> \(cell.songDict["title"] ?? "")")
 
@@ -93,7 +93,7 @@ class PlaylistLibraryView: LibraryTableView {
 		switch state {
 			case .began:
 				LongPressPersistentValues.indexPath = indexPath
-				let cell = self.cellForRow(at: indexPath) as! LibraryCell
+				let cell = self.cellForRow(at: indexPath) as! SongCell
 				LongPressPersistentValues.cellSnapShot = cell.snapshotOfView()
 				var center = cell.center
 				LongPressPersistentValues.cellSnapShot?.center = center
@@ -128,7 +128,7 @@ class PlaylistLibraryView: LibraryTableView {
 			}
 
 			default:
-				let cell = self.cellForRow(at: LongPressPersistentValues.indexPath!) as! LibraryCell
+				let cell = self.cellForRow(at: LongPressPersistentValues.indexPath!) as! SongCell
 				cell.isHidden = false
 				cell.alpha = 0.0
 				UIView.animate(withDuration: 0.25, animations: {

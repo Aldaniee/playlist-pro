@@ -6,9 +6,10 @@
 //  Copyright © 2019 Youstanzr. All rights reserved.
 //
 import UIKit
+import MaterialComponents.MaterialSlider
 
 protocol NowPlayingViewDelegate: class {
-	func shufflePlaylist()
+	func shuffleQueue()
 }
 
 class NowPlayingView: UIView, YYTAudioPlayerDelegate {
@@ -53,7 +54,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 	let songControlView = UIView()
 	let progressBar: UISlider = {
 		let pBar = UISlider()
-        pBar.tintColor = Constants.UI.orange
+        pBar.tintColor = Constants.UI.gray
 		return pBar
 	}()
 	var isProgressBarSliding = false
@@ -179,13 +180,6 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
     }*/
     private func addThumbnailImage() {
 
-        thumbnailImageView.layer.borderColor = UIColor.lightGray.cgColor
-        if let image : UIImage = UIGraphicsGetImageFromCurrentImageContext() {
-            let thumbImage = cropToBounds(image: image, height: 5.0)
-            let selectedThumbImage = cropToBounds(image: image, height: 5.0)
-            progressBar.setThumbImage(thumbImage, for: .normal)
-            progressBar.setThumbImage(selectedThumbImage, for: .highlighted)
-        }
         self.addSubview(thumbnailImageView)
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
         thumbnailImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
@@ -359,30 +353,5 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 			self.pausePlayButton.setImage(UIImage(named: "play"), for: UIControl.State.normal)
 		}
 	}
-
-    private func cropToBounds(image: UIImage, height: Double) -> UIImage {
-        
-        let cgimage = image.cgImage!
-        let contextImage = UIImage(cgImage: cgimage)
-        let contextSize = contextImage.size
-        var posX: CGFloat = 0.0
-        var posY: CGFloat = 0.0
-        var cgwidth = CGFloat(height)
-        var cgheight = CGFloat(height)
-
-        posX = ((contextSize.width - contextSize.height) / 2)
-        posY = 0
-        cgwidth = contextSize.height
-        cgheight = contextSize.height
-
-        let rect: CGRect = CGRect(x: posX, y: posY, width: cgwidth, height: cgheight)
-
-        // Create bitmap image from context using the rect
-        let imageRef: CGImage = cgimage.cropping(to: rect)!
-
-        // Create a new image based on the imageRef and rotate back to the original orientation
-        return UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
-        
-    }
 	
 }

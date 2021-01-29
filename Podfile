@@ -14,7 +14,8 @@ target 'playlist-pro' do
   pod 'Firebase/Storage'
   pod 'Alamofire', '~> 5.2'
   pod "XCDYouTubeKit", "~> 2.15"
-
+  pod 'MaterialComponents/Slider'
+  
   target 'playlist-proTests' do
     inherit! :search_paths
     # Pods for testing

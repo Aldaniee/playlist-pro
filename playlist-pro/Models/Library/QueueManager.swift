@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PlaylistManager: NSObject, PlaylistLibraryViewDelegate, NowPlayingViewDelegate {
+class QueueManager: NSObject, PlaylistLibraryViewDelegate, NowPlayingViewDelegate {
 	
 	var nowPlayingView: NowPlayingView!
 	var playlistLibraryView: PlaylistLibraryView!
@@ -69,14 +69,14 @@ class PlaylistManager: NSObject, PlaylistLibraryViewDelegate, NowPlayingViewDele
 		refreshNowPlayingView()
 	}
 	
-	func movePlaylistForward() {
+	func moveQueueForward() {
 		playlistLibraryView.playlistArray.insert(playlistLibraryView.playlistArray.lastObject!, at: 0)
 		playlistLibraryView.playlistArray.removeObject(at: playlistLibraryView.playlistArray.count - 1)
 		playlistLibraryView.reloadData()
 		refreshNowPlayingView()
 	}
 	
-	func movePlaylistBackward() {
+	func moveQueueBackward() {
 		playlistLibraryView.playlistArray.add(playlistLibraryView.playlistArray.object(at: 0))
 		playlistLibraryView.playlistArray.removeObject(at: 0)
 		playlistLibraryView.reloadData()
@@ -88,7 +88,7 @@ class PlaylistManager: NSObject, PlaylistLibraryViewDelegate, NowPlayingViewDele
 		nowPlayingView.pausePlayButtonAction(sender: nil)
 	}
 	
-	func shufflePlaylist() {
+	func shuffleQueue() {
 		if playlistLibraryView.playlistArray.count <= 1 {
 			return
 		}
@@ -102,8 +102,8 @@ class PlaylistManager: NSObject, PlaylistLibraryViewDelegate, NowPlayingViewDele
 	}
 
 	// MARK: Filter processing functions
-	func computePlaylist() {
-		let newPlaylist = LibraryManager.getLibraryArray()
+	func computeQueue() {
+        let newPlaylist = playlistLibraryView.LM.songLibraryArray.getSongList()
 		updatePlaylistLibrary(toPlaylist: newPlaylist)
 	}
 	

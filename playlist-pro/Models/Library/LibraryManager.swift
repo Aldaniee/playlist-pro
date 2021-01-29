@@ -26,32 +26,26 @@ class LibraryManager {
 		case min
 		case max
 	}
-	var libraryArray: NSMutableArray!
-
+    // An array storing all songs
+	var songLibraryArray: Playlist!
+    // An array of playlists in the application
 	
     init() {
-        self.refreshLibraryArray()
+        self.songLibraryArray = Playlist.init()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 	
-	func refreshLibraryArray() {
-		libraryArray = NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray())
-	}
-
-	static func getLibraryArray() -> NSMutableArray {
-		return NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray())
-	}
-	
+    
 	/*
 	If the following parameters have no value then pass nil and the function will handle it
 		Song ID -> will generate a custom id
 		Song Title -> will be set to Song ID
 		Thumbnail URL -> It will skip downloading a thumbnail image
 	*/
-	func addSongToLibrary(songTitle: String?, songUrl: URL, songExtension: String , thumbnailUrl: URL?, songID: String?, completion: (() -> Void)? = nil) {
+    func addSongToLibrary(songTitle: String?, songUrl: URL, songExtension: String , thumbnailUrl: URL?, songID: String?, completion: (() -> Void)? = nil) {
 		let sID = songID == nil ? "dl_" + generateIDFromTimeStamp() : "yt_" + songID! + generateIDFromTimeStamp()
 		var newExtension: String
 		var errorStr: String?
@@ -120,9 +114,15 @@ class LibraryManager {
                                 "fileExtension": newExtension] as [String : Any]
 				let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
 				let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
-				self.libraryArray.add(enrichedDict)
-				UserDefaults.standard.set(self.libraryArray, forKey: "LibraryArray")
-				self.refreshLibraryArray()
+                self.songLibraryArray.add(song: enrichedDict)
+                /*if (playlistID != nil) {
+                    print("Adding song to playlist: \(playlistID!)")
+                    if(playlistID! >= 0 && playlistID! < self.playlistLibraryArray.count) {
+                        self.playlistLibraryArray[playlistID!].add(song: enrichedDict)
+                    }
+                }*/
+				UserDefaults.standard.set(self.songLibraryArray, forKey: "LibraryArray")
+                self.songLibraryArray.refreshPlaylist()
 				completion?()
 			} else {	// In case of error in adding the song to the library
 				_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
@@ -212,25 +212,25 @@ class LibraryManager {
     
 	func deleteSongFromLibrary(songID: String) {
 		var songDict = Dictionary<String, Any>()
-		for i in 0 ..< libraryArray.count {
-			songDict = libraryArray.object(at: i) as! Dictionary<String, Any>
+		for i in 0 ..< songLibraryArray.count() {
+            songDict = songLibraryArray.get(at: i)
 			if songDict["id"] as! String == songID {
 				let songExt = (songDict["fileExtension"] as? String) ?? "m4a"  //support legacy code
 				if LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).\(songExt)") {
 					_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).jpg")
-					libraryArray.remove(songDict)
+                    songLibraryArray.remove(song: songDict)
 				}
 				break
 			}
 		}
-		UserDefaults.standard.set(libraryArray, forKey: "LibraryArray")
+		UserDefaults.standard.set(songLibraryArray, forKey: "LibraryArray")
 	}
 
 	func checkSongExistInLibrary(songLink: String) -> Bool {
-		self.refreshLibraryArray()
+        self.songLibraryArray.refreshPlaylist()
 		var songDict = Dictionary<String, Any>()
-		for i in 0 ..< libraryArray.count {
-			songDict = libraryArray.object(at: i) as! Dictionary<String, Any>
+		for i in 0 ..< songLibraryArray.count() {
+            songDict = songLibraryArray.get(at: i)
 			if songDict["link"] as! String == songLink {
 				return true
 			}
@@ -239,10 +239,10 @@ class LibraryManager {
 	}
 
 	func getSong(forID songID: String) -> Dictionary<String, Any> {
-		self.refreshLibraryArray()
+        self.songLibraryArray.refreshPlaylist()
 		var songDict = Dictionary<String, Any>()
-		for i in 0 ..< libraryArray.count {
-			songDict = libraryArray.object(at: i) as! Dictionary<String, Any>
+		for i in 0 ..< songLibraryArray.count() {
+			songDict = songLibraryArray.get(at: i)
 			if songDict["id"] as! String == songID {
 				return songDict
 			}
@@ -251,13 +251,13 @@ class LibraryManager {
 	}
 
     func updateSong(newSong: Dictionary<String, Any>) {
-		self.refreshLibraryArray()
+        self.songLibraryArray.refreshPlaylist()
 		var songDict = Dictionary<String, Any>()
-		for i in 0 ..< libraryArray.count {
-			songDict = libraryArray.object(at: i) as! Dictionary<String, Any>
+		for i in 0 ..< songLibraryArray.count() {
+			songDict = songLibraryArray.get(at: i)
 			if songDict["id"] as! String == newSong["id"] as! String {
-				libraryArray.replaceObject(at: i, with: newSong)
-				UserDefaults.standard.set(libraryArray, forKey: "LibraryArray")
+                songLibraryArray.replace(index: i, song: newSong)
+				UserDefaults.standard.set(songLibraryArray, forKey: "LibraryArray")
 				break
 			}
 		}
@@ -351,54 +351,5 @@ class LibraryManager {
 			timestamp /= 10
 		}
 		return str
-	}
-
-	static func exportBackupString() -> String {
-		let songArr = UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray()
-		var songDict = Dictionary<String, Any>()
-		var bkpStr = "[\n"
-		for i in 0 ..< songArr.count {
-			songDict = songArr.object(at: i) as! Dictionary<String, Any>
-			bkpStr += "{\n"
-			bkpStr += "\"id\": \"" + (songDict["id"] as! String) + "\",\n"
-			bkpStr += "\"title\": \"" + (songDict["title"] as! String) + "\",\n"
-			bkpStr += "\"artists\": [\"" + (songDict["artists"] as? NSArray ?? NSArray()).componentsJoined(by: "\", \"") + "\"],\n"
-			bkpStr += "\"album\": \"" + (songDict["album"] as! String) + "\",\n"
-			bkpStr += "\"releaseYear\": \"" + (songDict["releaseYear"] as! String) + "\",\n"
-			bkpStr += "\"lyrics\": \"" + (songDict["lyrics"] as! String) + "\",\n"
-			bkpStr += "\"tags\": [\"" + (songDict["tags"] as? NSArray ?? NSArray()).componentsJoined(by: "\", \"") + "\"],\n"
-			bkpStr += "\"link\": \"" + (songDict["link"] as? String ?? "") + "\",\n"
-			bkpStr += "\"fileExtension\": \"" + (songDict["fileExtension"] as? String ?? "m4a") + "\"\n"
-			bkpStr += "},\n"
-		}
-		bkpStr.removeLast(2)
-		bkpStr += "\n]"
-		return bkpStr.replacingOccurrences(of: "[\"\"]", with: "[]")
-	}
-
-	func importBackupString(bkpString: String) {
-		struct bkpSongStruct: Decodable {
-			let id: String
-			let title: String
-			let artists: Array<String>
-			let album: String
-			let releaseYear: String
-			let lyrics: String
-			let tags: Array<String>
-			let link: String
-			let fileExtension: String
-		}
-		print(bkpString)
-		let bkpSongs: [bkpSongStruct] = try! JSONDecoder().decode([bkpSongStruct].self, from: bkpString.data(using: .utf8)!)
-		print(bkpSongs)
-		
-		let dispatchGroup = DispatchGroup()  // To keep track of the async download group
-		for bkpSong in bkpSongs {
-			dispatchGroup.enter()
-			self.addSongToLibrary(songTitle: bkpSong.title, songUrl: URL(string: bkpSong.link)!, songExtension: bkpSong.fileExtension, thumbnailUrl: nil, songID: bkpSong.id, completion: {
-				dispatchGroup.leave()
-			})
-			dispatchGroup.wait()
-		}
 	}
 }

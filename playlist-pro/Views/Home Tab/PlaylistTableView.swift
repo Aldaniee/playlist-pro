@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LibraryTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
+class PlaylistTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
  
     var LM: LibraryManager!
     
@@ -20,24 +20,24 @@ class LibraryTableView: UITableView, UITableViewDelegate, UITableViewDataSource 
         super.init(frame: frame, style: style)
         LM = LibraryManager.init()
 
-        self.register(LibraryCell.self, forCellReuseIdentifier: "LibraryCell")
+        self.register(SongCell.self, forCellReuseIdentifier: "SongCell")
         self.delegate = self
         self.dataSource = self
     }
 
     func refreshTableView() {
-        self.LM.refreshLibraryArray()
+        self.LM.songLibraryArray.refreshPlaylist()
         self.reloadData()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return LM.libraryArray.count
+        return LM.songLibraryArray.count()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "LibraryCell", for: indexPath as IndexPath) as! LibraryCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "SongCell", for: indexPath as IndexPath) as! SongCell
         
-        let songDict = LM.libraryArray.object(at: LM.libraryArray.count - 1 - indexPath.row) as! Dictionary<String, Any>
+        let songDict = LM.songLibraryArray.get(at: LM.songLibraryArray.count() - 1 - indexPath.row) as! Dictionary<String, Any>
         cell.songDict = songDict
         cell.refreshCell()
         return cell
@@ -67,9 +67,9 @@ class LibraryTableView: UITableView, UITableViewDelegate, UITableViewDataSource 
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
-            let cell = tableView.cellForRow(at: indexPath) as! LibraryCell
+            let cell = tableView.cellForRow(at: indexPath) as! SongCell
             LM.deleteSongFromLibrary(songID: cell.songDict["id"] as? String ?? "")
-            LM.refreshLibraryArray()
+            LM.songLibraryArray.refreshPlaylist()
             tableView.reloadData()
         }
     }

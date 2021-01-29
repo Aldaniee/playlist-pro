@@ -19,7 +19,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 
 	weak var delegate: YYTAudioPlayerDelegate?
 
-	private var playlistManager: PlaylistManager!
+	private var playlistManager: QueueManager!
 	private var audioPlayer: AVAudioPlayer!
 	private var songsPlaylist: NSMutableArray!
 	private var songDict: Dictionary<String, Any>!
@@ -28,7 +28,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	private(set) var isSuspended: Bool = false
 	var isSongRepeat: Bool = false
 	
-	init(playlistManager: PlaylistManager) {
+	init(playlistManager: QueueManager) {
 		super.init()
 		self.playlistManager = playlistManager
 		setupRemoteTransportControls()
@@ -130,7 +130,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	
 	func next() {
 		if !isSuspended {
-			playlistManager.movePlaylistForward()
+			playlistManager.moveQueueForward()
 			currentSongIndex = currentSongIndex % songsPlaylist.count
 			if setupPlayer(withSongAtindex: currentSongIndex) {
 				play()
@@ -141,7 +141,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	func prev() {
 		if !isSuspended {
 			if Float(audioPlayer?.currentTime ?? 0) < 10.0 {
-				playlistManager.movePlaylistBackward()
+				playlistManager.moveQueueBackward()
 				currentSongIndex = currentSongIndex % songsPlaylist.count
 				if setupPlayer(withSongAtindex: currentSongIndex) {
 					play()
