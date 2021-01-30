@@ -6,7 +6,7 @@
 //
 
 import FirebaseDatabase
-
+import FirebaseAuth
 public class DatabaseManager {
     static let shared = DatabaseManager()
     
@@ -41,5 +41,69 @@ public class DatabaseManager {
             
         }
     }
+    /// Updates a user's music library on the database to match the library on the device
+    /// - Parameters
+    ///     - library: Playlist object holding all of a user's songs
+    ///     - user: User object for the current user
+    ///     - Async callback for result if database entry succeeded
+    func updateLibrary(library: Playlist, user: User, completion: @escaping (Bool) -> Void) {
+        
+        if(user.isAnonymous) {
+            database.child("anonymous-users/\(user.uid)/library").setValue(library.getSongList()) { error, _ in
+                if error == nil {
+                    // succeeded
+                }
+                else {
+                    print(error!)
+                    // failed
+                }
+                
+            }
+        }
+        else {
+            if(user.email == nil) {
+                print("error missing email")
+            }
+            else {
+                database.child("\(user.email!.safeDatabaseKey())/library").setValue(library.getSongList()) { error, _ in
+                    if error == nil {
+                        // succeeded
+                    }
+                    else {
+                        print(error!)
+                        // failed
+                    }
+                    
+                }
+            }
+        }
 
+    }
+    /// Updates a user's music library on the device to match the database
+    /// - Parameters
+    ///     - user: User object for the current user
+    ///     - Async callback for result if database entry succeeded
+    func getLibrary(user: User, oldLibrary: NSMutableArray!, completion: @escaping (Bool) -> Void) -> NSMutableArray {
+        var library = oldLibrary
+        var userPath : String!
+        if(user.isAnonymous) {
+            userPath = "anonymous-users/\(user.uid)"
+        }
+        else {
+            userPath = user.email!.safeDatabaseKey()
+        }
+        database.child(userPath).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? [String : Any] {
+                library = dictionary["library"] as? NSMutableArray
+                dump(library)
+            }
+            else {
+                print("Snapshot Error")
+            }
+        }) { (error) in
+                print(error.localizedDescription)
+                return
+        }
+        return library!
+    }
 }

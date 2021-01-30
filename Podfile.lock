@@ -88,58 +88,6 @@ PODS:
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.5.0)
   - leveldb-library (1.22)
-  - MaterialComponents/AnimationTiming (121.0.0)
-  - MaterialComponents/Availability (121.0.0)
-  - MaterialComponents/Elevation (121.0.0):
-    - MaterialComponents/Availability
-    - MaterialComponents/private/Color
-    - MaterialComponents/private/Math
-  - MaterialComponents/Ink (121.0.0):
-    - MaterialComponents/Availability
-    - MaterialComponents/private/Color
-    - MaterialComponents/private/Math
-  - MaterialComponents/Palettes (121.0.0)
-  - MaterialComponents/private/Application (121.0.0)
-  - MaterialComponents/private/Color (121.0.0):
-    - MaterialComponents/Availability
-  - MaterialComponents/private/Math (121.0.0)
-  - MaterialComponents/private/ThumbTrack (121.0.0):
-    - MaterialComponents/Availability
-    - MaterialComponents/Ink
-    - MaterialComponents/private/Math
-    - MaterialComponents/Ripple
-    - MaterialComponents/ShadowElevations
-    - MaterialComponents/ShadowLayer
-    - MaterialComponents/ShapeLibrary
-    - MaterialComponents/Typography
-    - MDFInternationalization
-  - MaterialComponents/Ripple (121.0.0):
-    - MaterialComponents/AnimationTiming
-    - MaterialComponents/Availability
-    - MaterialComponents/private/Color
-    - MaterialComponents/private/Math
-  - MaterialComponents/ShadowElevations (121.0.0)
-  - MaterialComponents/ShadowLayer (121.0.0):
-    - MaterialComponents/ShadowElevations
-  - MaterialComponents/ShapeLibrary (121.0.0):
-    - MaterialComponents/private/Math
-    - MaterialComponents/Shapes
-  - MaterialComponents/Shapes (121.0.0):
-    - MaterialComponents/private/Color
-    - MaterialComponents/private/Math
-    - MaterialComponents/ShadowLayer
-  - MaterialComponents/Slider (121.0.0):
-    - MaterialComponents/Elevation
-    - MaterialComponents/Palettes
-    - MaterialComponents/private/Math
-    - MaterialComponents/private/ThumbTrack
-    - MaterialComponents/ShadowElevations
-  - MaterialComponents/Typography (121.0.0):
-    - MaterialComponents/private/Application
-    - MaterialComponents/private/Math
-    - MDFTextAccessibility
-  - MDFInternationalization (2.0.0)
-  - MDFTextAccessibility (2.0.0)
   - nanopb (2.30906.0):
     - nanopb/decode (= 2.30906.0)
     - nanopb/encode (= 2.30906.0)
@@ -156,7 +104,6 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - Firebase/Database
   - Firebase/Storage
-  - MaterialComponents/Slider
   - XCDYouTubeKit (~> 2.15)
 
 SPEC REPOS:
@@ -176,9 +123,6 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - leveldb-library
-    - MaterialComponents
-    - MDFInternationalization
-    - MDFTextAccessibility
     - nanopb
     - PromisesObjC
     - XCDYouTubeKit
@@ -199,13 +143,10 @@ SPEC CHECKSUMS:
   GoogleUtilities: 3dc4ff0d5e4840e2fa8eef0889620e8c33d4218c
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
-  MaterialComponents: 2f6563c398b29e001cc58a764359b9fcbd991ca7
-  MDFInternationalization: 010097556d6b09d2c4ea38e0820ea6d37be6a314
-  MDFTextAccessibility: 85c09a1bd9c321f494348e632a25063bcda35a53
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
   XCDYouTubeKit: c6747c622dd0b52c9e668c028f68097eeffaea39
 
-PODFILE CHECKSUM: e3414169f8c6bd28098cc47f585d2cf109702fe1
+PODFILE CHECKSUM: 5aa8febd35102cf7b12505006398f6eebcdadc25
 
 COCOAPODS: 1.10.0

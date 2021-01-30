@@ -103,7 +103,7 @@ class QueueManager: NSObject, PlaylistLibraryViewDelegate, NowPlayingViewDelegat
 
 	// MARK: Filter processing functions
 	func computeQueue() {
-        let newPlaylist = playlistLibraryView.LM.songLibraryArray.getSongList()
+        let newPlaylist = playlistLibraryView.LM.songLibrary.getSongList()
 		updatePlaylistLibrary(toPlaylist: newPlaylist)
 	}
 	

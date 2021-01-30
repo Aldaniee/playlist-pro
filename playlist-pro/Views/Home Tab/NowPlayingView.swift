@@ -254,6 +254,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 	}
 	
     @objc func pausePlayButtonAction(sender: UIButton?) {
+        audioPlayer.playlistManager.playlistLibraryView.LM.importLibraryFromDatabase()
 		if self.audioPlayer.isPlaying() {
 			print("Paused")
 			audioPlayer.pause()

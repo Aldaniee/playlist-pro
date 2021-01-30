@@ -104,7 +104,7 @@ class YYTRangeSlider: UIControl {
 		}
 	}
 
-	var thumbSize: CGFloat = 20 {
+	var thumbSize: CGFloat = 10 {
 		didSet {
 			upperThumbImageView.image = makeCircleImage(radius: thumbSize, color: thumbColor,
 														borderColor: thumbBorderColor, borderWidth: thumbBorderWidth)
@@ -114,7 +114,7 @@ class YYTRangeSlider: UIControl {
 		}
 	}
 	
-	var highlightedThumbSize: CGFloat = 25.0
+	var highlightedThumbSize: CGFloat = 10
 	var isPushEnabled = true
 	
 	private let trackLayer = YYTRangeSliderTrackLayer()

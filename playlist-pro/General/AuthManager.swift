@@ -56,6 +56,7 @@ public class AuthManager {
             Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
                 guard authResult != nil, error == nil else {
                     print("Signed in with email")
+                    
                     completion(false)
                     return
                 }

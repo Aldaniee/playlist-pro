@@ -7,11 +7,12 @@
 //
 
 import UIKit
+import FirebaseAuth
 
 class PlaylistTableView: UITableView, UITableViewDelegate, UITableViewDataSource {
  
     var LM: LibraryManager!
-    
+        
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
@@ -19,25 +20,26 @@ class PlaylistTableView: UITableView, UITableViewDelegate, UITableViewDataSource
     override init(frame: CGRect, style: UITableView.Style) {
         super.init(frame: frame, style: style)
         LM = LibraryManager.init()
-
+        LM.updateLibraryToDatabase()
+        
         self.register(SongCell.self, forCellReuseIdentifier: "SongCell")
         self.delegate = self
         self.dataSource = self
     }
 
     func refreshTableView() {
-        self.LM.songLibraryArray.refreshPlaylist()
+        self.LM.songLibrary.refreshPlaylist()
         self.reloadData()
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return LM.songLibraryArray.count()
+        return LM.songLibrary.count()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "SongCell", for: indexPath as IndexPath) as! SongCell
         
-        let songDict = LM.songLibraryArray.get(at: LM.songLibraryArray.count() - 1 - indexPath.row) as! Dictionary<String, Any>
+        let songDict = LM.songLibrary.get(at: LM.songLibrary.count() - 1 - indexPath.row) 
         cell.songDict = songDict
         cell.refreshCell()
         return cell
@@ -69,7 +71,7 @@ class PlaylistTableView: UITableView, UITableViewDelegate, UITableViewDataSource
         if (editingStyle == .delete) {
             let cell = tableView.cellForRow(at: indexPath) as! SongCell
             LM.deleteSongFromLibrary(songID: cell.songDict["id"] as? String ?? "")
-            LM.songLibraryArray.refreshPlaylist()
+            LM.songLibrary.refreshPlaylist()
             tableView.reloadData()
         }
     }

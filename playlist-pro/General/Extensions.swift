@@ -11,7 +11,7 @@ import AVFoundation
 
 extension String {
     func safeDatabaseKey() -> String {
-        return replacingOccurrences(of: ".", with: "-").replacingOccurrences(of: "@", with: "-")
+        return replacingOccurrences(of: ".", with: "-").replacingOccurrences(of: "@", with: "-").lowercased()
     }
 }
 

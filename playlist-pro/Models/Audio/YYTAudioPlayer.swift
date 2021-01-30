@@ -19,7 +19,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 
 	weak var delegate: YYTAudioPlayerDelegate?
 
-	private var playlistManager: QueueManager!
+    var playlistManager: QueueManager!
 	private var audioPlayer: AVAudioPlayer!
 	private var songsPlaylist: NSMutableArray!
 	private var songDict: Dictionary<String, Any>!

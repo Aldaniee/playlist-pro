@@ -29,7 +29,7 @@ class PlaylistLibraryView: PlaylistTableView {
 
 	override init(frame: CGRect, style: UITableView.Style) {
 		super.init(frame: frame, style: style)
-        playlistArray = LM.songLibraryArray.getSongList()
+        playlistArray = LM.songLibrary.getSongList()
 		let longpress = UILongPressGestureRecognizer(target: self, action: #selector(longPressGestureRecognized(gestureRecognizer:)))
 		longpress.minimumPressDuration = 0.3
 		self.addGestureRecognizer(longpress)
