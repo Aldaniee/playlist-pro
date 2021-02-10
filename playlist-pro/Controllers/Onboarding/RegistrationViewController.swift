@@ -133,6 +133,8 @@ class RegistrationViewController: UIViewController {
             DispatchQueue.main.async {
                 if registered {
                     // good to go
+                    self.present(UINavigationController(rootViewController: HomeViewController()), animated: false)
+
                     print("Registration successful")
                     let alert = UIAlertController(title: "Registration Successful",
                                                   message: "Welcome to Playlist Pro!",
@@ -143,12 +145,12 @@ class RegistrationViewController: UIViewController {
                     self.present(alert, animated: true)
                     
                     //self.dismiss(animated: true, completion: nil)
-                    //self.present(UINavigationController(rootViewController: HomeViewController()), animated: false)
                 }
                 else {
                     print("Registration error")
                     // failed
                 }
+                print("OKAY WERE HERE AT LEASt")
             }
         }
 

@@ -6,7 +6,6 @@
 //  Copyright © 2019 Youstanzr. All rights reserved.
 //
 import UIKit
-import MaterialComponents.MaterialSlider
 
 protocol NowPlayingViewDelegate: class {
 	func shuffleQueue()
