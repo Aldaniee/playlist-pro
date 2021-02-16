@@ -52,7 +52,7 @@ class QueueManager: NSObject, PlaylistLibraryViewDelegate, NowPlayingViewDelegat
 			nowPlayingView.thumbnailImageView.image = UIImage(named: "placeholder")
 		}
 
-		let oldPlaybackRate = audioPlayer.getPlayerRate()
+		//let oldPlaybackRate = audioPlayer.getPlayerRate()
 		
 		if playlistLibraryView.playlistArray.count > 0 {
 			_ = audioPlayer.setupPlayer(withPlaylist: NSMutableArray(array: playlistLibraryView.playlistArray.reversed()))

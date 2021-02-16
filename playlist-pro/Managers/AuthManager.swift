@@ -10,8 +10,9 @@ import FirebaseAuth
 public class AuthManager {
     static let shared = AuthManager()
     
-    // MARK: - Public
+    var isSignedIn = Auth.auth().currentUser != nil
     
+    // MARK: - Public
     public func registerNewUser(username: String, email: String, password: String, completion: @escaping (Bool) -> Void) {
         // Check if username and email is avialable
         DatabaseManager.shared.canCreateNewUser(with: email, username: username) { canCreate in
@@ -62,9 +63,10 @@ public class AuthManager {
                 }
             }
         }
-        else if let username = username {
-            // username log in
-        }
+        /// TODO: Implement username login
+        /*else if let username = username {
+            
+        }*/
     }
     /// Attempt to log out Firebase User
     public func logOut(completion: (Bool) -> Void) {

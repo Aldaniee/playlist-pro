@@ -33,10 +33,13 @@
 		EA9D945025938AA80057493D /* SplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D944F25938AA80057493D /* SplashScreenViewController.swift */; };
 		EABA041B25B68CA1000BF883 /* PlaylistTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA041A25B68CA1000BF883 /* PlaylistTableView.swift */; };
 		EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */; };
+		EAC06DD425DC1CA300E86162 /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06DD325DC1CA300E86162 /* PlaylistViewController.swift */; };
+		EAC06DE025DC1CE800E86162 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06DDF25DC1CE800E86162 /* HapticsManager.swift */; };
+		EAC06DE525DC1D4F00E86162 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06DE425DC1D4F00E86162 /* TabBarViewController.swift */; };
 		EAC2DC9025AB862A006EA7AF /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC8F25AB862A006EA7AF /* Alamofire */; };
 		EAC2DC9625AB86F5006EA7AF /* XCDYouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC9525AB86F5006EA7AF /* XCDYouTubeKit */; };
 		EAE1459C2585858800C09FE9 /* ImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE1459B2585858800C09FE9 /* ImportViewController.swift */; };
-		EAE145B025858AFE00C09FE9 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145AF25858AFE00C09FE9 /* AccountViewController.swift */; };
+		EAE145B025858AFE00C09FE9 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145AF25858AFE00C09FE9 /* LibraryViewController.swift */; };
 		EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */; };
 		EAE145E22585933000C09FE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EAE145E12585933000C09FE9 /* GoogleService-Info.plist */; };
 		EAE145E7258593A600C09FE9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145E6258593A600C09FE9 /* LoginViewController.swift */; };
@@ -47,9 +50,7 @@
 		EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920E12548DA1200D22ACF /* AppDelegate.swift */; };
 		EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920E32548DA1200D22ACF /* SceneDelegate.swift */; };
 		EAF920E62548DA1200D22ACF /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920E52548DA1200D22ACF /* SearchViewController.swift */; };
-		EAF920E92548DA1200D22ACF /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAF920E72548DA1200D22ACF /* Main.storyboard */; };
 		EAF920EB2548DA1400D22ACF /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EAF920EA2548DA1400D22ACF /* Assets.xcassets */; };
-		EAF920EE2548DA1400D22ACF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EAF920EC2548DA1400D22ACF /* LaunchScreen.storyboard */; };
 		EAF920F92548DA1400D22ACF /* playlist-proTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920F82548DA1400D22ACF /* playlist-proTests.swift */; };
 		EAF921042548DA1400D22ACF /* playlist-proUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF921032548DA1400D22ACF /* playlist-proUITests.swift */; };
 /* End PBXBuildFile section */
@@ -101,8 +102,11 @@
 		EA9D944F25938AA80057493D /* SplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenViewController.swift; sourceTree = "<group>"; };
 		EABA041A25B68CA1000BF883 /* PlaylistTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistTableView.swift; sourceTree = "<group>"; };
 		EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyImportViewController.swift; sourceTree = "<group>"; };
+		EAC06DD325DC1CA300E86162 /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
+		EAC06DDF25DC1CE800E86162 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
+		EAC06DE425DC1D4F00E86162 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		EAE1459B2585858800C09FE9 /* ImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportViewController.swift; sourceTree = "<group>"; };
-		EAE145AF25858AFE00C09FE9 /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		EAE145AF25858AFE00C09FE9 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		EAE145E12585933000C09FE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		EAE145E6258593A600C09FE9 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
@@ -114,9 +118,7 @@
 		EAF920E12548DA1200D22ACF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAF920E32548DA1200D22ACF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		EAF920E52548DA1200D22ACF /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
-		EAF920E82548DA1200D22ACF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EAF920EA2548DA1400D22ACF /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		EAF920ED2548DA1400D22ACF /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		EAF920EF2548DA1400D22ACF /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EAF920F42548DA1400D22ACF /* playlist-proTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "playlist-proTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAF920F82548DA1400D22ACF /* playlist-proTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "playlist-proTests.swift"; sourceTree = "<group>"; };
@@ -217,7 +219,6 @@
 			children = (
 				EABA044025B73530000BF883 /* Search Tab */,
 				EABA043925B7350A000BF883 /* Home Tab */,
-				EABA044125B73552000BF883 /* Other */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -232,42 +233,16 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		EA637E092550B02800FCC983 /* Storyboards */ = {
-			isa = PBXGroup;
-			children = (
-				EAF920E72548DA1200D22ACF /* Main.storyboard */,
-				EAF920EC2548DA1400D22ACF /* LaunchScreen.storyboard */,
-			);
-			path = Storyboards;
-			sourceTree = "<group>";
-		};
-		EABA042825B72FDC000BF883 /* Account Tab */ = {
-			isa = PBXGroup;
-			children = (
-				EAE145AF25858AFE00C09FE9 /* AccountViewController.swift */,
-				EA7E3FE225A67646009A4DAE /* SettingsViewController.swift */,
-			);
-			path = "Account Tab";
-			sourceTree = "<group>";
-		};
 		EABA042925B73073000BF883 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				EABA042825B72FDC000BF883 /* Account Tab */,
-				EABA044225B7355F000BF883 /* Search Tab */,
-				EABA043025B73189000BF883 /* Home Tab */,
+				EAC06DD225DC1C6600E86162 /* Core */,
+				EA7E3FE225A67646009A4DAE /* SettingsViewController.swift */,
+				EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */,
+				EAC06DD325DC1CA300E86162 /* PlaylistViewController.swift */,
 				EAE145EC258593B400C09FE9 /* Onboarding */,
 			);
 			path = Controllers;
-			sourceTree = "<group>";
-		};
-		EABA043025B73189000BF883 /* Home Tab */ = {
-			isa = PBXGroup;
-			children = (
-				EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */,
-				EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */,
-			);
-			path = "Home Tab";
 			sourceTree = "<group>";
 		};
 		EABA043925B7350A000BF883 /* Home Tab */ = {
@@ -289,38 +264,41 @@
 			path = "Search Tab";
 			sourceTree = "<group>";
 		};
-		EABA044125B73552000BF883 /* Other */ = {
+		EAC06DD225DC1C6600E86162 /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				EAF920EA2548DA1400D22ACF /* Assets.xcassets */,
-				EA637E092550B02800FCC983 /* Storyboards */,
-			);
-			path = Other;
-			sourceTree = "<group>";
-		};
-		EABA044225B7355F000BF883 /* Search Tab */ = {
-			isa = PBXGroup;
-			children = (
+				EAC06DE425DC1D4F00E86162 /* TabBarViewController.swift */,
+				EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */,
 				EAF920E52548DA1200D22ACF /* SearchViewController.swift */,
+				EAE145AF25858AFE00C09FE9 /* LibraryViewController.swift */,
 			);
-			path = "Search Tab";
+			path = Core;
 			sourceTree = "<group>";
 		};
-		EAE145A32585890800C09FE9 /* General */ = {
+		EAC06DDE25DC1CBC00E86162 /* Managers */ = {
+			isa = PBXGroup;
+			children = (
+				EAE145F92585970200C09FE9 /* AuthManager.swift */,
+				EAE145F42585966D00C09FE9 /* DatabaseManager.swift */,
+				EA05585325AFA39600B1FF85 /* LocalFilesManager.swift */,
+				EAE431432550B6F700E5AEBF /* CacheManager.swift */,
+				EAC06DDF25DC1CE800E86162 /* HapticsManager.swift */,
+			);
+			path = Managers;
+			sourceTree = "<group>";
+		};
+		EAE145A32585890800C09FE9 /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 				EAE145E12585933000C09FE9 /* GoogleService-Info.plist */,
 				EAF920E12548DA1200D22ACF /* AppDelegate.swift */,
 				EAF920E32548DA1200D22ACF /* SceneDelegate.swift */,
-				EAE145F92585970200C09FE9 /* AuthManager.swift */,
 				EA8F5AD525926BC50081E9AB /* Extensions.swift */,
 				EA637DEA254B3EF200FCC983 /* Constants.swift */,
-				EAE145F42585966D00C09FE9 /* DatabaseManager.swift */,
-				EA05585325AFA39600B1FF85 /* LocalFilesManager.swift */,
-				EAE431432550B6F700E5AEBF /* CacheManager.swift */,
 				EAE4314D2550BD4C00E5AEBF /* DateHelper.swift */,
+				EAF920EA2548DA1400D22ACF /* Assets.xcassets */,
 			);
-			path = General;
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		EAE145EC258593B400C09FE9 /* Onboarding */ = {
@@ -359,7 +337,8 @@
 		EAF920E02548DA1200D22ACF /* playlist-pro */ = {
 			isa = PBXGroup;
 			children = (
-				EAE145A32585890800C09FE9 /* General */,
+				EAC06DDE25DC1CBC00E86162 /* Managers */,
+				EAE145A32585890800C09FE9 /* Resources */,
 				EA637E082550B02300FCC983 /* Models */,
 				EA637E072550B01D00FCC983 /* Views */,
 				EABA042925B73073000BF883 /* Controllers */,
@@ -506,10 +485,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EAF920EE2548DA1400D22ACF /* LaunchScreen.storyboard in Resources */,
 				EAE145E22585933000C09FE9 /* GoogleService-Info.plist in Resources */,
 				EAF920EB2548DA1400D22ACF /* Assets.xcassets in Resources */,
-				EAF920E92548DA1200D22ACF /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -645,6 +622,7 @@
 				EA9D945025938AA80057493D /* SplashScreenViewController.swift in Sources */,
 				EA05585425AFA39600B1FF85 /* LocalFilesManager.swift in Sources */,
 				EA081C5825C496AD00C1CC5E /* Playlist.swift in Sources */,
+				EAC06DE025DC1CE800E86162 /* HapticsManager.swift in Sources */,
 				EAE431442550B6F700E5AEBF /* CacheManager.swift in Sources */,
 				EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */,
 				EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */,
@@ -654,6 +632,7 @@
 				EA637DF5254B408C00FCC983 /* SearchModel.swift in Sources */,
 				EA8F5AD625926BC50081E9AB /* Extensions.swift in Sources */,
 				EAE145FA2585970200C09FE9 /* AuthManager.swift in Sources */,
+				EAC06DE525DC1D4F00E86162 /* TabBarViewController.swift in Sources */,
 				EA05589F25B118DF00B1FF85 /* YYTRangeSlider.swift in Sources */,
 				EA05589E25B118DF00B1FF85 /* YYTRangeSliderTrackLayer.swift in Sources */,
 				EAE4314E2550BD4C00E5AEBF /* DateHelper.swift in Sources */,
@@ -662,10 +641,11 @@
 				EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */,
 				EA637E022550B00200FCC983 /* SearchTableViewCell.swift in Sources */,
 				EAE145F52585966D00C09FE9 /* DatabaseManager.swift in Sources */,
-				EAE145B025858AFE00C09FE9 /* AccountViewController.swift in Sources */,
+				EAE145B025858AFE00C09FE9 /* LibraryViewController.swift in Sources */,
 				EA637DFD254B821200FCC983 /* Response.swift in Sources */,
 				EAE1459C2585858800C09FE9 /* ImportViewController.swift in Sources */,
 				EA7E3FE325A67646009A4DAE /* SettingsViewController.swift in Sources */,
+				EAC06DD425DC1CA300E86162 /* PlaylistViewController.swift in Sources */,
 				EA0558AA25B118EA00B1FF85 /* QueueManager.swift in Sources */,
 				EA0558AC25B118EA00B1FF85 /* LibraryManager.swift in Sources */,
 				EA0558BF25B1191700B1FF85 /* PlaylistLibraryView.swift in Sources */,
@@ -702,25 +682,6 @@
 			targetProxy = EAF921002548DA1400D22ACF /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
-
-/* Begin PBXVariantGroup section */
-		EAF920E72548DA1200D22ACF /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EAF920E82548DA1200D22ACF /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		EAF920EC2548DA1400D22ACF /* LaunchScreen.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EAF920ED2548DA1400D22ACF /* Base */,
-			);
-			name = LaunchScreen.storyboard;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		EAF921062548DA1400D22ACF /* Debug */ = {

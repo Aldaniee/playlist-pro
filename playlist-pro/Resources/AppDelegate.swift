@@ -15,10 +15,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-
+        
         FirebaseApp.configure()
+        
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        
+        if AuthManager.shared.isSignedIn {
+            window.rootViewController = TabBarViewController()
+        }
+        else {
+            let navVC = UINavigationController(rootViewController: SplashScreenViewController())
+            navVC.navigationBar.prefersLargeTitles = true
+            navVC.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always
+            window.rootViewController = navVC
+        }
+        window.makeKeyAndVisible()
+        self.window = window
+        
+
         /*
         To allow the sound continue playing in background mode
         AVAudioSession:    An intermediary object that communicates to the system how you intend to use audio in your app.

@@ -9,8 +9,31 @@ import Foundation
 import UIKit
 import FirebaseAuth
 
-final class AccountViewController: UIViewController {
+final class LibraryViewController: UIViewController {
 
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        title = "Library"
+        view.backgroundColor = .systemBackground
+
+        guard let user = Auth.auth().currentUser else {
+            let vc = SplashScreenViewController()
+            present(vc, animated: false)
+            return
+        }
+        if user.isAnonymous {
+            // Ask if the user wants to make an account
+            addLoginSubViews()
+                        
+            loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
+            createAccountButton.addTarget(self, action: #selector(didTapCreateAccountButton), for: .touchUpInside)
+        }
+        else {
+            configureNavigationBar()
+            // Show account settings
+        }
+    }
+    
     private let headerView: UIView = {
         let header = UIView()
         header.clipsToBounds = true
@@ -36,27 +59,6 @@ final class AccountViewController: UIViewController {
         return button
     }()
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-
-        guard let user = Auth.auth().currentUser else {
-            let vc = SplashScreenViewController()
-            present(vc, animated: false)
-            return
-        }
-        if user.isAnonymous {
-            // Ask if the user wants to make an account
-            addLoginSubViews()
-                        
-            loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
-            createAccountButton.addTarget(self, action: #selector(didTapCreateAccountButton), for: .touchUpInside)
-        }
-        else {
-            configureNavigationBar()
-            // Show account settings
-        }
-    }
     private func configureNavigationBar() {
         navigationItem.title = Auth.auth().currentUser?.email
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"),

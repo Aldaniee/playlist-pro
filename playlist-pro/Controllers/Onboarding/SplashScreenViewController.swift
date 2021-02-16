@@ -47,7 +47,8 @@ class SplashScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        title = "Playlist Pro"
+        
         addSubViews()
         
         view.backgroundColor = .systemBackground

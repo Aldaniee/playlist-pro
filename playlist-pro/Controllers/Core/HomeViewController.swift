@@ -15,17 +15,12 @@ class HomeViewController: UIViewController {
 
 	override func viewDidLoad() {
 		super.viewDidLoad()
+        title = "Home"
         view.backgroundColor = .systemBackground
-        configureNavBar()
         addNowPlayingView()
 		addPlaylistManager()
 	}
-    private func configureNavBar() {
-        navigationController?.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "import",
-                                                                                  style: .plain,
-                                                                                  target: self,
-                                                                                  action: #selector(importSpotify))
-    }
+
     @objc private func importSpotify() {
         let vc = SpotifyImportViewController()
         vc.title = "Spotify Import"

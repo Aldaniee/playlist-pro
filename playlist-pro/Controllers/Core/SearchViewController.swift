@@ -30,6 +30,8 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Search"
+
         // Set itself as the datasource and the delegate
         tableView.dataSource = self
         tableView.delegate = self
@@ -39,7 +41,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
         searchBar.sizeToFit()
         
         view.backgroundColor = .systemBackground
-        navigationController?.navigationBar.prefersLargeTitles = true
         navigationItem.title = "Search"
         
         navigationItem.titleView = searchBar
