@@ -8,8 +8,11 @@
 
 import UIKit
 
-class SongCell : UITableViewCell {
+class QueueSongCell : UITableViewCell {
   
+    static let identifier = "SongCell"
+    static let rowHeight = CGFloat(80)
+    
 	var songDict = Dictionary<String, Any>()
 	let thumbnailImageView: UIImageView = {
 		let imgView = UIImageView()
@@ -38,7 +41,7 @@ class SongCell : UITableViewCell {
 	
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
-		self.backgroundColor = .clear
+		contentView.backgroundColor = .clear
 		
         self.contentView.addSubview(thumbnailImageView)
 		thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
@@ -50,7 +53,7 @@ class SongCell : UITableViewCell {
 
         self.contentView.addSubview(titleLabel)
 		titleLabel.translatesAutoresizingMaskIntoConstraints = false
-		titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: 10).isActive = true
+		titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: 30).isActive = true
 		titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5).isActive = true
 		titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor, constant: 5).isActive = true
 		titleLabel.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.55, constant: -5).isActive = true

@@ -10,55 +10,40 @@ import UIKit
 import FirebaseAuth
 
 class HomeViewController: UIViewController {
-	
-	var playlistManager = QueueManager()
-
+    
+    var miniPlayerView: MiniPlayerView!
+    var queueManager = QueueManager()
+    
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(QueueSongCell.self, forCellReuseIdentifier: QueueSongCell.identifier)
+        return tableView
+    }()
+    
 	override func viewDidLoad() {
 		super.viewDidLoad()
         title = "Home"
         view.backgroundColor = .systemBackground
-        addNowPlayingView()
-		addPlaylistManager()
-	}
+        view.addSubview(tableView)
+        tableView.dataSource = self
+        tableView.delegate = self
 
+        //addNowPlayingView()
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.safeAreaLayoutGuide.layoutFrame
+    }
+    
     @objc private func importSpotify() {
         let vc = SpotifyImportViewController()
         vc.title = "Spotify Import"
         navigationController?.pushViewController(vc, animated: true)
     }
-	override func viewWillAppear(_ animated: Bool) {
-		playlistManager.computeQueue()
-		playlistManager.playlistLibraryView.scrollToTop()
-	}
 	
-	override func viewWillDisappear(_ animated: Bool) {
-		playlistManager.audioPlayer.pause()
-	}
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         handleNotAuthenticated()
-
-    }
-    private func addPlaylistManager() {
-        playlistManager.playlistLibraryView.backgroundColor = .clear
-        self.view.addSubview(playlistManager.playlistLibraryView)
-        playlistManager.playlistLibraryView.translatesAutoresizingMaskIntoConstraints = false
-        playlistManager.playlistLibraryView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        playlistManager.playlistLibraryView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        playlistManager.playlistLibraryView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor).isActive = true
-        playlistManager.playlistLibraryView.bottomAnchor.constraint(equalTo: playlistManager.playlistLibraryView.topAnchor).isActive = true
-        playlistManager.playlistLibraryView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.85).isActive = true
-
-        
-    }
-    private func addNowPlayingView() {
-        playlistManager.nowPlayingView.backgroundColor = .clear
-        self.view.addSubview(playlistManager.nowPlayingView)
-        playlistManager.nowPlayingView.translatesAutoresizingMaskIntoConstraints = false
-        playlistManager.nowPlayingView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor).isActive = true
-        playlistManager.nowPlayingView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor).isActive = true
-        playlistManager.nowPlayingView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor).isActive = true
-        playlistManager.nowPlayingView.heightAnchor.constraint(equalTo: view.safeAreaLayoutGuide.heightAnchor, multiplier: 0.15).isActive = true
 
     }
     func handleNotAuthenticated() {
@@ -68,6 +53,35 @@ class HomeViewController: UIViewController {
             let loginVC = SplashScreenViewController()
             loginVC.modalPresentationStyle = .fullScreen
             present(loginVC, animated: false)
+        }
+    }
+}
+
+extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        queueManager.queue.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: QueueSongCell.identifier, for: indexPath) as! QueueSongCell
+        cell.songDict = queueManager.queue[indexPath.row] as! Dictionary<String, Any>
+        cell.refreshCell()
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return QueueSongCell.rowHeight
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! QueueSongCell
+
+        print("Selected cell number \(indexPath.row) -> \(cell.songDict["title"] ?? "")")
+        
+        QueueManager.shared.didSelectSong(songDict: cell.songDict)
+    }
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if (editingStyle == .delete) {
+            QueueManager.shared.queue.removeObject(at: (QueueManager.shared.queue.count - 2 - indexPath.row) % queueManager.queue.count)
+            tableView.reloadData()
         }
     }
 }

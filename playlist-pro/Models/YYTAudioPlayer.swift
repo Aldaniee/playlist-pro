@@ -19,18 +19,16 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 
 	weak var delegate: YYTAudioPlayerDelegate?
 
-    var playlistManager: QueueManager!
 	private var audioPlayer: AVAudioPlayer!
-	private var songsPlaylist: NSMutableArray!
+	private var songsQueue: NSMutableArray!
 	private var songDict: Dictionary<String, Any>!
 	private var currentSongIndex: Int!
 	private var updater = CADisplayLink()
 	private(set) var isSuspended: Bool = false
 	var isSongRepeat: Bool = false
 	
-	init(playlistManager: QueueManager) {
+	override init() {
 		super.init()
-		self.playlistManager = playlistManager
 		setupRemoteTransportControls()
 		setupInterreuptionsNotifications()
 		setupRouteChangeNotifications()
@@ -44,14 +42,14 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	/*
 	 AVAudioPlayer: An audio player that provides playback of audio data from a file or memory.
 	*/
-	func setupPlayer(withPlaylist playlist: NSMutableArray) -> Bool {
-		songsPlaylist = playlist
+	func setupPlayer(withQueue queue: NSMutableArray) -> Bool {
+		songsQueue = queue
 		currentSongIndex = 0
 		return setupPlayer(withSongAtindex: currentSongIndex)
 	}
 	
 	func setupPlayer(withSongAtindex index: Int) -> Bool {
-		return setupPlayer(withSong: songsPlaylist.object(at: currentSongIndex) as! Dictionary<String, Any>)
+		return setupPlayer(withSong: songsQueue.object(at: currentSongIndex) as! Dictionary<String, Any>)
 	}
 	
 	func setupPlayer(withSong songDict: Dictionary<String, Any>) -> Bool {
@@ -130,8 +128,8 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	
 	func next() {
 		if !isSuspended {
-			playlistManager.moveQueueForward()
-			currentSongIndex = currentSongIndex % songsPlaylist.count
+            QueueManager.shared.moveQueueForward()
+			currentSongIndex = currentSongIndex % songsQueue.count
 			if setupPlayer(withSongAtindex: currentSongIndex) {
 				play()
 			}
@@ -141,8 +139,8 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	func prev() {
 		if !isSuspended {
 			if Float(audioPlayer?.currentTime ?? 0) < 10.0 {
-				playlistManager.moveQueueBackward()
-				currentSongIndex = currentSongIndex % songsPlaylist.count
+                QueueManager.shared.moveQueueBackward()
+				currentSongIndex = currentSongIndex % songsQueue.count
 				if setupPlayer(withSongAtindex: currentSongIndex) {
 					play()
 				}

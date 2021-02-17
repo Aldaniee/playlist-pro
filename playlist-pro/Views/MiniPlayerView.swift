@@ -1,22 +1,26 @@
 //
 //  NowPlayingView.swift
-//  YouTag
+//  Playlist Pro
 //
-//  Created by Youstanzr on 8/13/19.
-//  Copyright © 2019 Youstanzr. All rights reserved.
+//
+//  Tab bar playback controller
 //
 import UIKit
 
-protocol NowPlayingViewDelegate: class {
-	func shuffleQueue()
+protocol MiniPlayerViewDelegate: class {
+	func showNowPlayingView()
 }
 
-class NowPlayingView: UIView, YYTAudioPlayerDelegate {
+class MiniPlayerView: UIView, YYTAudioPlayerDelegate{
 
-	weak var NPDelegate: NowPlayingViewDelegate?
-
-	var audioPlayer: YYTAudioPlayer!
+	weak var delegate: MiniPlayerViewDelegate?
+    
 	var songID = ""
+    let backgroundButton: UIButton = {
+        let btn = UIButton()
+        return btn
+    }()
+    
 	let thumbnailImageView: UIImageView = {
 		let imgView = UIImageView()
 		imgView.layer.masksToBounds = true
@@ -35,22 +39,21 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         lbl.textAlignment = .left
         return lbl
     }()
-	/*let previousButton: UIButton = {
+	let previousButton: UIButton = {
 		let btn = UIButton()
 		btn.setImage(UIImage(named: "previous"), for: UIControl.State.normal)
 		return btn
-	}()*/
+	}()
 	let pausePlayButton: UIButton = {
 		let btn = UIButton()
 		btn.setImage(UIImage(named: "play"), for: UIControl.State.normal)
 		return btn
 	}()
-	/*let nextButton: UIButton = {
+	let nextButton: UIButton = {
 		let btn = UIButton()
 		btn.setImage(UIImage(named: "next"), for: UIControl.State.normal)
 		return btn
-	}()*/
-	let songControlView = UIView()
+	}()
 	let progressBar: UISlider = {
 		let pBar = UISlider()
         pBar.tintColor = Constants.UI.gray
@@ -79,7 +82,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		lbl.font = UIFont.boldSystemFont(ofSize: 11)
 		return lbl
 	}()*/
-	let playlistControlView = UIView()
+	//let queueControlView = UIView()
 	/*let repeatButton: UIButton = {
 		let btn = UIButton()
 		btn.backgroundColor = .clear
@@ -95,20 +98,37 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		btn.setImage(UIImage(named: "shuffle"), for: UIControl.State.normal)
 		return btn
 	}()*/
-
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        QueueManager.shared.audioPlayer.delegate = self
+        //addQueueControlView()
+        //addRepeatButton()
+        //addShuffleButton()
+        addBackgroundButton()
+        addProgressBar()
+        //addCurrentTimeLabel()
+        //addTimeLeftLabel()
+        //addPlaybackRateButton()
+        addThumbnailImage()
+        addNextButton()
+        addPlayPauseButtton()
+        addPreviousButton()
+        addTitleLabel()
+        addArtistLabel()
+    }
 	
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
     }
 
-    private func addPlaylistControlView() {
-        self.addSubview(playlistControlView)
-        playlistControlView.translatesAutoresizingMaskIntoConstraints = false
-        playlistControlView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        playlistControlView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        playlistControlView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        playlistControlView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.375).isActive = true
-    }
+    /*private func addQueueControlView() {
+        self.addSubview(queueControlView)
+        queueControlView.translatesAutoresizingMaskIntoConstraints = false
+        queueControlView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        queueControlView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        queueControlView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        queueControlView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.375).isActive = true
+    }*/
     /*private func addRepeatButton() {
         repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
         playlistControlView.addSubview(repeatButton)
@@ -127,13 +147,15 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         shuffleButton.centerYAnchor.constraint(equalTo: playlistControlView.centerYAnchor).isActive = true
         shuffleButton.heightAnchor.constraint(equalTo: playlistControlView.heightAnchor).isActive = true
     }*/
-    private func addSongControlView() {
-        self.addSubview(songControlView)
-        songControlView.translatesAutoresizingMaskIntoConstraints = false
-        songControlView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        songControlView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        songControlView.bottomAnchor.constraint(equalTo: playlistControlView.bottomAnchor).isActive = true
-        songControlView.heightAnchor.constraint(equalToConstant: 20).isActive = true
+    private func addBackgroundButton() {
+        backgroundButton.addTarget(self, action: #selector(backgroundButtonPressed), for: .touchUpInside)
+        self.addSubview(backgroundButton)
+        backgroundButton.translatesAutoresizingMaskIntoConstraints = false
+        backgroundButton.backgroundColor = .systemGray
+        backgroundButton.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
+        backgroundButton.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
+        backgroundButton.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
+        backgroundButton.heightAnchor.constraint(equalToConstant: 80).isActive = true
     }
     /*private func addCurrentTimeLabel() {
         currentTimeLabel.addBorder(side: .right, color: Constants.UI.orange, width: 0.5)
@@ -159,12 +181,12 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
     private func addProgressBar() {
 
         progressBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
-        songControlView.addSubview(progressBar)
+        backgroundButton.addSubview(progressBar)
         progressBar.translatesAutoresizingMaskIntoConstraints = false
-        progressBar.leadingAnchor.constraint(equalTo: songControlView.leadingAnchor, constant: 6.0).isActive = true
-        progressBar.widthAnchor.constraint(equalTo: songControlView.widthAnchor, multiplier: 0.7, constant: -2.5).isActive = true
-        progressBar.centerYAnchor.constraint(equalTo: songControlView.centerYAnchor).isActive = true
-        progressBar.heightAnchor.constraint(equalTo: songControlView.heightAnchor).isActive = true
+        progressBar.leadingAnchor.constraint(equalTo: backgroundButton.leadingAnchor, constant: 6.0).isActive = true
+        progressBar.widthAnchor.constraint(equalTo: backgroundButton.widthAnchor, multiplier: 0.7, constant: -2.5).isActive = true
+        progressBar.bottomAnchor.constraint(equalTo: backgroundButton.bottomAnchor).isActive = true
+        progressBar.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
     }
     /*private func addPlaybackRateButton() {
@@ -183,43 +205,43 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
         thumbnailImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
         thumbnailImageView.topAnchor.constraint(equalTo: self.topAnchor, constant: 3.5).isActive = true
-        thumbnailImageView.bottomAnchor.constraint(equalTo: songControlView.topAnchor, constant: -2.5).isActive = true
+        thumbnailImageView.bottomAnchor.constraint(equalTo: progressBar.topAnchor, constant: -2.5).isActive = true
         thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor).isActive = true
     }
-    /*private func addNextButton() {
+    private func addNextButton() {
         nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
         self.addSubview(nextButton)
         nextButton.translatesAutoresizingMaskIntoConstraints = false
-        nextButton.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5).isActive = true
+        nextButton.trailingAnchor.constraint(equalTo: backgroundButton.trailingAnchor, constant: -10).isActive = true
         nextButton.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor).isActive = true
-        nextButton.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.25).isActive = true
-        nextButton.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.25).isActive = true
-    }*/
+        nextButton.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.3).isActive = true
+        nextButton.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.3).isActive = true
+    }
     private func addPlayPauseButtton() {
         pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
         self.addSubview(pausePlayButton)
         pausePlayButton.translatesAutoresizingMaskIntoConstraints = false
-        pausePlayButton.trailingAnchor.constraint(equalTo: songControlView.trailingAnchor, constant: -40).isActive = true
+        pausePlayButton.trailingAnchor.constraint(equalTo: nextButton.leadingAnchor, constant: -10).isActive = true
         pausePlayButton.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor).isActive = true
-        pausePlayButton.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.4).isActive = true
-        pausePlayButton.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.4).isActive = true
+        pausePlayButton.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.5).isActive = true
+        pausePlayButton.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.5).isActive = true
 
     }
-    /*private func addPreviousButton() {
+    private func addPreviousButton() {
         previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
         self.addSubview(previousButton)
         previousButton.translatesAutoresizingMaskIntoConstraints = false
-        previousButton.trailingAnchor.constraint(equalTo: pausePlayButton.leadingAnchor, constant: -5).isActive = true
+        previousButton.trailingAnchor.constraint(equalTo: pausePlayButton.leadingAnchor, constant: -10).isActive = true
         previousButton.centerYAnchor.constraint(equalTo: pausePlayButton.centerYAnchor).isActive = true
         previousButton.heightAnchor.constraint(equalTo: nextButton.heightAnchor).isActive = true
         previousButton.widthAnchor.constraint(equalTo: nextButton.heightAnchor).isActive = true
 
-    }*/
+    }
     private func addTitleLabel() {
         self.addSubview(titleLabel)
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: 10).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: pausePlayButton.leadingAnchor, constant: -5).isActive = true
+        titleLabel.trailingAnchor.constraint(equalTo: previousButton.leadingAnchor, constant: -10).isActive = true
         titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor, constant: 5).isActive = true
         titleLabel.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.5, constant: -5).isActive = true
     }
@@ -231,46 +253,34 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
         artistLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
         artistLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor).isActive = true
     }
-	init(frame: CGRect, audioPlayer: YYTAudioPlayer) {
-		super.init(frame: frame)
-		self.audioPlayer = audioPlayer
-		self.audioPlayer.delegate = self
-
-        addPlaylistControlView()
-        //addRepeatButton()
-		//addShuffleButton()
-		addSongControlView()
-        addProgressBar()
-        //addCurrentTimeLabel()
-		//addTimeLeftLabel()
-		//addPlaybackRateButton()
-		addThumbnailImage()
-		//addNextButton()
-        addPlayPauseButtton()
-        //addPreviousButton()
-        addTitleLabel()
-        addArtistLabel()
-	}
 	
     @objc func pausePlayButtonAction(sender: UIButton?) {
-        audioPlayer.playlistManager.playlistLibraryView.LM.importLibraryFromDatabase()
-		if self.audioPlayer.isPlaying() {
+        /// FOR TESTING PURPOSES
+        //audioPlayer.queueManager.LM.importLibraryFromDatabase()
+        if QueueManager.shared.isPlaying() {
 			print("Paused")
-			audioPlayer.pause()
-		}else{
+            QueueManager.shared.pause()
+            changePlayPauseIcon(isPlaying: false)
+		} else{
 			print("Playing")
-			audioPlayer.play()
+            QueueManager.shared.play()
+            changePlayPauseIcon(isPlaying: true)
 		}
+    }
+    
+    @objc func backgroundButtonPressed(sender: UIButton!) {
+        print("Showing Now Playing View 1")
+        delegate!.showNowPlayingView()
     }
 	
     @objc func nextButtonAction(sender: UIButton!) {
         print("Next Button tapped")
-		audioPlayer.next()
+        QueueManager.shared.next()
    }
     
     @objc func previousButtonAction(sender: UIButton!) {
         print("Previous Button tapped")
-		audioPlayer.prev()
+        QueueManager.shared.prev()
     }
 	
 	@objc func playbackRateButtonAction(sender: UIButton!) {
@@ -280,13 +290,13 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 		}
 		if sender.titleLabel?.text == "x1" {
 			sender.setTitle("x1.25", for: .normal)
-			audioPlayer.setPlayerRate(to: 1.25)
+            QueueManager.shared.setPlayerRate(to: 1.25)
 		} else if sender.titleLabel?.text == "x1.25" {
 			sender.setTitle("x0.75", for: .normal)
-			audioPlayer.setPlayerRate(to: 0.75)
+            QueueManager.shared.setPlayerRate(to: 0.75)
 		} else {
 			sender.setTitle("x1", for: .normal)
-			audioPlayer.setPlayerRate(to: 1)
+            QueueManager.shared.setPlayerRate(to: 1)
 		}
 	}
 	
@@ -317,7 +327,7 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 						slider.value = 0.0
 						return
 					}
-					audioPlayer.setPlayerCurrentTime(withPercentage: slider.value)
+                    QueueManager.shared.setPlayerCurrentTime(withPercentage: slider.value)
 				case .moved:
 				// handle drag moved
 					//let songDuration = Float((currentTimeLabel.text?.convertToTimeInterval())! + (timeLeftLabel.text?.convertToTimeInterval())!)
@@ -345,8 +355,10 @@ class NowPlayingView: UIView, YYTAudioPlayerDelegate {
 			self.progressBar.value = currentTime/duration
 		}
 	}
-	
-	func audioPlayerPlayingStatusChanged(isPlaying: Bool) {
+    func audioPlayerPlayingStatusChanged(isPlaying: Bool) {
+        changePlayPauseIcon(isPlaying: isPlaying)
+    }
+	func changePlayPauseIcon(isPlaying: Bool) {
 		if isPlaying {
 			self.pausePlayButton.setImage(UIImage(named: "pause"), for: UIControl.State.normal)
 		} else {
