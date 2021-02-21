@@ -64,7 +64,7 @@ class RegistrationViewController: UIViewController {
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        title = "Create Account"
         view.addSubview(usernameField)
         view.addSubview(emailField)
         view.addSubview(passwordField)
@@ -132,9 +132,9 @@ class RegistrationViewController: UIViewController {
         AuthManager.shared.registerNewUser(username: username, email: email, password: password) { registered in
             DispatchQueue.main.async {
                 if registered {
-                    // good to go
-                    self.present(UINavigationController(rootViewController: HomeViewController()), animated: false)
-
+                    // dismiss all view controllers down to the root
+                    self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+                    
                     print("Registration successful")
                     let alert = UIAlertController(title: "Registration Successful",
                                                   message: "Welcome to Playlist Pro!",
@@ -143,14 +143,10 @@ class RegistrationViewController: UIViewController {
                                                   style: .cancel,
                                                   handler: nil))
                     self.present(alert, animated: true)
-                    
-                    //self.dismiss(animated: true, completion: nil)
                 }
                 else {
                     print("Registration error")
-                    // failed
                 }
-                print("OKAY WERE HERE AT LEASt")
             }
         }
 

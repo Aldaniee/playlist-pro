@@ -11,10 +11,33 @@ protocol MiniPlayerViewDelegate: class {
 	func showNowPlayingView()
 }
 
-class MiniPlayerView: UIView, YYTAudioPlayerDelegate{
+class MiniPlayerView: UIView, QueueManagerDelegate {
 
 	weak var delegate: MiniPlayerViewDelegate?
     
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        QueueManager.shared.delegate = self
+
+        //addQueueControlView()
+        //addRepeatButton()
+        //addShuffleButton()
+        addBackgroundButton()
+        addProgressBar()
+        //addCurrentTimeLabel()
+        //addTimeLeftLabel()
+        //addPlaybackRateButton()
+        addThumbnailImage()
+        addNextButton()
+        addPlayPauseButtton()
+        addPreviousButton()
+        addTitleLabel()
+        addArtistLabel()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
 	var songID = ""
     let backgroundButton: UIButton = {
         let btn = UIButton()
@@ -98,28 +121,6 @@ class MiniPlayerView: UIView, YYTAudioPlayerDelegate{
 		btn.setImage(UIImage(named: "shuffle"), for: UIControl.State.normal)
 		return btn
 	}()*/
-    override init(frame: CGRect) {
-        super.init(frame: frame)
-        QueueManager.shared.audioPlayer.delegate = self
-        //addQueueControlView()
-        //addRepeatButton()
-        //addShuffleButton()
-        addBackgroundButton()
-        addProgressBar()
-        //addCurrentTimeLabel()
-        //addTimeLeftLabel()
-        //addPlaybackRateButton()
-        addThumbnailImage()
-        addNextButton()
-        addPlayPauseButtton()
-        addPreviousButton()
-        addTitleLabel()
-        addArtistLabel()
-    }
-	
-    required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
-    }
 
     /*private func addQueueControlView() {
         self.addSubview(queueControlView)
@@ -269,8 +270,7 @@ class MiniPlayerView: UIView, YYTAudioPlayerDelegate{
     }
     
     @objc func backgroundButtonPressed(sender: UIButton!) {
-        print("Showing Now Playing View 1")
-        delegate!.showNowPlayingView()
+        delegate?.showNowPlayingView()
     }
 	
     @objc func nextButtonAction(sender: UIButton!) {
@@ -365,5 +365,33 @@ class MiniPlayerView: UIView, YYTAudioPlayerDelegate{
 			self.pausePlayButton.setImage(UIImage(named: "play"), for: UIControl.State.normal)
 		}
 	}
-	
+    func updateDisplayedSong() {
+        let displayedSong: Dictionary<String, Any>
+        if QueueManager.shared.queue.count > 0 {
+            QueueManager.shared.unsuspend()
+            displayedSong = QueueManager.shared.queue.object(at: 0) as! Dictionary<String, Any>
+        } else {
+            QueueManager.shared.suspend()
+            displayedSong = Dictionary<String, Any>()
+        }
+
+        let songID = displayedSong["id"] as? String ?? ""
+        self.songID = songID
+        titleLabel.text = displayedSong["title"] as? String ?? ""
+        artistLabel.text = ((displayedSong["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", "))
+        
+        let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
+        if let imgData = imageData {
+            thumbnailImageView.image = UIImage(data: imgData)
+        } else {
+            thumbnailImageView.image = UIImage(named: "placeholder")
+        }
+
+        //let oldPlaybackRate = audioPlayer.getPlayerRate()
+
+        //miniPlayerView.playbackRateButton.titleLabel?.text = "x\(oldPlaybackRate == 1.0 ? 1 : oldPlaybackRate)"
+        progressBar.value = 0.0
+        //miniPlayerView.currentTimeLabel.text = "00:00"
+        //miniPlayerView.timeLeftLabel.text = (songDict["duration"] as? String) ?? "00:00"
+    }
 }

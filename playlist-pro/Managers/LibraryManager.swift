@@ -11,6 +11,8 @@ import FirebaseAuth
 
 class LibraryManager {
 
+    static let shared = LibraryManager()
+    
 	enum SongProperties: String {
 		case id = "id"
 		case link = "link"
@@ -29,10 +31,12 @@ class LibraryManager {
 	}
     // An array storing all songs
 	var songLibrary: Playlist!
+    var playlists = [Playlist]()
     
     // An array of playlists in the application
     init() {
-        self.songLibrary = Playlist.init()
+        self.songLibrary = Playlist.init(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray()), title: "library")
+        updateLibraryToDatabase()
     }
     
     required init?(coder: NSCoder) {
@@ -52,7 +56,7 @@ class LibraryManager {
         }
         self.downloadMissingSongs(newLibrary: newLibrary)
         UserDefaults.standard.set(newLibrary, forKey: "LibraryArray")
-        self.songLibrary.refreshPlaylist()
+        self.songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray()))
         deleteExcessSongs(songLibraryArray: songLibrary.getSongList())
 
     }
@@ -64,6 +68,9 @@ class LibraryManager {
 
             }
         }
+    }
+    func refreshSongLibraryFromLocalStorage() {
+        songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray()))
     }
     func deleteExcessSongs(songLibraryArray: NSMutableArray) {
         // TODO: Delete any songs not in library array
@@ -165,7 +172,7 @@ class LibraryManager {
                 }*/
                 UserDefaults.standard.set(self.songLibrary.getSongList(), forKey: "LibraryArray")
                 self.updateLibraryToDatabase()
-                self.songLibrary.refreshPlaylist()
+                self.songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray()))
 				completion?()
 			} else {	// In case of error in adding the song to the library
 				_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
@@ -271,7 +278,7 @@ class LibraryManager {
 	}
 
 	func checkSongExistInLibrary(songLink: String) -> Bool {
-        self.songLibrary.refreshPlaylist()
+        refreshSongLibraryFromLocalStorage()
 		var songDict = Dictionary<String, Any>()
 		for i in 0 ..< songLibrary.count() {
             songDict = songLibrary.get(at: i)
@@ -283,7 +290,7 @@ class LibraryManager {
 	}
 
 	func getSong(forID songID: String) -> Dictionary<String, Any> {
-        self.songLibrary.refreshPlaylist()
+        refreshSongLibraryFromLocalStorage()
 		var songDict = Dictionary<String, Any>()
 		for i in 0 ..< songLibrary.count() {
 			songDict = songLibrary.get(at: i)
@@ -295,7 +302,7 @@ class LibraryManager {
 	}
 
     func updateSong(newSong: Dictionary<String, Any>) {
-        self.songLibrary.refreshPlaylist()
+        refreshSongLibraryFromLocalStorage()
 		var songDict = Dictionary<String, Any>()
 		for i in 0 ..< songLibrary.count() {
 			songDict = songLibrary.get(at: i)

@@ -109,7 +109,8 @@ class SplashScreenViewController: UIViewController {
         Auth.auth().signInAnonymously { (authResult, error) in
             if (error == nil) {
                 print("Signed in with Anonymous auth")
-                self.present(UINavigationController(rootViewController: HomeViewController()), animated: false)
+                // dismiss all view controllers down to the root
+                self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
             }
         }
     }

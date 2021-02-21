@@ -1,9 +1,8 @@
 //
-//  LibraryCell.swift
-//  YouTag
+//  QueueSongCell.swift
+//  playlist-pro
 //
-//  Created by Youstanzr on 2/28/20.
-//  Copyright © 2020 Youstanzr. All rights reserved.
+//  Cell to display one song inside the Queue Table VLibraryManager.shared.playlists[indexPath.row - 1]iew
 //
 
 import UIKit

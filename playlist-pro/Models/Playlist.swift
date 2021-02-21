@@ -10,18 +10,18 @@ import Foundation
 class Playlist {
     
     private var songList: NSMutableArray!
-    
-    init() {
-        songList = NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray())
+    var title : String!
+    init(songList: NSMutableArray, title: String) {
+        self.songList = songList
+        self.title = title
     }
-    
-    func refreshPlaylist() {
-        songList = NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray())
-    }
-    
     func getSongList() -> NSMutableArray {
         return songList
     }
+    func setSongList(songList: NSMutableArray) {
+        self.songList = songList
+    }
+    
     
     func add(song: Dictionary<String, Any>) {
         songList.add(song)

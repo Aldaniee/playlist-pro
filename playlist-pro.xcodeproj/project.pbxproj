@@ -35,6 +35,11 @@
 		EAC06E0825DC356B00E86162 /* LibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E0525DC356B00E86162 /* LibraryManager.swift */; };
 		EAC06E0925DC356B00E86162 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E0625DC356B00E86162 /* QueueManager.swift */; };
 		EAC06E4025DD92FA00E86162 /* NowPlayingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E3F25DD92FA00E86162 /* NowPlayingViewController.swift */; };
+		EAC06E4B25DEB25E00E86162 /* DismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E4A25DEB25E00E86162 /* DismissAnimator.swift */; };
+		EAC06E5025DEB42B00E86162 /* Interactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E4F25DEB42B00E86162 /* Interactor.swift */; };
+		EAC06E5525DEC34B00E86162 /* QueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E5425DEC34B00E86162 /* QueueViewController.swift */; };
+		EAC06E5A25DEEA6D00E86162 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E5925DEEA6D00E86162 /* PlaylistCell.swift */; };
+		EAC06E5F25DEFEB600E86162 /* CreatePlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */; };
 		EAC2DC9025AB862A006EA7AF /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC8F25AB862A006EA7AF /* Alamofire */; };
 		EAC2DC9625AB86F5006EA7AF /* XCDYouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC9525AB86F5006EA7AF /* XCDYouTubeKit */; };
 		EAE1459C2585858800C09FE9 /* ImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE1459B2585858800C09FE9 /* ImportViewController.swift */; };
@@ -103,6 +108,11 @@
 		EAC06E0525DC356B00E86162 /* LibraryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryManager.swift; sourceTree = "<group>"; };
 		EAC06E0625DC356B00E86162 /* QueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueManager.swift; sourceTree = "<group>"; };
 		EAC06E3F25DD92FA00E86162 /* NowPlayingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingViewController.swift; sourceTree = "<group>"; };
+		EAC06E4A25DEB25E00E86162 /* DismissAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissAnimator.swift; sourceTree = "<group>"; };
+		EAC06E4F25DEB42B00E86162 /* Interactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interactor.swift; sourceTree = "<group>"; };
+		EAC06E5425DEC34B00E86162 /* QueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueViewController.swift; sourceTree = "<group>"; };
+		EAC06E5925DEEA6D00E86162 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
+		EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePlaylistViewController.swift; sourceTree = "<group>"; };
 		EAE1459B2585858800C09FE9 /* ImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImportViewController.swift; sourceTree = "<group>"; };
 		EAE145AF25858AFE00C09FE9 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
@@ -198,6 +208,7 @@
 				EA637E012550B00200FCC983 /* SearchTableViewCell.swift */,
 				EA0558A425B118EA00B1FF85 /* QueueSongCell.swift */,
 				EA0558BB25B1191700B1FF85 /* MiniPlayerView.swift */,
+				EAC06E5925DEEA6D00E86162 /* PlaylistCell.swift */,
 				EA05589B25B118DF00B1FF85 /* YYTRangeSliderTrackLayer.swift */,
 				EA05589C25B118DF00B1FF85 /* YYTRangeSlider.swift */,
 			);
@@ -221,8 +232,10 @@
 				EA7E3FE225A67646009A4DAE /* SettingsViewController.swift */,
 				EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */,
 				EAC06DD325DC1CA300E86162 /* PlaylistViewController.swift */,
+				EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */,
 				EAE145EC258593B400C09FE9 /* Onboarding */,
 				EAC06E3F25DD92FA00E86162 /* NowPlayingViewController.swift */,
+				EAC06E5425DEC34B00E86162 /* QueueViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -262,6 +275,8 @@
 				EA637DEA254B3EF200FCC983 /* Constants.swift */,
 				EAE4314D2550BD4C00E5AEBF /* DateHelper.swift */,
 				EAF920EA2548DA1400D22ACF /* Assets.xcassets */,
+				EAC06E4A25DEB25E00E86162 /* DismissAnimator.swift */,
+				EAC06E4F25DEB42B00E86162 /* Interactor.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -585,13 +600,17 @@
 				EA5E9E8925B4BC560026E9AE /* HomeViewController.swift in Sources */,
 				EA9D945025938AA80057493D /* SplashScreenViewController.swift in Sources */,
 				EA05585425AFA39600B1FF85 /* LocalFilesManager.swift in Sources */,
+				EAC06E5525DEC34B00E86162 /* QueueViewController.swift in Sources */,
+				EAC06E5A25DEEA6D00E86162 /* PlaylistCell.swift in Sources */,
 				EAC06DE025DC1CE800E86162 /* HapticsManager.swift in Sources */,
 				EAE431442550B6F700E5AEBF /* CacheManager.swift in Sources */,
 				EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */,
 				EAC06E0725DC356B00E86162 /* Playlist.swift in Sources */,
 				EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */,
 				EA0558BE25B1191700B1FF85 /* MiniPlayerView.swift in Sources */,
+				EAC06E5F25DEFEB600E86162 /* CreatePlaylistViewController.swift in Sources */,
 				EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */,
+				EAC06E4B25DEB25E00E86162 /* DismissAnimator.swift in Sources */,
 				EA0558A925B118EA00B1FF85 /* QueueSongCell.swift in Sources */,
 				EAC06E0825DC356B00E86162 /* LibraryManager.swift in Sources */,
 				EAC06E0925DC356B00E86162 /* QueueManager.swift in Sources */,
@@ -608,6 +627,7 @@
 				EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */,
 				EA637E022550B00200FCC983 /* SearchTableViewCell.swift in Sources */,
 				EAE145F52585966D00C09FE9 /* DatabaseManager.swift in Sources */,
+				EAC06E5025DEB42B00E86162 /* Interactor.swift in Sources */,
 				EAE145B025858AFE00C09FE9 /* LibraryViewController.swift in Sources */,
 				EA637DFD254B821200FCC983 /* Response.swift in Sources */,
 				EAE1459C2585858800C09FE9 /* ImportViewController.swift in Sources */,

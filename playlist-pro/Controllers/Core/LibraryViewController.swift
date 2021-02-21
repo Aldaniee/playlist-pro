@@ -11,20 +11,24 @@ import FirebaseAuth
 
 final class LibraryViewController: UIViewController {
 
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        title = "Library"
-        view.backgroundColor = .systemBackground
-
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        // Remove all subviews
+        for view in view.subviews{
+            view.removeFromSuperview()
+        }
         guard let user = Auth.auth().currentUser else {
+            print("No user logged in, presenting authentication splash screen")
             let vc = SplashScreenViewController()
+            vc.modalPresentationStyle = .fullScreen
             present(vc, animated: false)
             return
         }
         if user.isAnonymous {
-            // Ask if the user wants to make an account
+            // Show options for user to make an account
             addLoginSubViews()
-                        
+            title = "Join us?"
+            
             loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
             createAccountButton.addTarget(self, action: #selector(didTapCreateAccountButton), for: .touchUpInside)
         }
@@ -32,6 +36,11 @@ final class LibraryViewController: UIViewController {
             configureNavigationBar()
             // Show account settings
         }
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
     }
     
     private let headerView: UIView = {
@@ -107,11 +116,13 @@ final class LibraryViewController: UIViewController {
         view.addSubview(createAccountButton)
     }
     @objc private func didTapCreateAccountButton() {
-        let vc = RegistrationViewController()
-        present(vc, animated: true)
+        let registrationVC = RegistrationViewController()
+        registrationVC.modalPresentationStyle = .fullScreen
+        present(registrationVC, animated: true)
     }
     @objc private func didTapLoginButton() {
-        let vc = LoginViewController()
-        present(vc, animated: true)
+        let loginVC = LoginViewController()
+        loginVC.modalPresentationStyle = .fullScreen
+        present(loginVC, animated: true)
     }
 }

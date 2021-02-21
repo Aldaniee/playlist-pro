@@ -63,6 +63,7 @@ final class SettingsViewController: UIViewController {
                         // Show log in
                         let loginVC = SplashScreenViewController()
                         loginVC.modalPresentationStyle = .fullScreen
+                        QueueManager.shared.suspend()
                         self.present(loginVC, animated: false) {
                             self.navigationController?.popToRootViewController(animated: false)
                             self.tabBarController?.selectedIndex = 0

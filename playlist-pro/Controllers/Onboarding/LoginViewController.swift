@@ -129,7 +129,7 @@ class LoginViewController: UIViewController {
         
         guard let usernameEmail = usernameEmailField.text, !usernameEmail.isEmpty else {
             print("Username Error")
-            let alert = UIAlertController(title: "Log In Error",
+            let alert = UIAlertController(title: "Login Error",
                                           message: "Username is empty.",
                                           preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Dismiss",
@@ -140,7 +140,7 @@ class LoginViewController: UIViewController {
         }
         guard let password = passwordField.text, !password.isEmpty, password.count >= 8 else {
             print("Password Error")
-            let alert = UIAlertController(title: "Log In Error",
+            let alert = UIAlertController(title: "Login Error",
                                           message: "Password must be 8 or more characters.",
                                           preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Dismiss",
@@ -163,18 +163,18 @@ class LoginViewController: UIViewController {
             username = usernameEmail
         }
         
-        print("here")
         AuthManager.shared.loginUser(username: username, email: email, password: password) { success in
             DispatchQueue.main.async {
                 if success {
                     // user logged in
-                    self.dismiss(animated: true, completion: nil)
                     print("Successfully Logged In")
+                    // dismiss all view controllers down to the root
+                    self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
                 }
                 else {
-                    print("Log In Database Error")
+                    print("Login Database Error")
                     // error occurred
-                    let alert = UIAlertController(title: "Log In Error",
+                    let alert = UIAlertController(title: "Login Error",
                                                   message: "We were unable to log you in.",
                                                   preferredStyle: .alert)
                     alert.addAction(UIAlertAction(title: "Dismiss",
@@ -187,7 +187,6 @@ class LoginViewController: UIViewController {
     }
     @objc private func didTapCreateAccountButton() {
         let vc = RegistrationViewController()
-        vc.title = "Create Account"
         present(UINavigationController(rootViewController: vc), animated: true)
     }
     

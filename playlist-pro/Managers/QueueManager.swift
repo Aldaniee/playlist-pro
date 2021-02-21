@@ -10,26 +10,26 @@ import UIKit
 protocol QueueManagerDelegate: class {
     func updateDisplayedSong()
     func changePlayPauseIcon(isPlaying: Bool)
+    func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float)
 }
 
-public class QueueManager: NSObject {
+public class QueueManager: NSObject, YYTAudioPlayerDelegate{
+    
     
     static let shared = QueueManager()
     weak var delegate: QueueManagerDelegate?
 
-    var audioPlayer: YYTAudioPlayer!
-    var LM: LibraryManager!
+    private var audioPlayer: YYTAudioPlayer!
 
     var queue = NSMutableArray()
 
 	override init() {
 		super.init()
 		audioPlayer = YYTAudioPlayer()
+        audioPlayer.delegate = self
         
-        LM = LibraryManager.init()
-        LM.updateLibraryToDatabase()
         
-        queue = LM.songLibrary.getSongList()
+        queue = LibraryManager.shared.songLibrary.getSongList()
         if audioPlayer.setupPlayer(withQueue: queue) == false {
             print("setup failure")
         }
@@ -85,5 +85,11 @@ public class QueueManager: NSObject {
     func unsuspend() {
         audioPlayer.unsuspend()
     }
-			
+    func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float) {
+        delegate?.audioPlayerPeriodicUpdate(currentTime: currentTime, duration: duration)
+    }
+    
+    func audioPlayerPlayingStatusChanged(isPlaying playing: Bool) {
+        delegate?.changePlayPauseIcon(isPlaying: playing)
+    }
 }

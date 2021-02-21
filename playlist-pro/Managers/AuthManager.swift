@@ -20,12 +20,12 @@ public class AuthManager {
                 // Create account
                 Auth.auth().createUser(withEmail: email, password: password) { result, error in
                     guard error == nil, result != nil else {
-                        // Firebase auth could not create account
-                        print(error!)
+                        print("Firebase auth could not create account")
                         completion(false)
                         return
                     }
-                    
+                    completion(true)
+                    return
                 }
                 // Insert Account to database
                 DatabaseManager.shared.insertNewUser(with: email, username: username) { inserted in
@@ -45,7 +45,7 @@ public class AuthManager {
             }
             else {
                 // either username or email does not exist
-                print("Either the useranme or email does not exist")
+                print("Either the username or email is not valid")
                 completion(false)
             }
         }
@@ -56,11 +56,11 @@ public class AuthManager {
             // email log in
             Auth.auth().signIn(withEmail: email, password: password) { authResult, error in
                 guard authResult != nil, error == nil else {
-                    print("Signed in with email")
-                    
                     completion(false)
                     return
                 }
+                completion(true)
+                return
             }
         }
         /// TODO: Implement username login
@@ -72,6 +72,7 @@ public class AuthManager {
     public func logOut(completion: (Bool) -> Void) {
         do {
             try Auth.auth().signOut()
+            QueueManager.shared.suspend()
             completion(true)
             return
         }
