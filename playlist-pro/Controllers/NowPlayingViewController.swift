@@ -17,14 +17,12 @@ class NowPlayingViewController: UIViewController {
         view.backgroundColor = .systemBackground
         view.addGestureRecognizer(UIPanGestureRecognizer(target:self, action: #selector(handleGesture)))
 
-        //addQueueControlView()
         //addRepeatButton()
         //addShuffleButton()
         addBackgroundBox()
         addProgressBar()
         //addCurrentTimeLabel()
         //addTimeLeftLabel()
-        //addPlaybackRateButton()
         addThumbnailImage()
         addNextButton()
         addPlayPauseButtton()
@@ -95,7 +93,7 @@ class NowPlayingViewController: UIViewController {
         btn.setTitle("x1", for: .normal)
         return btn
     }()*/
-    /*let currentTimeLabel: UILabel = {
+    let currentTimeLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "00:00"
         lbl.textAlignment = .center
@@ -108,9 +106,9 @@ class NowPlayingViewController: UIViewController {
         lbl.textAlignment = .center
         lbl.font = UIFont.boldSystemFont(ofSize: 11)
         return lbl
-    }()*/
+    }()
     //let queueControlView = UIView()
-    /*let repeatButton: UIButton = {
+    let repeatButton: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
         btn.imageView!.contentMode = .scaleAspectFit
@@ -124,26 +122,19 @@ class NowPlayingViewController: UIViewController {
         btn.imageView!.contentMode = .scaleAspectFit
         btn.setImage(UIImage(named: "shuffle"), for: UIControl.State.normal)
         return btn
-    }()*/
+    }()
 
-    /*private func addQueueControlView() {
-        self.addSubview(queueControlView)
-        queueControlView.translatesAutoresizingMaskIntoConstraints = false
-        queueControlView.leadingAnchor.constraint(equalTo: self.leadingAnchor).isActive = true
-        queueControlView.trailingAnchor.constraint(equalTo: self.trailingAnchor).isActive = true
-        queueControlView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
-        queueControlView.heightAnchor.constraint(equalTo: self.heightAnchor, multiplier: 0.375).isActive = true
-    }*/
-    /*private func addRepeatButton() {
+/*
+    private func addRepeatButton() {
         repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
-        playlistControlView.addSubview(repeatButton)
+        view.addSubview(repeatButton)
         repeatButton.translatesAutoresizingMaskIntoConstraints = false
-        repeatButton.leadingAnchor.constraint(equalTo: playlistControlView.leadingAnchor, constant: 2.5).isActive = true
-        repeatButton.widthAnchor.constraint(equalTo: playlistControlView.widthAnchor, multiplier: 0.125).isActive = true
-        repeatButton.centerYAnchor.constraint(equalTo: playlistControlView.centerYAnchor).isActive = true
-        repeatButton.heightAnchor.constraint(equalTo: playlistControlView.heightAnchor).isActive = true
-    }
-    private func addShuffleButton() {
+        repeatButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
+        repeatButton.widthAnchor.constraint(equalTo: pausePlayButton.widthAnchor).isActive = true
+        repeatButton.heightAnchor.constraint(equalTo: pausePlayButton.heightAnchor).isActive = true
+        repeatButton.topAnchor.constraint(equalTo: progressBar.bottomAnchor).isActive = true
+    }*/
+    /*private func addShuffleButton() {
         shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
         playlistControlView.addSubview(shuffleButton)
         shuffleButton.translatesAutoresizingMaskIntoConstraints = false
@@ -309,18 +300,16 @@ class NowPlayingViewController: UIViewController {
             QueueManager.shared.setPlayerRate(to: 1)
         }
     }
-    
-    /*@objc func shuffleButtonAction(sender: UIButton!) {
+    /*
+    @objc func shuffleButtonAction(sender: UIButton!) {
         print("shuffle Button tapped")
         NPDelegate?.shufflePlaylist()
     }
-    
+    */
     @objc func repeatButtonAction(sender: UIButton!) {
         print("repeat Button tapped")
-        print("new repeat status: ", !audioPlayer.isSongRepeat)
-        repeatButton.alpha = !audioPlayer.isSongRepeat ? 1 : 0.35
-        audioPlayer.isSongRepeat = !audioPlayer.isSongRepeat
-    }*/
+
+    }
 
 
     @objc func onSliderValChanged(slider: UISlider, event: UIEvent) {

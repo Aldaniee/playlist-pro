@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MediaPlayer
 
 protocol QueueManagerDelegate: class {
     func updateDisplayedSong()
@@ -21,6 +22,7 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
 
     final let PREV_CUTOFF_FOR_SONG_RESTART = 2.0 //seconds
     private var audioPlayer: YYTAudioPlayer!
+    var repeatType = RepeatType.playlist
 
     var queue = NSMutableArray()
 
@@ -29,16 +31,17 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
 		audioPlayer = YYTAudioPlayer()
         audioPlayer.delegate = self
         
-        
+
         queue = LibraryManager.shared.songLibrary.getSongList()
         if audioPlayer.setupPlayer(withQueue: queue) == false {
             print("setup failure")
         }
+        setupRemoteTransportControls()
 
     }
 	
 	func moveQueueForward() {
-        if audioPlayer.repeatType == RepeatType.playlist {
+        if repeatType == RepeatType.playlist {
             queue.add(queue.object(at: 0))
         }
         queue.removeObject(at: 0)
@@ -52,7 +55,7 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
 	func didSelectSong(songDict: Dictionary<String, Any>) {
         if !audioPlayer.isSuspended {
             for _ in 0..<queue.index(of: songDict) {
-                if audioPlayer.repeatType == RepeatType.playlist {
+                if repeatType == RepeatType.playlist {
                     queue.add(queue.object(at: 0))
                 }
                 queue.removeObject(at: 0)
@@ -64,7 +67,7 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
     
     func next() {
         if !audioPlayer.isSuspended {
-            if audioPlayer.repeatType == RepeatType.song || queue.count == 1{
+            if repeatType == RepeatType.song || queue.count == 1{
                 audioPlayer.audioPlayer.currentTime = 0.0
             }
             else {
@@ -119,6 +122,57 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
     
     func audioPlayerPlayingStatusChanged(isPlaying playing: Bool) {
         delegate?.changePlayPauseIcon(isPlaying: playing)
+    }
+    // MARK: Control from Control Center
+    /*
+    Support controlling background audio from the Control Center and iOS Lock screen.
+    */
+    func setupRemoteTransportControls() {
+        // Get the shared MPRemoteCommandCenter
+        let commandCenter = MPRemoteCommandCenter.shared()
+        commandCenter.playCommand.removeTarget(nil)
+        commandCenter.pauseCommand.removeTarget(nil)
+        commandCenter.nextTrackCommand.removeTarget(nil)
+        commandCenter.previousTrackCommand.removeTarget(nil)
+        commandCenter.changePlaybackPositionCommand.removeTarget(nil)
+
+        // Add handler for Play Command
+        commandCenter.playCommand.addTarget { [unowned self] event in
+            print("Play command - is playing: \(!self.isPlaying())")
+            if !self.isPlaying() {
+                self.play()
+                return .success
+            }
+            return .commandFailed
+        }
+        
+        // Add handler for Pause Command
+        commandCenter.pauseCommand.addTarget { [unowned self] event in
+            print("Pause command - is playing: \(!self.isPlaying())")
+            if self.isPlaying() {
+                self.pause()
+                return .success
+            }
+            return .commandFailed
+        }
+        
+        commandCenter.nextTrackCommand.addTarget { [unowned self] event in
+            print("Next track command pressed")
+            self.next()
+            return .success
+        }
+        
+        commandCenter.previousTrackCommand.addTarget { [unowned self] event in
+            print("Previous track command pressed")
+            self.prev()
+            return .success
+        }
+        
+        commandCenter.changePlaybackPositionCommand.addTarget { [unowned self] event in
+            let e = event as? MPChangePlaybackPositionCommandEvent
+            audioPlayer.audioPlayer.currentTime = e!.positionTime
+            return .success
+        }
     }
 }
 

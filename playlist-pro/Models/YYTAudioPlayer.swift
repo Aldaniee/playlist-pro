@@ -26,11 +26,8 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	private(set) var isSuspended: Bool = false
 	var isSongRepeat: Bool = false
 	
-    var repeatType = RepeatType.playlist
-
 	override init() {
 		super.init()
-		setupRemoteTransportControls()
 		setupInterreuptionsNotifications()
 		setupRouteChangeNotifications()
 	}
@@ -125,91 +122,11 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 			updater.invalidate()
 		}
 	}
-	
-	func next() {
-		if !isSuspended {
-            if repeatType == RepeatType.song {
-                self.audioPlayer.currentTime = 0.0
-            } else if repeatType == RepeatType.playlist {
-                
-            }
-            else {
-                QueueManager.shared.moveQueueForward()
-            }
-			if setupPlayer() {
-				play()
-			}
-		}
-	}
-	
-	func prev() {
-		if !isSuspended {
-			if Float(audioPlayer?.currentTime ?? 0) < 10.0 {
-                QueueManager.shared.moveQueueBackward()
-				if setupPlayer() {
-					play()
-				}
-			} else {
-				self.audioPlayer.currentTime = 0.0
-			}
-		}
-	}
 
 	func isPlaying() -> Bool {
 		return audioPlayer?.isPlaying ?? false
 	}
 			
-	// MARK: Control from Control Center
-	/*
-	Support controlling background audio from the Control Center and iOS Lock screen.
-	*/
-	func setupRemoteTransportControls() {
-		// Get the shared MPRemoteCommandCenter
-		let commandCenter = MPRemoteCommandCenter.shared()
-		commandCenter.playCommand.removeTarget(nil)
-		commandCenter.pauseCommand.removeTarget(nil)
-		commandCenter.nextTrackCommand.removeTarget(nil)
-		commandCenter.previousTrackCommand.removeTarget(nil)
-		commandCenter.changePlaybackPositionCommand.removeTarget(nil)
-
-		// Add handler for Play Command
-		commandCenter.playCommand.addTarget { [unowned self] event in
-			print("Play command - is playing: \(!self.isPlaying())")
-			if !self.isPlaying() {
-				self.play()
-				return .success
-			}
-			return .commandFailed
-		}
-		
-		// Add handler for Pause Command
-		commandCenter.pauseCommand.addTarget { [unowned self] event in
-			print("Pause command - is playing: \(!self.isPlaying())")
-			if self.isPlaying() {
-				self.pause()
-				return .success
-			}
-			return .commandFailed
-		}
-		
-		commandCenter.nextTrackCommand.addTarget { [unowned self] event in
-			print("Next track command pressed")
-			self.next()
-			return .success
-		}
-		
-		commandCenter.previousTrackCommand.addTarget { [unowned self] event in
-			print("Previous track command pressed")
-			self.prev()
-			return .success
-		}
-		
-		commandCenter.changePlaybackPositionCommand.addTarget { [unowned self] event in
-			let e = event as? MPChangePlaybackPositionCommandEvent
-			self.audioPlayer.currentTime = e!.positionTime
-			return .success
-		}
-	}
 
 	func setupNowPlaying() {
 		// Define Now Playing Info
@@ -253,10 +170,10 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
 		print("Audio player did finish playing: \(flag)")
 		if (flag) {
-			if (isSongRepeat) {
-				play()
+            if (QueueManager.shared.repeatType == RepeatType.song) {
+                QueueManager.shared.prev()
 			} else {
-				next()
+                QueueManager.shared.next()
 			}
 		}
 	}
