@@ -4,6 +4,7 @@
 //
 //  Created by Aidan Lee on 12/4/20.
 //
+//  An object to store the downloaded YouTube video from the search result
 
 import Foundation
 
@@ -21,7 +22,6 @@ struct Video : Decodable {
         case thumbnails
         case high
         case id // For search only
-//        case resourceId // For playlist
         
         case published = "publishedAt"
         case title

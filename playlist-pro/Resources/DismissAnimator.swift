@@ -4,6 +4,7 @@
 //
 //  Created by Aidan Lee on 2/18/21.
 //
+//  Used for full-screen swipe down dismiss currently implemented in the queue system
 
 import UIKit
 

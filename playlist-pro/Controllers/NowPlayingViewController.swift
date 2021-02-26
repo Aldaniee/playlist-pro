@@ -279,8 +279,8 @@ class NowPlayingViewController: UIViewController {
         }
     }
     @objc func queueButtonAction(sender: UIButton?) {
-        queueViewController.modalPresentationStyle = .fullScreen
-        present(queueViewController, animated: false, completion: nil)
+        //queueViewController.modalPresentationStyle = .fullScreen
+        present(queueViewController, animated: true, completion: nil)
     }
     
     @objc func nextButtonAction(sender: UIButton!) {

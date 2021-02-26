@@ -19,6 +19,7 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
     static let shared = QueueManager()
     weak var delegate: QueueManagerDelegate?
 
+    final let PREV_CUTOFF_FOR_SONG_RESTART = 2.0 //seconds
     private var audioPlayer: YYTAudioPlayer!
 
     var queue = NSMutableArray()
@@ -37,30 +38,57 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
     }
 	
 	func moveQueueForward() {
-        queue.add(queue.object(at: 0))
+        if audioPlayer.repeatType == RepeatType.playlist {
+            queue.add(queue.object(at: 0))
+        }
         queue.removeObject(at: 0)
-        delegate!.updateDisplayedSong()
 	}
 	
 	func moveQueueBackward() {
         queue.insert(queue.lastObject!, at: 0)
-        queue.removeObject(at: queue.count - 1)
-        delegate!.updateDisplayedSong()
+        queue.removeObject(at: queue.endIndex())
 	}
 	
 	func didSelectSong(songDict: Dictionary<String, Any>) {
-        queue.remove(songDict)
-        queue.insert(songDict, at: 0)
-        play()
-	}
+        if !audioPlayer.isSuspended {
+            for _ in 0..<queue.index(of: songDict) {
+                if audioPlayer.repeatType == RepeatType.playlist {
+                    queue.add(queue.object(at: 0))
+                }
+                queue.removeObject(at: 0)
+            }
+            updateSongPlaying()
+        }
+
+    }
     
     func next() {
-        audioPlayer.next()
-        delegate?.changePlayPauseIcon(isPlaying: true)
+        if !audioPlayer.isSuspended {
+            if audioPlayer.repeatType == RepeatType.song || queue.count == 1{
+                audioPlayer.audioPlayer.currentTime = 0.0
+            }
+            else {
+                moveQueueForward()
+            }
+            updateSongPlaying()
+        }
     }
+    
     func prev() {
-        audioPlayer.prev()
-        delegate?.changePlayPauseIcon(isPlaying: true)
+        if !audioPlayer.isSuspended  {
+            if audioPlayer.audioPlayer?.currentTime ?? 0 < PREV_CUTOFF_FOR_SONG_RESTART {
+                updateSongPlaying()
+            } else {
+                audioPlayer.audioPlayer.currentTime = 0.0
+            }
+        }
+    }
+    /// Displays and plays the first song of the queue
+    private func updateSongPlaying() {
+        delegate!.updateDisplayedSong()
+        if audioPlayer.setupPlayer() {
+            play()
+        }
     }
     func play() {
         audioPlayer.play()
@@ -93,3 +121,10 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
         delegate?.changePlayPauseIcon(isPlaying: playing)
     }
 }
+
+extension NSMutableArray {
+    func endIndex() -> Int {
+        return count-1
+    }
+}
+

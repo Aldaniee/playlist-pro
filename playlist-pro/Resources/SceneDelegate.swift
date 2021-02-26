@@ -22,7 +22,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             window.rootViewController = TabBarViewController()
         }
         else {
-            let navVC = UINavigationController(rootViewController: SplashScreenViewController())
+            let navVC = UINavigationController(rootViewController: AuthSplashScreenViewController())
             navVC.navigationBar.prefersLargeTitles = true
             navVC.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always
             window.rootViewController = navVC

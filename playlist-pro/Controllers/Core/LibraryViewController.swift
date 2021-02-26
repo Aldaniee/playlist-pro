@@ -19,7 +19,7 @@ final class LibraryViewController: UIViewController {
         }
         guard let user = Auth.auth().currentUser else {
             print("No user logged in, presenting authentication splash screen")
-            let vc = SplashScreenViewController()
+            let vc = AuthSplashScreenViewController()
             vc.modalPresentationStyle = .fullScreen
             present(vc, animated: false)
             return
@@ -34,7 +34,7 @@ final class LibraryViewController: UIViewController {
         }
         else {
             configureNavigationBar()
-            // Show account settings
+            addLibraryView()
         }
     }
     
@@ -48,6 +48,11 @@ final class LibraryViewController: UIViewController {
         header.clipsToBounds = true
         header.backgroundColor = .systemGray
         return header
+    }()
+    private let tableView: UITableView = {
+        let tableView = UITableView()
+        tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
+        return tableView
     }()
     private let loginButton: UIButton = {
         let button = UIButton()
@@ -70,14 +75,20 @@ final class LibraryViewController: UIViewController {
     
     private func configureNavigationBar() {
         navigationItem.title = Auth.auth().currentUser?.email
-        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "gear"),
+        navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"),
                                                             style: .done,
                                                             target: self,
                                                             action: #selector(didTapSettingsButton))
     }
+    private func addLibraryView() {
+        tableView.frame = view.frame
+        view.addSubview(tableView)
+
+        tableView.dataSource = self
+        tableView.delegate = self
+    }
     @objc private func didTapSettingsButton() {
-        let vc = SettingsViewController()
-        vc.title = "Settings"
+        let vc = AccountViewController()
         navigationController?.pushViewController(vc, animated: true)
     }
     override func viewDidLayoutSubviews() {
@@ -124,5 +135,26 @@ final class LibraryViewController: UIViewController {
         let loginVC = LoginViewController()
         loginVC.modalPresentationStyle = .fullScreen
         present(loginVC, animated: true)
+    }
+}
+extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return LibraryManager.shared.songLibrary.count()
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
+        cell.songDict = LibraryManager.shared.songLibrary.get(at: indexPath.row)
+        cell.refreshCell()
+
+        return cell
+    }
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return SongCell.rowHeight
+    }
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! SongCell
+
+        print("Selected cell number \(indexPath.row) -> \(cell.songDict["title"] ?? "")")
     }
 }

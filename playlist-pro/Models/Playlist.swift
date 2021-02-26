@@ -4,13 +4,20 @@
 //
 //  Created by Aidan Lee on 1/29/21.
 //
+//  Object to store a playlist (or collection of songs) within the app
 
 import Foundation
 
 class Playlist {
     
+    
+    /*
+     * songList: Songs are stored in an NSMutableArray and are defined as a Dictionary<String, Any>
+     * title: Title of the playlist
+     */
     private var songList: NSMutableArray!
     var title : String!
+    
     init(songList: NSMutableArray, title: String) {
         self.songList = songList
         self.title = title
@@ -21,8 +28,6 @@ class Playlist {
     func setSongList(songList: NSMutableArray) {
         self.songList = songList
     }
-    
-    
     func add(song: Dictionary<String, Any>) {
         songList.add(song)
     }

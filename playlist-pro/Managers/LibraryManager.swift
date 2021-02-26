@@ -12,6 +12,7 @@ import FirebaseAuth
 class LibraryManager {
 
     static let shared = LibraryManager()
+    final let LIBRARY_KEY = "LibraryArray"
     
 	enum SongProperties: String {
 		case id = "id"
@@ -35,7 +36,7 @@ class LibraryManager {
     
     // An array of playlists in the application
     init() {
-        self.songLibrary = Playlist.init(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray()), title: "library")
+        self.songLibrary = Playlist.init(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()), title: "library")
         updateLibraryToDatabase()
     }
     
@@ -55,8 +56,8 @@ class LibraryManager {
             }
         }
         self.downloadMissingSongs(newLibrary: newLibrary)
-        UserDefaults.standard.set(newLibrary, forKey: "LibraryArray")
-        self.songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray()))
+        UserDefaults.standard.set(newLibrary, forKey: LIBRARY_KEY)
+        self.songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()))
         deleteExcessSongs(songLibraryArray: songLibrary.getSongList())
 
     }
@@ -70,8 +71,12 @@ class LibraryManager {
         }
     }
     func refreshSongLibraryFromLocalStorage() {
-        songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray()))
+        songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()))
     }
+    func refreshPlaylistFromLocalStorage(index: Int) {
+        playlists[index].setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "PlaylistArrayAtIndex:\(index)") as? NSArray ?? NSArray()))
+    }
+
     func deleteExcessSongs(songLibraryArray: NSMutableArray) {
         // TODO: Delete any songs not in library array
     }
@@ -170,9 +175,9 @@ class LibraryManager {
                         self.playlistLibraryArray[playlistID!].add(song: enrichedDict)
                     }
                 }*/
-                UserDefaults.standard.set(self.songLibrary.getSongList(), forKey: "LibraryArray")
+                UserDefaults.standard.set(self.songLibrary.getSongList(), forKey: self.LIBRARY_KEY)
                 self.updateLibraryToDatabase()
-                self.songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "LibraryArray") as? NSArray ?? NSArray()))
+                self.songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: self.LIBRARY_KEY) as? NSArray ?? NSArray()))
 				completion?()
 			} else {	// In case of error in adding the song to the library
 				_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
@@ -273,7 +278,7 @@ class LibraryManager {
 				break
 			}
 		}
-        UserDefaults.standard.set(songLibrary.getSongList(), forKey: "LibraryArray")
+        UserDefaults.standard.set(songLibrary.getSongList(), forKey: LIBRARY_KEY)
         self.updateLibraryToDatabase()
 	}
 
@@ -308,12 +313,17 @@ class LibraryManager {
 			songDict = songLibrary.get(at: i)
 			if songDict["id"] as! String == newSong["id"] as! String {
                 songLibrary.replace(index: i, song: newSong)
-                UserDefaults.standard.set(songLibrary.getSongList(), forKey: "LibraryArray")
+                UserDefaults.standard.set(songLibrary.getSongList(), forKey: LIBRARY_KEY)
                 self.updateLibraryToDatabase()
 				break
 			}
 		}
     }
+    func addPlaylist(playlist: Playlist) {
+        playlists.append(playlist)
+        UserDefaults.standard.set(playlist.getSongList(), forKey: "PlaylistArrayAtIndex:\(playlists.count-1)")
+    }
+    
 	private func generateIDFromTimeStamp() -> String {
 		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
 		var timestamp: Int = Int(Date().timeIntervalSince1970 * 1000)

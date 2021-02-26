@@ -1,5 +1,5 @@
 //
-//  PlaylistViewController.swift
+//  PlaylistDetailViewController.swift
 //  playlist-pro
 //
 //  Created by Aidan Lee on 2/16/21.
@@ -7,19 +7,18 @@
 
 import UIKit
 
-class PlaylistViewController: UIViewController {
+class PlaylistContentsViewController: UIViewController {
 
     var playlist = Playlist(songList: NSMutableArray(), title: "Create Playlist")
     
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        // Do any additional setup after loading the view.
+        navigationItem.title = playlist.title
     }
-    
-
     func setPlaylist(withPlaylist playlist: Playlist) {
         self.playlist = playlist
     }
     
 }
+

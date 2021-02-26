@@ -23,32 +23,31 @@ class TabBarViewController: UITabBarController, MiniPlayerViewDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        let home = HomeViewController()
+        let playlist = PlaylistViewController()
         let search = SearchViewController()
         let library = LibraryViewController()
         
-        home.title = "Playlists"
+        playlist.title = "Playlists"
         search.title = "Search"
         library.title = "Library"
         
-        home.navigationItem.largeTitleDisplayMode = .always
+        playlist.navigationItem.largeTitleDisplayMode = .always
         search.navigationItem.largeTitleDisplayMode = .always
         library.navigationItem.largeTitleDisplayMode = .always
 
-        let navHome = UINavigationController(rootViewController: home)
+        let navPlaylist = UINavigationController(rootViewController: playlist)
         let navSearch = UINavigationController(rootViewController: search)
         let navLibrary = UINavigationController(rootViewController: library)
         
-        navHome.navigationBar.prefersLargeTitles = true
+        navPlaylist.navigationBar.prefersLargeTitles = true
         navSearch.navigationBar.prefersLargeTitles = true
         navLibrary.navigationBar.prefersLargeTitles = true
         
-        navHome.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 1)
+        navPlaylist.tabBarItem = UITabBarItem(title: "Playlists", image: UIImage(systemName: "house"), tag: 1)
         navSearch.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 1)
         navLibrary.tabBarItem = UITabBarItem(title: "Library", image: UIImage(systemName: "list.bullet"), tag: 1)
         
-
-        setViewControllers([navHome, navSearch, navLibrary], animated: false)
+        setViewControllers([navPlaylist, navSearch, navLibrary], animated: false)
         addMiniPlayerView()
         miniPlayerView.delegate = self
     }

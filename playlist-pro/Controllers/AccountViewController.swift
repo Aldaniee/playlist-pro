@@ -8,16 +8,16 @@
 import UIKit
 import FirebaseAuth
 
-struct SettingCellModel {
+struct AccountCellModel {
     let title: String
     let handler: (() -> Void)
 }
 
 /// View Controller to show user settings
-final class SettingsViewController: UIViewController {
+final class AccountViewController: UIViewController {
     
-    private var data = [[SettingCellModel]]()
-    static let cellReuseIdentifier = "cell"
+    private var data = [[AccountCellModel]]()
+    static let cellReuseIdentifier = "AccountCell"
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero,
@@ -25,10 +25,11 @@ final class SettingsViewController: UIViewController {
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
         return tableView
     }()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         configureModels()
+        title = "Account"
         view.backgroundColor = .systemBackground
         tableView.delegate = self
         tableView.dataSource = self
@@ -44,7 +45,7 @@ final class SettingsViewController: UIViewController {
     
     private func configureModels() {
         let section = [
-            SettingCellModel(title: "Log Out") { [weak self] in
+            AccountCellModel(title: "Log Out") { [weak self] in
                 self?.didTapLogoutButton()
             }
         ]
@@ -61,7 +62,7 @@ final class SettingsViewController: UIViewController {
                 DispatchQueue.main.async {
                     if success {
                         // Show log in
-                        let loginVC = SplashScreenViewController()
+                        let loginVC = AuthSplashScreenViewController()
                         loginVC.modalPresentationStyle = .fullScreen
                         QueueManager.shared.suspend()
                         self.present(loginVC, animated: false) {
@@ -86,7 +87,7 @@ final class SettingsViewController: UIViewController {
     }
 }
 
-extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
+extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     func numberOfSections(in tableView: UITableView) -> Int {
         return data.count
     }
@@ -96,7 +97,7 @@ extension SettingsViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SettingsViewController.cellReuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: AccountViewController.cellReuseIdentifier, for: indexPath)
         cell.textLabel!.text = data[indexPath.section][indexPath.row].title
         return cell
     }

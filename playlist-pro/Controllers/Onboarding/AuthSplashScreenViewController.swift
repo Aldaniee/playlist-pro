@@ -9,7 +9,7 @@ import UIKit
 import Foundation
 import Firebase
 
-class SplashScreenViewController: UIViewController {
+class AuthSplashScreenViewController: UIViewController {
 
     private let headerView: UIView = {
         let header = UIView()

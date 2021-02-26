@@ -2,14 +2,15 @@
 //  QueueSongCell.swift
 //  playlist-pro
 //
-//  Cell to display one song inside the Queue Table VLibraryManager.shared.playlists[indexPath.row - 1]iew
+//  Cell to display one song inside the Queue Table View
 //
 
 import UIKit
 
-class QueueSongCell : UITableViewCell {
+class SongCell : UITableViewCell {
   
     static let identifier = "SongCell"
+    
     static let rowHeight = CGFloat(80)
     
 	var songDict = Dictionary<String, Any>()

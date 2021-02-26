@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SearchTableViewCell: UITableViewCell {
+class SearchVideoCell: UITableViewCell {
 
     static let identifier = "SearchTableViewCell"
     
@@ -19,7 +19,6 @@ class SearchTableViewCell: UITableViewCell {
         imageView.clipsToBounds = true
         return imageView
     }()
-    
     private let titleLabel: UILabel = {
         let titleLabel = UILabel()
         titleLabel.font = .systemFont(ofSize: 18, weight: .bold)

@@ -24,7 +24,7 @@ class QueueViewController: UIViewController {
     }
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(QueueSongCell.self, forCellReuseIdentifier: QueueSongCell.identifier)
+        tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
         return tableView
     }()
     
@@ -93,20 +93,21 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: QueueSongCell.identifier, for: indexPath) as! QueueSongCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
         cell.songDict = QueueManager.shared.queue[indexPath.row] as! Dictionary<String, Any>
         cell.refreshCell()
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return QueueSongCell.rowHeight
+        return SongCell.rowHeight
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! QueueSongCell
+        let cell = tableView.cellForRow(at: indexPath) as! SongCell
 
         print("Selected cell number \(indexPath.row) -> \(cell.songDict["title"] ?? "")")
         
         QueueManager.shared.didSelectSong(songDict: cell.songDict)
+        tableView.reloadData()
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {

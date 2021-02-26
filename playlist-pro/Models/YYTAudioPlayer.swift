@@ -19,14 +19,15 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 
 	weak var delegate: YYTAudioPlayerDelegate?
 
-	private var audioPlayer: AVAudioPlayer!
+	private(set) var audioPlayer: AVAudioPlayer!
 	private var songsQueue: NSMutableArray!
-	private var songDict: Dictionary<String, Any>!
-	private var currentSongIndex: Int!
+	private(set) var songDict: Dictionary<String, Any>!
 	private var updater = CADisplayLink()
 	private(set) var isSuspended: Bool = false
 	var isSongRepeat: Bool = false
 	
+    var repeatType = RepeatType.playlist
+
 	override init() {
 		super.init()
 		setupRemoteTransportControls()
@@ -40,16 +41,15 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	
 	// MARK: Basics
 	/*
-	 AVAudioPlayer: An audio player that provides playback of audio data from a file or memory.
+	 * AVAudioPlayer: An audio player that provides playback of audio data from a file or memory.
 	*/
 	func setupPlayer(withQueue queue: NSMutableArray) -> Bool {
 		songsQueue = queue
-		currentSongIndex = 0
-		return setupPlayer(withSongAtindex: currentSongIndex)
+		return setupPlayer()
 	}
 	
-	func setupPlayer(withSongAtindex index: Int) -> Bool {
-		return setupPlayer(withSong: songsQueue.object(at: currentSongIndex) as! Dictionary<String, Any>)
+	func setupPlayer() -> Bool {
+		return setupPlayer(withSong: songsQueue.object(at: 0) as! Dictionary<String, Any>)
 	}
 	
 	func setupPlayer(withSong songDict: Dictionary<String, Any>) -> Bool {
@@ -128,9 +128,15 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	
 	func next() {
 		if !isSuspended {
-            QueueManager.shared.moveQueueForward()
-			currentSongIndex = currentSongIndex % songsQueue.count
-			if setupPlayer(withSongAtindex: currentSongIndex) {
+            if repeatType == RepeatType.song {
+                self.audioPlayer.currentTime = 0.0
+            } else if repeatType == RepeatType.playlist {
+                
+            }
+            else {
+                QueueManager.shared.moveQueueForward()
+            }
+			if setupPlayer() {
 				play()
 			}
 		}
@@ -140,8 +146,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 		if !isSuspended {
 			if Float(audioPlayer?.currentTime ?? 0) < 10.0 {
                 QueueManager.shared.moveQueueBackward()
-				currentSongIndex = currentSongIndex % songsQueue.count
-				if setupPlayer(withSongAtindex: currentSongIndex) {
+				if setupPlayer() {
 					play()
 				}
 			} else {

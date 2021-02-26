@@ -4,20 +4,27 @@
 //
 //  Created by Aidan Lee on 2/18/21.
 //
+//  Cell controller for cells within the PlaylistViewController tab, each holding and representing one playlist
 
 import UIKit
 
 class PlaylistCell : UITableViewCell {
-  
+    
+    // Used by tableview controller to identify the cell
     static let identifier = "PlaylistCell"
+    
+    // Height of a cell within the table view
     static let rowHeight = CGFloat(80)
     
+    // Playlist to be displayed
     var playlist : Playlist!
     
+    // Display image for playlist
     let thumbnailImageView: UIImageView = {
         let imgView = UIImageView()
         return imgView
     }()
+    // Playlist title
     let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.boldSystemFont(ofSize: 16)
@@ -51,6 +58,7 @@ class PlaylistCell : UITableViewCell {
     }
     
     func refreshCell() {
+        print("refreshing cell")
         self.titleLabel.text = playlist.title
         if playlist.count() > 0 {
             let firstSong = playlist.getSongList().object(at: 0) as! Dictionary<String, Any>
@@ -59,12 +67,13 @@ class PlaylistCell : UITableViewCell {
                 self.thumbnailImageView.image = cropToBounds(image: UIImage(data: imgData)!, height: 15.0)
             } else {
                 self.thumbnailImageView.image = UIImage(systemName: "list.bullet")
-                print("here")
             }
         }
-        else {
+        else if titleLabel.text == "Create Playlist" {
             self.thumbnailImageView.image = UIImage(systemName: "plus")
-            print("here")
+        }
+        else {
+            self.thumbnailImageView.image = UIImage(systemName: "list.bullet")
         }
     }
     private func cropToBounds(image: UIImage, height: Double) -> UIImage {

@@ -17,14 +17,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(SearchTableViewCell.self,
-                           forCellReuseIdentifier: SearchTableViewCell.identifier)
+        tableView.register(SearchVideoCell.self,
+                           forCellReuseIdentifier: SearchVideoCell.identifier)
         tableView.rowHeight = 80
         return tableView
     }()
 
-    
-    let LM = LibraryManager()
     var model = SearchModel()
     var videos = [Video]()
 
@@ -57,7 +55,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
                                  height: view.height)
     }
 
-    func loadYouTubeVideo(videoID: String) {
+    func downloadYouTubeVideo(videoID: String) {
         print("Loading url: https://www.youtube.com/embed/\(videoID)")
         self.showSpinner(onView: self.view, withTitle: "Loading...")
         XCDYouTubeClient.default().getVideoWithIdentifier(videoID) { (video, error) in
@@ -70,7 +68,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
                 return
             }
             self.removeSpinner()
-            self.LM.addSongToLibrary(songTitle: video!.title, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, completion: nil)
+            LibraryManager.shared.addSongToLibrary(songTitle: video!.title, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, completion: nil)
         }
     }
     
@@ -130,8 +128,8 @@ extension SearchViewController: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SearchTableViewCell.identifier,
-                                                 for: indexPath) as! SearchTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SearchVideoCell.identifier,
+                                                 for: indexPath) as! SearchVideoCell
         
         // Show search Results
         if(isSearching == true) {
@@ -155,7 +153,7 @@ extension SearchViewController: UITableViewDataSource {
         let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
         
         // Download the selected video
-        loadYouTubeVideo(videoID: selectedVideo.videoId)
+        downloadYouTubeVideo(videoID: selectedVideo.videoId)
     }
     
 }
