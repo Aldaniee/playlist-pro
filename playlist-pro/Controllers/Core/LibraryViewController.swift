@@ -34,7 +34,7 @@ final class LibraryViewController: UIViewController {
         }
         else {
             configureNavigationBar()
-            addLibraryView()
+            addTableView()
         }
     }
     
@@ -80,7 +80,7 @@ final class LibraryViewController: UIViewController {
                                                             target: self,
                                                             action: #selector(didTapSettingsButton))
     }
-    private func addLibraryView() {
+    private func addTableView() {
         tableView.frame = view.frame
         view.addSubview(tableView)
 
