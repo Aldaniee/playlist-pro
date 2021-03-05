@@ -32,18 +32,17 @@ class LibraryManager {
 	}
     // An array storing all songs
 	var songLibrary: Playlist!
-    var playlists = [Playlist]()
     
     // An array of playlists in the application
     init() {
-        self.songLibrary = Playlist.init(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()), title: "library")
+        self.songLibrary = Playlist.init(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()), title: LIBRARY_KEY)
         updateLibraryToDatabase()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-	
+ 
     func importLibraryFromDatabase() {
         if(Auth.auth().currentUser == nil) {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
@@ -73,9 +72,6 @@ class LibraryManager {
     func refreshSongLibraryFromLocalStorage() {
         songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()))
     }
-    func refreshPlaylistFromLocalStorage(index: Int) {
-        playlists[index].setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: "PlaylistArrayAtIndex:\(index)") as? NSArray ?? NSArray()))
-    }
 
     func deleteExcessSongs(songLibraryArray: NSMutableArray) {
         // TODO: Delete any songs not in library array
@@ -98,7 +94,7 @@ class LibraryManager {
 		Song Title -> will be set to Song ID
 		Thumbnail URL -> It will skip downloading a thumbnail image
 	*/
-    func addSongToLibrary(songTitle: String?, songUrl: URL, songExtension: String , thumbnailUrl: URL?, songID: String?, completion: (() -> Void)? = nil) {
+    func addSongToLibrary(songTitle: String?, songUrl: URL, songExtension: String , thumbnailUrl: URL?, songID: String?, playlistTitle: String?, completion: (() -> Void)? = nil) {
 		let sID = songID == nil ? "dl_" + generateIDFromTimeStamp() : "yt_" + songID! + generateIDFromTimeStamp()
 		var newExtension: String
 		var errorStr: String?
@@ -169,14 +165,19 @@ class LibraryManager {
 				let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
                 self.songLibrary.add(song: enrichedDict)
                 self.updateLibraryToDatabase()
-                /*if (playlistID != nil) {
-                    print("Adding song to playlist: \(playlistID!)")
-                    if(playlistID! >= 0 && playlistID! < self.playlistLibraryArray.count) {
-                        self.playlistLibraryArray[playlistID!].add(song: enrichedDict)
+                if (playlistTitle != nil) {
+                    print("Adding song to playlist: \(playlistTitle!)")
+                    let playlistIndex = PlaylistsManager.shared.getPlaylistIndex(title: playlistTitle!)
+                    if playlistIndex == -1 {
+                        print("Playlist not found")
                     }
-                }*/
+                    else {
+                        PlaylistsManager.shared.playlists[playlistIndex].add(song: enrichedDict)
+                    }
+                }
                 UserDefaults.standard.set(self.songLibrary.getSongList(), forKey: self.LIBRARY_KEY)
                 self.updateLibraryToDatabase()
+                
                 self.songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: self.LIBRARY_KEY) as? NSArray ?? NSArray()))
 				completion?()
 			} else {	// In case of error in adding the song to the library
@@ -318,10 +319,6 @@ class LibraryManager {
 				break
 			}
 		}
-    }
-    func addPlaylist(playlist: Playlist) {
-        playlists.append(playlist)
-        UserDefaults.standard.set(playlist.getSongList(), forKey: "PlaylistArrayAtIndex:\(playlists.count-1)")
     }
     
 	private func generateIDFromTimeStamp() -> String {

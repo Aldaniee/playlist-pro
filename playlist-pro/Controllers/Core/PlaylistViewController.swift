@@ -9,7 +9,12 @@ import Foundation
 import UIKit
 import FirebaseAuth
 
-class PlaylistViewController: UIViewController {
+class PlaylistViewController: UIViewController, CreatePlaylistDelegate {
+    func reloadTableView() {
+        tableView.reloadData()
+    }
+    let createPlaylistViewController = CreatePlaylistViewController()
+
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(PlaylistCell.self, forCellReuseIdentifier: PlaylistCell.identifier)
@@ -20,6 +25,7 @@ class PlaylistViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         handleNotAuthenticated()
+        PlaylistsManager.shared.refreshPlaylistsFromLocalStorage()
         tableView.reloadData()
     }
     // Called only when view instatiated
@@ -30,6 +36,7 @@ class PlaylistViewController: UIViewController {
         tableView.frame = view.frame
         tableView.dataSource = self
         tableView.delegate = self
+        createPlaylistViewController.delegate = self
         view.addSubview(tableView)
     }
     override func viewDidLayoutSubviews() {
@@ -49,7 +56,7 @@ class PlaylistViewController: UIViewController {
 }
 extension PlaylistViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return LibraryManager.shared.playlists.count + 1
+        return PlaylistsManager.shared.playlists.count + 1
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -59,7 +66,7 @@ extension PlaylistViewController: UITableViewDataSource, UITableViewDelegate {
             cell.playlist = Playlist(songList: NSMutableArray(), title: "Create Playlist")
         }
         else {
-            cell.playlist = LibraryManager.shared.playlists[indexPath.row - 1]
+            cell.playlist = PlaylistsManager.shared.playlists[indexPath.row - 1]
         }
         cell.refreshCell()
 
@@ -74,14 +81,13 @@ extension PlaylistViewController: UITableViewDataSource, UITableViewDelegate {
         print("Selected cell number \(indexPath.row) -> \(cell.playlist.title ?? "")")
         
         if indexPath.row == 0 {
-            let createPlaylistViewController = CreatePlaylistViewController()
-            present(createPlaylistViewController, animated: true) {
+            present(createPlaylistViewController, animated: true, completion: {
                 tableView.reloadData()
-            }
+            })
         }
         else {
             let playlistDetailViewController = PlaylistContentsViewController()
-            playlistDetailViewController.setPlaylist(withPlaylist: LibraryManager.shared.playlists[indexPath.row - 1])
+            playlistDetailViewController.setPlaylist(withPlaylist: PlaylistsManager.shared.playlists[indexPath.row - 1])
             playlistDetailViewController.modalPresentationStyle = .fullScreen
             navigationController?.pushViewController(playlistDetailViewController, animated: true)
         }

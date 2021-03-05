@@ -27,6 +27,7 @@
 		EA7E3FE325A67646009A4DAE /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7E3FE225A67646009A4DAE /* AccountViewController.swift */; };
 		EA8F5AD625926BC50081E9AB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F5AD525926BC50081E9AB /* Extensions.swift */; };
 		EA96633425E9647700C8254C /* RepeatType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA96633325E9647700C8254C /* RepeatType.swift */; };
+		EA96634B25F161BC00C8254C /* PlaylistsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA96634A25F161BC00C8254C /* PlaylistsManager.swift */; };
 		EA9D945025938AA80057493D /* AuthSplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D944F25938AA80057493D /* AuthSplashScreenViewController.swift */; };
 		EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */; };
 		EAC06DD425DC1CA300E86162 /* PlaylistContentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06DD325DC1CA300E86162 /* PlaylistContentsViewController.swift */; };
@@ -100,6 +101,7 @@
 		EA7E3FE225A67646009A4DAE /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		EA8F5AD525926BC50081E9AB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA96633325E9647700C8254C /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
+		EA96634A25F161BC00C8254C /* PlaylistsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsManager.swift; sourceTree = "<group>"; };
 		EA9D944F25938AA80057493D /* AuthSplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSplashScreenViewController.swift; sourceTree = "<group>"; };
 		EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyImportViewController.swift; sourceTree = "<group>"; };
 		EAC06DD325DC1CA300E86162 /* PlaylistContentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistContentsViewController.swift; sourceTree = "<group>"; };
@@ -261,6 +263,7 @@
 				EAE431432550B6F700E5AEBF /* CacheManager.swift */,
 				EAC06DDF25DC1CE800E86162 /* HapticsManager.swift */,
 				EAC06E0525DC356B00E86162 /* LibraryManager.swift */,
+				EA96634A25F161BC00C8254C /* PlaylistsManager.swift */,
 				EAC06E0625DC356B00E86162 /* QueueManager.swift */,
 			);
 			path = Managers;
@@ -611,6 +614,7 @@
 				EAC06E5F25DEFEB600E86162 /* CreatePlaylistViewController.swift in Sources */,
 				EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */,
 				EAC06E4B25DEB25E00E86162 /* DismissAnimator.swift in Sources */,
+				EA96634B25F161BC00C8254C /* PlaylistsManager.swift in Sources */,
 				EA0558A925B118EA00B1FF85 /* SongCell.swift in Sources */,
 				EAC06E0825DC356B00E86162 /* LibraryManager.swift in Sources */,
 				EAC06E0925DC356B00E86162 /* QueueManager.swift in Sources */,

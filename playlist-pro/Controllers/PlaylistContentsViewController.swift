@@ -11,7 +11,7 @@ class PlaylistContentsViewController: UIViewController {
 
     var playlist = Playlist(songList: NSMutableArray(), title: "Empty Playlist")
     
-    private let tableView: UITableView = {
+    let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
         return tableView

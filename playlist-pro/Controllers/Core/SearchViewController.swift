@@ -68,7 +68,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
                 return
             }
             self.removeSpinner()
-            LibraryManager.shared.addSongToLibrary(songTitle: video!.title, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, completion: nil)
+            LibraryManager.shared.addSongToLibrary(songTitle: video!.title, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, playlistTitle: nil, completion: nil)
         }
     }
     

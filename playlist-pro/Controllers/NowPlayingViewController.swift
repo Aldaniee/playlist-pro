@@ -9,82 +9,158 @@ import UIKit
 
 class NowPlayingViewController: UIViewController {
     
+    // MARK: Tab Bar
+    let tabBarHeight = CGFloat(18)
+    let closeButtonScaleConstant = CGFloat(1.5)
+    
+    let artistLabelHeight = CGFloat(14)
+    let progressBarHeight = CGFloat(5)
+    let pausePlaySize = CGFloat(80)
+    let nextPrevSize = CGFloat(30)
+    let spacing = CGFloat(40)
+    let repeatShuffleSize = CGFloat(20)
+    
+    let timeLabelSize = CGFloat(10)
+    let timeLabelScaleConstant = CGFloat(3.5)
+    let queueButtonSize = CGFloat(20)
+
+    
     var interactor: Interactor? = nil
     var queueViewController = QueueViewController()
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        view.addGestureRecognizer(UIPanGestureRecognizer(target:self, action: #selector(handleGesture)))
-
-        //addRepeatButton()
-        //addShuffleButton()
-        addBackgroundBox()
-        addProgressBar()
-        //addCurrentTimeLabel()
-        //addTimeLeftLabel()
-        addThumbnailImage()
-        addNextButton()
-        addPlayPauseButtton()
-        addPreviousButton()
-        addTitleLabel()
-        addArtistLabel()
-        addQueueButtton()
-
-        updateDisplayedSong()
-
-    }
-    
     var songID = ""
-    let backgroundBox: UIImageView = {
-        let img = UIImageView()
-        return img
+    
+    // MARK: Background
+    private let overlayView: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        view.alpha = 0.7
+        return view
     }()
     
-    let thumbnailImageView: UIImageView = {
+    // MARK: Tab Bar
+    let closeButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "chevron.down", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
+        return btn
+    }()
+    let tabBarTitle: UILabel = {
+        let lbl = UILabel()
+        lbl.numberOfLines = 0
+        lbl.backgroundColor = .clear
+        lbl.textAlignment = .center
+        lbl.text = "Now Playing"
+        lbl.textColor = .white
+        return lbl
+    }()
+    let optionsButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        btn.tintColor = .white
+        return btn
+    }()
+    // MARK: Playback Display
+    let albumCoverImageView: UIImageView = {
         let imgView = UIImageView()
         imgView.layer.masksToBounds = true
         return imgView
     }()
-    let titleLabel: UILabel = {
+    let songTitleLabel: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.boldSystemFont(ofSize: 18)
+        lbl.numberOfLines = 0
+        lbl.backgroundColor = .clear
+        lbl.textColor = .white
         lbl.textAlignment = .left
         return lbl
     }()
     let artistLabel: UILabel = {
         let lbl = UILabel()
+        lbl.numberOfLines = 0
+        lbl.backgroundColor = .clear
         lbl.textColor = Constants.UI.gray
-        lbl.font = UIFont.systemFont(ofSize: 18)
         lbl.textAlignment = .left
         return lbl
-    }()
-    let previousButton: UIButton = {
-        let btn = UIButton()
-        btn.setImage(UIImage(named: "previous"), for: UIControl.State.normal)
-        return btn
-    }()
-    let pausePlayButton: UIButton = {
-        let btn = UIButton()
-        btn.setImage(UIImage(named: "play"), for: UIControl.State.normal)
-        return btn
-    }()
-    let nextButton: UIButton = {
-        let btn = UIButton()
-        btn.setImage(UIImage(named: "next"), for: UIControl.State.normal)
-        return btn
     }()
     let progressBar: UISlider = {
         let pBar = UISlider()
         pBar.tintColor = Constants.UI.gray
+        pBar.backgroundColor = .clear
         return pBar
     }()
-    let queueButton: UIButton = {
+    var isProgressBarSliding = false
+    // MARK: Playback Controls
+    let pausePlayButton: UIButton = {
         let btn = UIButton()
-        btn.setImage(UIImage(named: "list.bullet"), for: UIControl.State.normal)
+        btn.backgroundColor = .clear
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "play.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
         return btn
     }()
-    var isProgressBarSliding = false
+    let previousButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "backward.end.fill", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
+        return btn
+    }()
+    let nextButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "forward.end.fill", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
+        return btn
+    }()
+    let currentTimeLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "00:00"
+        lbl.backgroundColor = .clear
+        lbl.textColor = .white
+        return lbl
+    }()
+    let timeLeftLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "00:00"
+        lbl.backgroundColor = .clear
+        lbl.textColor = .white
+        return lbl
+    }()
+    let repeatButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        btn.imageView!.contentMode = .scaleAspectFit
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "repeat", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
+        return btn
+    }()
+    let shuffleButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "shuffle", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
+        return btn
+    }()
+    // MARK: Bottom Bar
+    let queueButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        btn.imageView!.contentMode = .scaleAspectFit
+        btn.setImage(UIImage(systemName: "list.bullet"), for: UIControl.State.normal)
+        btn.tintColor = .white
+        return btn
+    }()
     /*let playbackRateButton: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = Constants.UI.orange
@@ -93,96 +169,139 @@ class NowPlayingViewController: UIViewController {
         btn.setTitle("x1", for: .normal)
         return btn
     }()*/
-    let currentTimeLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.text = "00:00"
-        lbl.textAlignment = .center
-        lbl.font = UIFont.boldSystemFont(ofSize: 11)
-        return lbl
-    }()
-    let timeLeftLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.text = "00:00"
-        lbl.textAlignment = .center
-        lbl.font = UIFont.boldSystemFont(ofSize: 11)
-        return lbl
-    }()
-    //let queueControlView = UIView()
-    let repeatButton: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        btn.imageView!.contentMode = .scaleAspectFit
-        btn.setImage(UIImage(named: "loop"), for: UIControl.State.normal)
-        btn.alpha = 0.35
-        return btn
-    }()
-    let shuffleButton: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        btn.imageView!.contentMode = .scaleAspectFit
-        btn.setImage(UIImage(named: "shuffle"), for: UIControl.State.normal)
-        return btn
-    }()
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        view.backgroundColor = .systemBackground
+        view.addGestureRecognizer(UIPanGestureRecognizer(target:self, action: #selector(handleGesture)))
 
-/*
-    private func addRepeatButton() {
-        repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
-        view.addSubview(repeatButton)
-        repeatButton.translatesAutoresizingMaskIntoConstraints = false
-        repeatButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 40).isActive = true
-        repeatButton.widthAnchor.constraint(equalTo: pausePlayButton.widthAnchor).isActive = true
-        repeatButton.heightAnchor.constraint(equalTo: pausePlayButton.heightAnchor).isActive = true
-        repeatButton.topAnchor.constraint(equalTo: progressBar.bottomAnchor).isActive = true
-    }*/
-    /*private func addShuffleButton() {
+        view.addSubview(overlayView)
+        
+        // MARK: Tab Bar
+        view.addSubview(closeButton)
+        view.addSubview(tabBarTitle)
+        tabBarTitle.font = UIFont.boldSystemFont(ofSize: tabBarHeight)
+        view.addSubview(optionsButton)
+        optionsButton.titleLabel!.numberOfLines = 0
+        optionsButton.titleLabel!.font = UIFont.systemFont(ofSize: tabBarHeight)
+        optionsButton.setTitle("···", for: UIControl.State.normal)
+
+
+        
+        // MARK: Playback Display
+        view.addSubview(albumCoverImageView)
+        view.addSubview(progressBar)
+        progressBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
+        view.addSubview(songTitleLabel)
+        songTitleLabel.font = UIFont.boldSystemFont(ofSize: tabBarHeight)
+        view.addSubview(artistLabel)
+        artistLabel.font = UIFont.systemFont(ofSize: artistLabelHeight)
+
+        view.addSubview(currentTimeLabel)
+        currentTimeLabel.font = UIFont.boldSystemFont(ofSize: timeLabelSize)
+        view.addSubview(timeLeftLabel)
+        timeLeftLabel.font = UIFont.boldSystemFont(ofSize: timeLabelSize)
+
+        
+        // MARK: Playback Controls
+        view.addSubview(shuffleButton)
         shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
-        playlistControlView.addSubview(shuffleButton)
-        shuffleButton.translatesAutoresizingMaskIntoConstraints = false
-        shuffleButton.trailingAnchor.constraint(equalTo: playlistControlView.trailingAnchor, constant: -2.5).isActive = true
-        shuffleButton.widthAnchor.constraint(equalTo: playlistControlView.widthAnchor, multiplier: 0.125).isActive = true
-        shuffleButton.centerYAnchor.constraint(equalTo: playlistControlView.centerYAnchor).isActive = true
-        shuffleButton.heightAnchor.constraint(equalTo: playlistControlView.heightAnchor).isActive = true
-    }*/
-    private func addBackgroundBox() {
-        view.addSubview(backgroundBox)
-        backgroundBox.translatesAutoresizingMaskIntoConstraints = false
-        backgroundBox.backgroundColor = .systemGray
-        backgroundBox.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
-        backgroundBox.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        backgroundBox.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        backgroundBox.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-    }
-    /*private func addCurrentTimeLabel() {
-        currentTimeLabel.addBorder(side: .right, color: Constants.UI.orange, width: 0.5)
-        songControlView.addSubview(currentTimeLabel)
-        currentTimeLabel.translatesAutoresizingMaskIntoConstraints = false
-        currentTimeLabel.leadingAnchor.constraint(equalTo: progressBar.trailingAnchor, constant: 2.5).isActive = true
-        currentTimeLabel.widthAnchor.constraint(equalTo: songControlView.widthAnchor, multiplier: 0.1, constant: -2.5).isActive = true
-        currentTimeLabel.centerYAnchor.constraint(equalTo: songControlView.centerYAnchor).isActive = true
-        currentTimeLabel.heightAnchor.constraint(equalTo: songControlView.heightAnchor).isActive = true
+        view.addSubview(repeatButton)
+        repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
+        view.addSubview(pausePlayButton)
+        pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
+        view.addSubview(previousButton)
+        previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
+        view.addSubview(nextButton)
+        nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+        
+        // MARK: Bottom Bar
+        view.addSubview(queueButton)
+        queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
 
+        updateDisplayedSong()
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        overlayView.frame = view.bounds
+        let edgePadding = spacing/2
+
+        // MARK: Tab Bar
+        let topToTabBarMiddle = CGFloat(70)
+        let closeButtonWidth = tabBarHeight*closeButtonScaleConstant
+        closeButton.frame = CGRect(x: edgePadding,
+                                   y: topToTabBarMiddle-tabBarHeight/2,
+                                   width: closeButtonWidth,
+                                   height: tabBarHeight)
+        tabBarTitle.frame = CGRect(x: spacing + closeButtonWidth,
+                                  y: topToTabBarMiddle-tabBarHeight/2,
+                                  width: view.width-spacing-closeButtonWidth-tabBarHeight-spacing,
+                                  height: tabBarHeight)
+        optionsButton.frame = CGRect(x: view.width-edgePadding-tabBarHeight,
+                                     y: topToTabBarMiddle-tabBarHeight/2,
+                                     width: tabBarHeight,
+                                     height: tabBarHeight)
+        
+        // MARK: Playback View
+        let tabBarTitleBottomToAlbumTop = CGFloat(52)
+        
+        albumCoverImageView.frame = CGRect(x: edgePadding,
+                                          y: tabBarTitle.bottom + tabBarTitleBottomToAlbumTop,
+                                          width: view.width - spacing,
+                                          height: view.width - spacing)
+        songTitleLabel.frame = CGRect(x: edgePadding,
+                                  y: albumCoverImageView.bottom + spacing,
+                                  width: view.width-spacing,
+                                  height: tabBarHeight)
+        artistLabel.frame = CGRect(x: edgePadding,
+                                   y: songTitleLabel.bottom + 5,
+                                   width: view.width-spacing,
+                                   height: artistLabelHeight)
+        progressBar.frame = CGRect(x: edgePadding,
+                                   y: songTitleLabel.bottom + spacing,
+                                   width: view.width-spacing,
+                                   height: progressBarHeight)
+        let timeLabelWidth = timeLabelSize*timeLabelScaleConstant
+        currentTimeLabel.frame = CGRect(x: progressBar.left,
+                                        y: progressBar.bottom,
+                                        width: timeLabelWidth,
+                                        height: timeLabelSize)
+        timeLeftLabel.frame = CGRect(x: progressBar.right-timeLabelWidth,
+                                     y: progressBar.bottom,
+                                     width: timeLabelWidth,
+                                     height: timeLabelSize)
+        
+        // MARK: Playback Controls
+        let progressBarToControlsCenterLineSpacing = progressBar.bottom+spacing*2
+        
+        shuffleButton.frame = CGRect(x: progressBar.left,
+                                     y: progressBarToControlsCenterLineSpacing-repeatShuffleSize/2,
+                                     width: repeatShuffleSize,
+                                     height: repeatShuffleSize)
+        repeatButton.frame = CGRect(x: progressBar.right-repeatShuffleSize,
+                                    y: progressBarToControlsCenterLineSpacing-repeatShuffleSize/2,
+                                    width: repeatShuffleSize,
+                                    height: repeatShuffleSize)
+        pausePlayButton.frame = CGRect(x: view.center.x-pausePlaySize/2,
+                                       y: progressBarToControlsCenterLineSpacing-pausePlaySize/2,
+                                       width: pausePlaySize,
+                                       height: pausePlaySize)
+        let pausePlayToPrevNextSpacing = spacing*2
+        previousButton.frame = CGRect(x: view.center.x-pausePlayToPrevNextSpacing-nextPrevSize,
+                                       y: progressBarToControlsCenterLineSpacing-nextPrevSize/2,
+                                       width: nextPrevSize,
+                                       height: nextPrevSize)
+        nextButton.frame = CGRect(x: view.center.x + pausePlayToPrevNextSpacing,
+                                       y: progressBarToControlsCenterLineSpacing-nextPrevSize/2,
+                                       width: nextPrevSize,
+                                       height: nextPrevSize)
+        let playPauseBottomToBottomBar = CGFloat(40)
+        // MARK: Bottom Bar
+        queueButton.frame = CGRect(x: edgePadding,
+                                   y: pausePlayButton.bottom + playPauseBottomToBottomBar,
+                                   width: queueButtonSize,
+                                   height: queueButtonSize)
     }
     
-    private func addTimeLeftLabel() {
-        timeLeftLabel.addBorder(side: .left, color: Constants.UI.orange, width: 0.5)
-        songControlView.addSubview(timeLeftLabel)
-        timeLeftLabel.translatesAutoresizingMaskIntoConstraints = false
-        timeLeftLabel.widthAnchor.constraint(equalTo: songControlView.widthAnchor, multiplier: 0.1, constant: -2.5).isActive = true
-        timeLeftLabel.leadingAnchor.constraint(equalTo: currentTimeLabel.trailingAnchor).isActive = true
-        timeLeftLabel.centerYAnchor.constraint(equalTo: songControlView.centerYAnchor).isActive = true
-        timeLeftLabel.heightAnchor.constraint(equalTo: songControlView.heightAnchor).isActive = true
-
-    }*/
-    private func addProgressBar() {
-        progressBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
-        backgroundBox.addSubview(progressBar)
-        progressBar.translatesAutoresizingMaskIntoConstraints = false
-        progressBar.leadingAnchor.constraint(equalTo: backgroundBox.leadingAnchor, constant: 6.0).isActive = true
-        progressBar.widthAnchor.constraint(equalTo: backgroundBox.widthAnchor, multiplier: 0.7, constant: -2.5).isActive = true
-        progressBar.bottomAnchor.constraint(equalTo: backgroundBox.bottomAnchor).isActive = true
-        progressBar.heightAnchor.constraint(equalToConstant: 20).isActive = true
-        
-    }
     /*private func addPlaybackRateButton() {
         playbackRateButton.addTarget(self, action: #selector(playbackRateButtonAction), for: .touchUpInside)
         songControlView.addSubview(playbackRateButton)
@@ -193,71 +312,7 @@ class NowPlayingViewController: UIViewController {
         playbackRateButton.heightAnchor.constraint(equalTo: songControlView.heightAnchor).isActive = true
 
     }*/
-    private func addThumbnailImage() {
 
-        view.addSubview(thumbnailImageView)
-        thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
-        thumbnailImageView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 5).isActive = true
-        thumbnailImageView.topAnchor.constraint(equalTo: view.topAnchor, constant: 3.5).isActive = true
-        thumbnailImageView.bottomAnchor.constraint(equalTo: progressBar.topAnchor, constant: -2.5).isActive = true
-        thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor).isActive = true
-    }
-    private func addNextButton() {
-        nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
-        view.addSubview(nextButton)
-        nextButton.translatesAutoresizingMaskIntoConstraints = false
-        nextButton.trailingAnchor.constraint(equalTo: backgroundBox.trailingAnchor, constant: -10).isActive = true
-        nextButton.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor).isActive = true
-        nextButton.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.3).isActive = true
-        nextButton.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.3).isActive = true
-    }
-    private func addPlayPauseButtton() {
-        pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
-        view.addSubview(pausePlayButton)
-        pausePlayButton.translatesAutoresizingMaskIntoConstraints = false
-        pausePlayButton.trailingAnchor.constraint(equalTo: nextButton.leadingAnchor, constant: -10).isActive = true
-        pausePlayButton.centerYAnchor.constraint(equalTo: thumbnailImageView.centerYAnchor).isActive = true
-        pausePlayButton.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.5).isActive = true
-        pausePlayButton.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.5).isActive = true
-
-    }
-    private func addQueueButtton() {
-        queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
-        view.addSubview(queueButton)
-        queueButton.translatesAutoresizingMaskIntoConstraints = false
-        queueButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20).isActive = true
-        queueButton.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -20).isActive = true
-        queueButton.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.5).isActive = true
-        queueButton.widthAnchor.constraint(equalTo: queueButton.heightAnchor).isActive = true
-
-    }
-    private func addPreviousButton() {
-        previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
-        view.addSubview(previousButton)
-        previousButton.translatesAutoresizingMaskIntoConstraints = false
-        previousButton.trailingAnchor.constraint(equalTo: pausePlayButton.leadingAnchor, constant: -10).isActive = true
-        previousButton.centerYAnchor.constraint(equalTo: pausePlayButton.centerYAnchor).isActive = true
-        previousButton.heightAnchor.constraint(equalTo: nextButton.heightAnchor).isActive = true
-        previousButton.widthAnchor.constraint(equalTo: nextButton.heightAnchor).isActive = true
-
-    }
-    private func addTitleLabel() {
-        view.addSubview(titleLabel)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: 10).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: previousButton.leadingAnchor, constant: -10).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor, constant: 5).isActive = true
-        titleLabel.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.5, constant: -5).isActive = true
-    }
-    private func addArtistLabel() {
-        view.addSubview(artistLabel)
-        artistLabel.translatesAutoresizingMaskIntoConstraints = false
-        artistLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor).isActive = true
-        artistLabel.trailingAnchor.constraint(equalTo: pausePlayButton.leadingAnchor, constant: -5).isActive = true
-        artistLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor).isActive = true
-        artistLabel.heightAnchor.constraint(equalTo: titleLabel.heightAnchor).isActive = true
-    }
-    
     @objc func pausePlayButtonAction(sender: UIButton?) {
         if QueueManager.shared.isPlaying() {
             print("Paused")
@@ -300,15 +355,13 @@ class NowPlayingViewController: UIViewController {
             QueueManager.shared.setPlayerRate(to: 1)
         }
     }
-    /*
+    
     @objc func shuffleButtonAction(sender: UIButton!) {
-        print("shuffle Button tapped")
-        NPDelegate?.shufflePlaylist()
+        print("shuffle Button tapped but not yet implemented")
     }
-    */
+    
     @objc func repeatButtonAction(sender: UIButton!) {
-        print("repeat Button tapped")
-
+        print("repeat Button tapped but not yet implemented")
     }
 
 
@@ -358,10 +411,12 @@ class NowPlayingViewController: UIViewController {
         changePlayPauseIcon(isPlaying: isPlaying)
     }
     func changePlayPauseIcon(isPlaying: Bool) {
+        let font = UIFont.systemFont(ofSize: 999)
+        let configuration = UIImage.SymbolConfiguration(font: font)
         if isPlaying {
-            self.pausePlayButton.setImage(UIImage(named: "pause"), for: UIControl.State.normal)
+            self.pausePlayButton.setImage(UIImage(systemName: "pause.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
         } else {
-            self.pausePlayButton.setImage(UIImage(named: "play"), for: UIControl.State.normal)
+            self.pausePlayButton.setImage(UIImage(systemName: "play.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
         }
     }
     func updateDisplayedSong() {
@@ -376,14 +431,14 @@ class NowPlayingViewController: UIViewController {
 
         let songID = displayedSong["id"] as? String ?? ""
         self.songID = songID
-        titleLabel.text = displayedSong["title"] as? String ?? ""
+        songTitleLabel.text = displayedSong["title"] as? String ?? ""
         artistLabel.text = ((displayedSong["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", "))
         
         let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
         if let imgData = imageData {
-            thumbnailImageView.image = UIImage(data: imgData)
+            albumCoverImageView.image = UIImage(data: imgData)
         } else {
-            thumbnailImageView.image = UIImage(named: "placeholder")
+            albumCoverImageView.image = UIImage(named: "placeholder")
         }
 
         //let oldPlaybackRate = audioPlayer.getPlayerRate()
