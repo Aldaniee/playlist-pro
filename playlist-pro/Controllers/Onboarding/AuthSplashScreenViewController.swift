@@ -11,24 +11,30 @@ import Firebase
 
 class AuthSplashScreenViewController: UIViewController {
 
-    private let headerView: UIView = {
-        let header = UIView()
-        header.clipsToBounds = true
-        header.backgroundColor = .systemGray
-        return header
+    private let background: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "scooby")
+        return img
     }()
-    private let loginButton: UIButton = {
+    private let overlay: UIView = {
+        let view = UIView()
+        view.backgroundColor = .black
+        view.alpha = 0.75
+        view.applyGradient(colors: Constants.UI.orangePinkPair)
+        return view
+    }()
+    private let createAccountButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Log In", for: .normal)
+        button.setTitle("Create Account", for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.UI.cornerRadius
         button.backgroundColor = .systemBlue
         button.setTitleColor(.white, for: .normal)
         return button
     }()
-    private let createAccountButton: UIButton = {
+    private let loginButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Create Account", for: .normal)
+        button.setTitle("Login", for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.UI.cornerRadius
         button.backgroundColor = .systemBlue
@@ -47,55 +53,41 @@ class AuthSplashScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Playlist Pro"
         
-        addSubViews()
+        view.addSubview(background)
+        view.addSubview(overlay)
+        view.addSubview(createAccountButton)
+        view.addSubview(loginButton)
+        view.addSubview(loginAnonymousButton)
         
         view.backgroundColor = .systemBackground
         
-        loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
         createAccountButton.addTarget(self, action: #selector(didTapCreateAccountButton), for: .touchUpInside)
+        loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
         loginAnonymousButton.addTarget(self, action: #selector(didTapLoginAnonymousButton), for: .touchUpInside)
     }
     override func viewDidLayoutSubviews() {
-        headerView.frame = CGRect(
-            x: 0,
-            y: 0.0,
-            width: view.width,
-            height: view.height/3.0)
-        loginButton.frame = CGRect(
-            x: 25,
-            y: headerView.bottom + 10,
-            width: view.width - 50,
-            height: 52.0)
+        background.frame = view.bounds
+        overlay.frame = view.bounds
         createAccountButton.frame = CGRect(
             x: 25,
-            y: loginButton.bottom + 10,
+            y: view.height/2 + 50,
             width: view.width - 50,
-            height: 52.0)
-        loginAnonymousButton.frame = CGRect(
+            height: 52.0
+        )
+        loginButton.frame = CGRect(
             x: 25,
             y: createAccountButton.bottom + 10,
             width: view.width - 50,
-            height: 52.0)
+            height: 52.0
+        )
+        loginAnonymousButton.frame = CGRect(
+            x: 25,
+            y: loginButton.bottom + 10,
+            width: view.width - 50,
+            height: 52.0
+        )
         
-        configureHeaderView()
-    }
-    private func configureHeaderView() {
-        guard headerView.subviews.count == 1 else {
-            return
-        }
-        
-        guard let backgroundView = headerView.subviews.first else {
-            return
-        }
-        backgroundView.frame = headerView.bounds
-    }
-    private func addSubViews() {
-        view.addSubview(headerView)
-        view.addSubview(loginButton)
-        view.addSubview(createAccountButton)
-        view.addSubview(loginAnonymousButton)
     }
     @objc private func didTapCreateAccountButton() {
         let vc = RegistrationViewController()

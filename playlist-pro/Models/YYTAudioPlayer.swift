@@ -170,7 +170,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
 		print("Audio player did finish playing: \(flag)")
 		if (flag) {
-            if (QueueManager.shared.repeatType == RepeatType.song) {
+            if (QueueManager.shared.repeatSelection == RepeatType.song) {
                 QueueManager.shared.prev()
 			} else {
                 QueueManager.shared.next()

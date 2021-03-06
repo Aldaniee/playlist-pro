@@ -8,6 +8,19 @@
 import UIKit
 
 class TabBarViewController: UITabBarController, MiniPlayerViewDelegate {
+    func changePlayPauseIcon(isPlaying: Bool) {
+        print("changePlayPauseIcon:\(isPlaying)")
+        nowPlayingView.changePlayPauseIcon(isPlaying: isPlaying)
+    }
+    
+    func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float) {
+        nowPlayingView.audioPlayerPeriodicUpdate(currentTime: currentTime, duration: duration)
+
+    }
+    
+    func updateNowPlayingView() {
+        nowPlayingView.updateDisplayedSong()
+    }
     
     var miniPlayerView = MiniPlayerView(frame: .zero)
     var nowPlayingView = NowPlayingViewController()

@@ -9,22 +9,28 @@ import UIKit
 
 class NowPlayingViewController: UIViewController {
     
+    let spacing = CGFloat(40)
+
     // MARK: Tab Bar
     let tabBarHeight = CGFloat(18)
     let closeButtonScaleConstant = CGFloat(1.5)
-    
+    // MARK: Playback Display
     let artistLabelHeight = CGFloat(14)
     let progressBarHeight = CGFloat(5)
+    let progressBarThumbHeight = CGFloat(20)
+    let progressBarThumbWidth = CGFloat(3)
     let pausePlaySize = CGFloat(80)
     let nextPrevSize = CGFloat(30)
-    let spacing = CGFloat(40)
     let repeatShuffleSize = CGFloat(20)
-    
+    // MARK: Playback Controls
     let timeLabelSize = CGFloat(10)
     let timeLabelScaleConstant = CGFloat(3.5)
+    // MARK: Bottom Bar
     let queueButtonSize = CGFloat(20)
+    let editButtonSize = CGFloat(38)
+    let editButtonTextSize = CGFloat(18)
+    let editButtonImageViewSize = CGFloat(10)
 
-    
     var interactor: Interactor? = nil
     var queueViewController = QueueViewController()
     var songID = ""
@@ -80,16 +86,20 @@ class NowPlayingViewController: UIViewController {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.backgroundColor = .clear
-        lbl.textColor = Constants.UI.gray
+        lbl.textColor = Constants.UI.darkGray
         lbl.textAlignment = .left
         return lbl
     }()
+
     let progressBar: UISlider = {
         let pBar = UISlider()
-        pBar.tintColor = Constants.UI.gray
+        pBar.tintColor = Constants.UI.darkPink
         pBar.backgroundColor = .clear
+        pBar.minimumTrackTintColor = Constants.UI.darkPink
+        pBar.minimumTrackTintColor = Constants.UI.darkGray
         return pBar
     }()
+
     var isProgressBarSliding = false
     // MARK: Playback Controls
     let pausePlayButton: UIButton = {
@@ -161,6 +171,30 @@ class NowPlayingViewController: UIViewController {
         btn.tintColor = .white
         return btn
     }()
+    let editButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        btn.tintColor = .white
+        return btn
+    }()
+    let editButtonTextLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.numberOfLines = 0
+        lbl.text = "EDIT TRACK"
+        lbl.textAlignment = .center
+        lbl.backgroundColor = .clear
+        lbl.textColor = .white
+        return lbl
+    }()
+    
+    let editButtonImageView: UIImageView = {
+        let imgView = UIImageView()
+        let font = UIFont.boldSystemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        imgView.image = UIImage(systemName: "chevron.down", withConfiguration: configuration)
+        imgView.tintColor = Constants.UI.darkPink
+        return imgView
+    }()
     /*let playbackRateButton: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = Constants.UI.orange
@@ -172,12 +206,13 @@ class NowPlayingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        view.addGestureRecognizer(UIPanGestureRecognizer(target:self, action: #selector(handleGesture)))
+        //overlayView.addGestureRecognizer(UIPanGestureRecognizer(target:self, action: #selector(handleGesture)))
 
         view.addSubview(overlayView)
         
         // MARK: Tab Bar
         view.addSubview(closeButton)
+        closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
         view.addSubview(tabBarTitle)
         tabBarTitle.font = UIFont.boldSystemFont(ofSize: tabBarHeight)
         view.addSubview(optionsButton)
@@ -190,8 +225,17 @@ class NowPlayingViewController: UIViewController {
         // MARK: Playback Display
         view.addSubview(albumCoverImageView)
         view.addSubview(progressBar)
+        let thumbView = UIImageView()
+        thumbView.backgroundColor = Constants.UI.darkPink
+
+        thumbView.frame = CGRect(x: 0, y: progressBarThumbWidth/2, width: progressBarThumbWidth, height: progressBarThumbHeight)
+        let thumbImage = UIGraphicsImageRenderer(bounds: thumbView.bounds).image { rendererContext in
+            thumbView.layer.render(in: rendererContext.cgContext)
+        }
+        progressBar.setThumbImage(thumbImage, for: UIControl.State.normal)
         progressBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
         view.addSubview(songTitleLabel)
+        
         songTitleLabel.font = UIFont.boldSystemFont(ofSize: tabBarHeight)
         view.addSubview(artistLabel)
         artistLabel.font = UIFont.systemFont(ofSize: artistLabelHeight)
@@ -217,8 +261,13 @@ class NowPlayingViewController: UIViewController {
         // MARK: Bottom Bar
         view.addSubview(queueButton)
         queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
-
+        view.addSubview(editButton)
+        editButton.addSubview(editButtonTextLabel)
+        editButtonTextLabel.font = UIFont.systemFont(ofSize: editButtonTextSize)
+        editButton.addSubview(editButtonImageView)
         updateDisplayedSong()
+        updateRepeatButton()
+        updateShuffleButton()
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -228,18 +277,24 @@ class NowPlayingViewController: UIViewController {
         // MARK: Tab Bar
         let topToTabBarMiddle = CGFloat(70)
         let closeButtonWidth = tabBarHeight*closeButtonScaleConstant
-        closeButton.frame = CGRect(x: edgePadding,
-                                   y: topToTabBarMiddle-tabBarHeight/2,
-                                   width: closeButtonWidth,
-                                   height: tabBarHeight)
-        tabBarTitle.frame = CGRect(x: spacing + closeButtonWidth,
-                                  y: topToTabBarMiddle-tabBarHeight/2,
-                                  width: view.width-spacing-closeButtonWidth-tabBarHeight-spacing,
-                                  height: tabBarHeight)
-        optionsButton.frame = CGRect(x: view.width-edgePadding-tabBarHeight,
-                                     y: topToTabBarMiddle-tabBarHeight/2,
-                                     width: tabBarHeight,
-                                     height: tabBarHeight)
+        closeButton.frame = CGRect(
+            x: edgePadding,
+            y: topToTabBarMiddle-tabBarHeight/2,
+            width: closeButtonWidth,
+            height: tabBarHeight
+        )
+        tabBarTitle.frame = CGRect(
+            x: spacing + closeButtonWidth,
+            y: topToTabBarMiddle-tabBarHeight/2,
+            width: view.width-spacing-closeButtonWidth-tabBarHeight-spacing,
+            height: tabBarHeight
+        )
+        optionsButton.frame = CGRect(
+            x: view.width-edgePadding-tabBarHeight,
+            y: topToTabBarMiddle-tabBarHeight/2,
+            width: tabBarHeight,
+            height: tabBarHeight
+        )
         
         // MARK: Playback View
         let tabBarTitleBottomToAlbumTop = CGFloat(52)
@@ -261,12 +316,13 @@ class NowPlayingViewController: UIViewController {
                                    width: view.width-spacing,
                                    height: progressBarHeight)
         let timeLabelWidth = timeLabelSize*timeLabelScaleConstant
+        let progressBarToTimeLabels = spacing/4
         currentTimeLabel.frame = CGRect(x: progressBar.left,
-                                        y: progressBar.bottom,
+                                        y: progressBar.bottom+progressBarToTimeLabels,
                                         width: timeLabelWidth,
                                         height: timeLabelSize)
         timeLeftLabel.frame = CGRect(x: progressBar.right-timeLabelWidth,
-                                     y: progressBar.bottom,
+                                     y: progressBar.bottom+progressBarToTimeLabels,
                                      width: timeLabelWidth,
                                      height: timeLabelSize)
         
@@ -294,12 +350,26 @@ class NowPlayingViewController: UIViewController {
                                        y: progressBarToControlsCenterLineSpacing-nextPrevSize/2,
                                        width: nextPrevSize,
                                        height: nextPrevSize)
-        let playPauseBottomToBottomBar = CGFloat(40)
+        let playPauseBottomToBottomBar = CGFloat(60)
         // MARK: Bottom Bar
         queueButton.frame = CGRect(x: edgePadding,
-                                   y: pausePlayButton.bottom + playPauseBottomToBottomBar,
+                                   y: pausePlayButton.bottom + playPauseBottomToBottomBar - queueButtonSize/2,
                                    width: queueButtonSize,
                                    height: queueButtonSize)
+        let editButtonWidth = editButtonSize*3.5
+        editButton.frame = CGRect(x: view.center.x-editButtonWidth/2,
+                                  y: pausePlayButton.bottom + playPauseBottomToBottomBar - editButtonTextSize/2,
+                                  width: editButtonWidth,
+                                  height: editButtonSize)
+        editButtonTextLabel.frame = CGRect(x: 0,
+                                           y: 0,
+                                           width: editButtonWidth,
+                                           height: editButtonTextSize)
+        let editButtonImageViewWidth = editButtonImageViewSize*1.5
+        editButtonImageView.frame = CGRect(x: editButtonWidth/2-editButtonImageViewWidth/2,
+                                           y: editButtonTextLabel.bottom + spacing/4,
+                                           width: editButtonImageViewWidth,
+                                           height: editButtonImageViewSize)
     }
     
     /*private func addPlaybackRateButton() {
@@ -324,7 +394,12 @@ class NowPlayingViewController: UIViewController {
             changePlayPauseIcon(isPlaying: true)
         }
     }
+    @objc func closeButtonAction(sender: UIButton?) {
+        print("Close button tapped")
+        dismiss(animated: true, completion: nil)
+    }
     @objc func queueButtonAction(sender: UIButton?) {
+        print("Queue button tapped")
         //queueViewController.modalPresentationStyle = .fullScreen
         present(queueViewController, animated: true, completion: nil)
     }
@@ -340,7 +415,7 @@ class NowPlayingViewController: UIViewController {
     }
     
     @objc func playbackRateButtonAction(sender: UIButton!) {
-        print("playback rate Button tapped")
+        print("Playback rate Button tapped")
         if songID == "" {
             return
         }
@@ -357,11 +432,15 @@ class NowPlayingViewController: UIViewController {
     }
     
     @objc func shuffleButtonAction(sender: UIButton!) {
-        print("shuffle Button tapped but not yet implemented")
+        print("Shuffle button tapped")
+        QueueManager.shared.shuffle()
+        updateShuffleButton()
     }
     
     @objc func repeatButtonAction(sender: UIButton!) {
-        print("repeat Button tapped but not yet implemented")
+        print("Repeat button tapped")
+        QueueManager.shared.nextRepeatType()
+        updateRepeatButton()
     }
 
 
@@ -397,18 +476,15 @@ class NowPlayingViewController: UIViewController {
     func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float) {
         if !isProgressBarSliding {
             if duration == 0 {
-                //currentTimeLabel.text = "00:00"
-                //timeLeftLabel.text = "00:00"
+                currentTimeLabel.text = "00:00"
+                timeLeftLabel.text = TimeInterval(exactly: duration)?.stringFromTimeInterval()
                 progressBar.value = 0.0
                 return
             }
-            //currentTimeLabel.text = TimeInterval(exactly: currentTime)?.stringFromTimeInterval()
-            //timeLeftLabel.text = TimeInterval(exactly: duration-currentTime)?.stringFromTimeInterval()
+            currentTimeLabel.text = TimeInterval(exactly: currentTime)?.stringFromTimeInterval()
+            timeLeftLabel.text = TimeInterval(exactly: duration-currentTime)?.stringFromTimeInterval()
             self.progressBar.value = currentTime/duration
         }
-    }
-    func audioPlayerPlayingStatusChanged(isPlaying: Bool) {
-        changePlayPauseIcon(isPlaying: isPlaying)
     }
     func changePlayPauseIcon(isPlaying: Bool) {
         let font = UIFont.systemFont(ofSize: 999)
@@ -419,6 +495,29 @@ class NowPlayingViewController: UIViewController {
             self.pausePlayButton.setImage(UIImage(systemName: "play.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
         }
     }
+    func updateRepeatButton() {
+        if QueueManager.shared.repeatSelection == RepeatType.none {
+            repeatButton.tintColor = .white
+            repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
+        }
+        else if QueueManager.shared.repeatSelection == RepeatType.playlist {
+            repeatButton.tintColor = Constants.UI.darkPink
+            repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
+        }
+        else {
+            repeatButton.tintColor = Constants.UI.darkPink
+            repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
+        }
+    }
+    func updateShuffleButton() {
+        if QueueManager.shared.shuffleStatus {
+            shuffleButton.tintColor = Constants.UI.darkPink
+        }
+        else {
+            shuffleButton.tintColor = .white
+        }
+    }
+
     func updateDisplayedSong() {
         let displayedSong: Dictionary<String, Any>
         if QueueManager.shared.queue.count > 0 {
@@ -428,7 +527,6 @@ class NowPlayingViewController: UIViewController {
             QueueManager.shared.suspend()
             displayedSong = Dictionary<String, Any>()
         }
-
         let songID = displayedSong["id"] as? String ?? ""
         self.songID = songID
         songTitleLabel.text = displayedSong["title"] as? String ?? ""
@@ -449,6 +547,7 @@ class NowPlayingViewController: UIViewController {
         //miniPlayerView.timeLeftLabel.text = (songDict["duration"] as? String) ?? "00:00"
         queueViewController.updateDisplayedSong()
     }
+    /*
     @objc func handleGesture(sender: UIPanGestureRecognizer) {
 
         let percentThreshold:CGFloat = 0.3
@@ -480,6 +579,6 @@ class NowPlayingViewController: UIViewController {
         default:
             break
         }
-    }
+    }*/
 
 }

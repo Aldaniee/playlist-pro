@@ -59,7 +59,7 @@ extension UIViewController {
         
         let titleLbl = UILabel(frame: CGRect(x: 0, y: 0, width: self.view.frame.width*0.65, height: 40))
         titleLbl.text = title ?? ""
-        titleLbl.textColor = Constants.UI.backgroundWhite
+        titleLbl.textColor = .white
         titleLbl.font = UIFont.init(name: "DINCondensed-Bold", size: 34)
         titleLbl.textAlignment = .center
         titleLbl.center = ai.center
@@ -87,15 +87,15 @@ extension UIViewController {
         progressView.backgroundColor = UIColor.init(red: 0.5, green: 0.5, blue: 0.5, alpha: 0.5)
         
         let boxView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width*0.65, height: 80))
-        boxView.backgroundColor = Constants.UI.backgroundWhite
+        boxView.backgroundColor = .white
         boxView.layer.cornerRadius = 10.0
         boxView.layer.borderWidth = 2.0
-        boxView.layer.borderColor = Constants.UI.orange.cgColor
+        boxView.layer.borderColor = Constants.UI.darkPink.cgColor
         boxView.center = progressView.center
 
         let pBar = UIProgressView(frame: CGRect(x: boxView.frame.width*0.1, y: boxView.frame.height * 0.8, width: boxView.frame.width*0.8, height: 2))
         pBar.tag = 10
-        pBar.progressTintColor = Constants.UI.orange
+        pBar.progressTintColor = Constants.UI.darkPink
         pBar.progress = 0.0
         
         let titleLbl = UILabel(frame: CGRect(x: 0, y: 0, width: pBar.frame.width, height: pBar.frame.minY - 10))
@@ -183,7 +183,34 @@ extension UIViewController {
 
 // MARK: UIView
 extension UIView {
+    func applyButtonGradient(colors: [CGColor]) {
+        self.backgroundColor = nil
+        self.layoutIfNeeded()
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = colors
+        gradientLayer.startPoint = CGPoint(x: 0, y: 1)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0)
+        gradientLayer.frame = self.bounds
+        gradientLayer.cornerRadius = Constants.UI.cornerRadius
 
+        gradientLayer.shadowColor = Constants.UI.lightGray.cgColor
+        gradientLayer.shadowOffset = CGSize(width: 2.5, height: 2.5)
+        gradientLayer.shadowRadius = 5.0
+        gradientLayer.shadowOpacity = 0.3
+        gradientLayer.masksToBounds = false
+
+        self.layer.insertSublayer(gradientLayer, at: 0)
+    }
+    func applyGradient(colors: [CGColor]) {
+        self.backgroundColor = nil
+        self.layoutIfNeeded()
+        let gradientLayer = CAGradientLayer()
+        gradientLayer.colors = colors
+        gradientLayer.startPoint = CGPoint(x: 0, y: 1)
+        gradientLayer.endPoint = CGPoint(x: 1, y: 0)
+
+        self.layer.insertSublayer(gradientLayer, at: 0)
+    }
     public var width: CGFloat {
         return frame.size.width
     }

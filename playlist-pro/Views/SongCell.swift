@@ -26,7 +26,7 @@ class SongCell : UITableViewCell {
     }()
     let artistLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = Constants.UI.gray
+        lbl.textColor = Constants.UI.darkGray
         lbl.font = UIFont.systemFont(ofSize: 16)
         lbl.textAlignment = .left
         return lbl

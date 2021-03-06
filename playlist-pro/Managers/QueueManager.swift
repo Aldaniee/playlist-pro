@@ -22,7 +22,9 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
 
     final let PREV_CUTOFF_FOR_SONG_RESTART = 2.0 //seconds
     private var audioPlayer: YYTAudioPlayer!
-    var repeatType = RepeatType.playlist
+    
+    var repeatSelection = RepeatType.playlist
+    var shuffleStatus = false
 
     var queue = NSMutableArray()
 
@@ -39,9 +41,25 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
         setupRemoteTransportControls()
 
     }
-	
+    func shuffle() {
+        shuffleStatus = !shuffleStatus
+        if shuffleStatus {
+            var newQueue = queue.mutableCopy() as! NSMutableArray
+            newQueue.removeObject(at: 0)
+            newQueue = NSMutableArray(array: (newQueue as! Array<Dictionary<String,Any>>).shuffled())
+            newQueue.add(queue.object(at: 0))
+            queue = newQueue
+            
+        }
+        else {
+            queue = LibraryManager.shared.songLibrary.getSongList()
+        }
+        if audioPlayer.setupPlayer(withQueue: queue) == false {
+            print("setup failure")
+        }
+    }
 	func moveQueueForward() {
-        if repeatType == RepeatType.playlist {
+        if repeatSelection == RepeatType.playlist {
             queue.add(queue.object(at: 0))
         }
         queue.removeObject(at: 0)
@@ -55,7 +73,7 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
 	func didSelectSong(songDict: Dictionary<String, Any>) {
         if !audioPlayer.isSuspended {
             for _ in 0..<queue.index(of: songDict) {
-                if repeatType == RepeatType.playlist {
+                if repeatSelection == RepeatType.playlist {
                     queue.add(queue.object(at: 0))
                 }
                 queue.removeObject(at: 0)
@@ -67,7 +85,7 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
     
     func next() {
         if !audioPlayer.isSuspended {
-            if repeatType == RepeatType.song || queue.count == 1{
+            if repeatSelection == RepeatType.song || queue.count == 1{
                 audioPlayer.audioPlayer.currentTime = 0.0
             }
             else {
@@ -79,11 +97,23 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
     
     func prev() {
         if !audioPlayer.isSuspended  {
-            if audioPlayer.audioPlayer?.currentTime ?? 0 < PREV_CUTOFF_FOR_SONG_RESTART {
+            if audioPlayer.audioPlayer?.currentTime ?? 0 < PREV_CUTOFF_FOR_SONG_RESTART && repeatSelection != RepeatType.song {
+                moveQueueBackward()
                 updateSongPlaying()
             } else {
                 audioPlayer.audioPlayer.currentTime = 0.0
             }
+        }
+    }
+    func nextRepeatType() {
+        if repeatSelection == RepeatType.none {
+            repeatSelection = RepeatType.playlist
+        }
+        else if repeatSelection == RepeatType.playlist {
+            repeatSelection = RepeatType.song
+        }
+        else {
+            repeatSelection = RepeatType.none
         }
     }
     /// Displays and plays the first song of the queue

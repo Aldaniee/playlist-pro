@@ -9,7 +9,11 @@ import UIKit
 
 protocol MiniPlayerViewDelegate: class {
 	func showNowPlayingView()
+    func updateNowPlayingView()
+    func changePlayPauseIcon(isPlaying: Bool)
+    func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float)
 }
+
 
 class MiniPlayerView: UIView, QueueManagerDelegate {
 
@@ -51,7 +55,7 @@ class MiniPlayerView: UIView, QueueManagerDelegate {
     }()
     let artistLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = Constants.UI.gray
+        lbl.textColor = Constants.UI.darkGray
         lbl.font = UIFont.systemFont(ofSize: 18)
         lbl.textAlignment = .left
         return lbl
@@ -73,7 +77,7 @@ class MiniPlayerView: UIView, QueueManagerDelegate {
 	}()
 	let progressBar: UISlider = {
 		let pBar = UISlider()
-        pBar.tintColor = Constants.UI.gray
+        pBar.tintColor = Constants.UI.darkPink
 		return pBar
 	}()
 	var isProgressBarSliding = false
@@ -89,7 +93,6 @@ class MiniPlayerView: UIView, QueueManagerDelegate {
         backgroundButton.heightAnchor.constraint(equalToConstant: 80).isActive = true
     }
     private func addProgressBar() {
-
         progressBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
         backgroundButton.addSubview(progressBar)
         progressBar.translatesAutoresizingMaskIntoConstraints = false
@@ -100,7 +103,6 @@ class MiniPlayerView: UIView, QueueManagerDelegate {
         
     }
     private func addThumbnailImage() {
-
         self.addSubview(thumbnailImageView)
         thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
         thumbnailImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
@@ -155,8 +157,6 @@ class MiniPlayerView: UIView, QueueManagerDelegate {
     }
 	
     @objc func pausePlayButtonAction(sender: UIButton?) {
-        /// FOR TESTING PURPOSES
-        //audioPlayer.queueManager.LM.importLibraryFromDatabase()
         if QueueManager.shared.isPlaying() {
 			print("Paused")
             QueueManager.shared.pause()
@@ -169,6 +169,7 @@ class MiniPlayerView: UIView, QueueManagerDelegate {
     }
     
     @objc func backgroundButtonPressed(sender: UIButton!) {
+        print("MiniPlayerView tapped, showing NowPlayingViewController")
         delegate?.showNowPlayingView()
     }
 	
@@ -223,6 +224,7 @@ class MiniPlayerView: UIView, QueueManagerDelegate {
 	}
 	
 	func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float) {
+        delegate?.audioPlayerPeriodicUpdate(currentTime: currentTime, duration: duration)
 		if !isProgressBarSliding {
 			if duration == 0 {
 				progressBar.value = 0.0
@@ -232,9 +234,11 @@ class MiniPlayerView: UIView, QueueManagerDelegate {
 		}
 	}
     func audioPlayerPlayingStatusChanged(isPlaying: Bool) {
+        delegate?.changePlayPauseIcon(isPlaying: isPlaying)
         changePlayPauseIcon(isPlaying: isPlaying)
     }
 	func changePlayPauseIcon(isPlaying: Bool) {
+        delegate?.changePlayPauseIcon(isPlaying: isPlaying)
 		if isPlaying {
 			self.pausePlayButton.setImage(UIImage(named: "pause"), for: UIControl.State.normal)
 		} else {
@@ -242,6 +246,7 @@ class MiniPlayerView: UIView, QueueManagerDelegate {
 		}
 	}
     func updateDisplayedSong() {
+        delegate?.updateNowPlayingView()
         let displayedSong: Dictionary<String, Any>
         if QueueManager.shared.queue.count > 0 {
             QueueManager.shared.unsuspend()

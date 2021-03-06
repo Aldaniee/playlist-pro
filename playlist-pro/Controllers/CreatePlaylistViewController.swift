@@ -14,19 +14,17 @@ protocol CreatePlaylistDelegate: class {
 class CreatePlaylistViewController: UIViewController {
     weak var delegate: CreatePlaylistDelegate?
 
-    private let overlayView: UIView = {
-        let view = UIView()
-        view.backgroundColor = .black
-        view.alpha = 0.7
-        return view
-    }()
+    let spacing = CGFloat(60)
+    let buttonHeight = CGFloat(50)
+    let lineHeight = CGFloat(4)
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
         label.textColor = .black
-        label.font = .systemFont(ofSize: 22, weight: .bold)
-        label.text = "Give your playlist a name:"
+        label.font = .systemFont(ofSize: 16, weight: .regular)
+        label.textColor = Constants.UI.darkGray
+        label.text = "Give your playlist a name"
         return label
     }()
     
@@ -34,48 +32,83 @@ class CreatePlaylistViewController: UIViewController {
         let inputField = UITextField()
         inputField.placeholder = "Playlist Name"
         inputField.textAlignment = .center
-        inputField.font = .systemFont(ofSize: 16, weight: .semibold)
-        inputField.textColor = .black
-        inputField.backgroundColor = .white
+        inputField.font = .systemFont(ofSize: 32, weight: .heavy)
+        inputField.textColor = Constants.UI.blackGray
         return inputField
+    }()
+    
+    private let horizontalLine: UIView = {
+        let view = UIView()
+        view.backgroundColor = Constants.UI.lightGray
+        return view
     }()
     
     private let createButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = .white
+        button.backgroundColor = .black
         button.setTitle("Create Playlist", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
+        button.setTitleColor(.white, for: .normal)
+        button.addTarget(self, action: #selector(onCreateButtonPressed), for: .touchUpInside)
+        button.layer.cornerRadius = Constants.UI.cornerRadius
+        return button
+    }()
+    private let importButton: UIButton = {
+        let button = UIButton()
+        button.backgroundColor = Constants.UI.spotifyGreen
+        button.setTitle("Import From Spotify", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
         button.setTitleColor(.black, for: .normal)
         button.addTarget(self, action: #selector(onCreateButtonPressed), for: .touchUpInside)
+        button.layer.cornerRadius = Constants.UI.cornerRadius
         return button
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .systemBackground
-        view.addSubview(overlayView)
+        view.backgroundColor = Constants.UI.hardlyGray
         view.addSubview(titleLabel)
         view.addSubview(inputField)
+        view.addSubview(horizontalLine)
         view.addSubview(createButton)
-        
+        view.addSubview(importButton)
+
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        overlayView.frame = view.bounds
+        let edgePadding = spacing/2
         titleLabel.frame = CGRect(
-            x: 20,
+            x: edgePadding,
             y: view.top+100,
-            width: view.width-40,
-            height: 50)
+            width: view.width-spacing,
+            height: buttonHeight
+        )
         inputField.frame = CGRect(
-            x: 40,
-            y: titleLabel.bottom+50,
-            width: view.width-80,
-            height: 50)
+            x: spacing,
+            y: titleLabel.bottom+spacing/2,
+            width: view.width-spacing*2,
+            height: buttonHeight
+        )
+        horizontalLine.frame = CGRect(
+            x: inputField.left,
+            y: inputField.bottom,
+            width: inputField.width,
+            height: lineHeight
+        )
         createButton.frame = CGRect(
-            x: 40,
-            y: inputField.bottom+50,
-            width: view.width-80,
-            height: 50)
+            x: spacing,
+            y: inputField.bottom+spacing,
+            width: view.width-spacing*2,
+            height: buttonHeight
+        )
+        createButton.applyButtonGradient(colors: [Constants.UI.orange.cgColor, Constants.UI.lightPink.cgColor])
+
+        importButton.frame = CGRect(
+            x: spacing,
+            y: createButton.bottom+spacing/3,
+            width: view.width-spacing*2,
+            height: buttonHeight
+        )
     }
     
     @objc func onCreateButtonPressed() {
