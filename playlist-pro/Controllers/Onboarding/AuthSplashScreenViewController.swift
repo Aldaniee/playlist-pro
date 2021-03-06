@@ -11,25 +11,46 @@ import Firebase
 
 class AuthSplashScreenViewController: UIViewController {
 
+    let logoSize = CGFloat(80)
+    
+    
     private let background: UIImageView = {
         let img = UIImageView()
-        img.image = UIImage(named: "scooby")
+        img.image = UIImage(named: "Background")
         return img
     }()
-    private let overlay: UIView = {
-        let view = UIView()
-        view.backgroundColor = .black
-        view.alpha = 0.75
-        view.applyGradient(colors: Constants.UI.orangePinkPair)
-        return view
+    private let logo: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "Logo")
+        return img
+    }()
+    private let appTitle: UILabel = {
+        let lbl = UILabel()
+        lbl.numberOfLines = 0
+        lbl.text = "Playlist Pro"
+        lbl.font = .systemFont(ofSize: 52, weight: .semibold)
+        lbl.textAlignment = .center
+        lbl.textColor = .white
+        return lbl
+    }()
+    private let slogan: UILabel = {
+        let lbl = UILabel()
+        lbl.numberOfLines = 0
+        lbl.text = "For The Best Playlist In The Room"
+        lbl.font = .systemFont(ofSize: 18, weight: .regular)
+        lbl.textAlignment = .center
+
+        lbl.textColor = .white
+
+        return lbl
     }()
     private let createAccountButton: UIButton = {
         let button = UIButton()
         button.setTitle("Create Account", for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.UI.cornerRadius
-        button.backgroundColor = .systemBlue
-        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .white
+        button.setTitleColor(.black, for: .normal)
         return button
     }()
     private let loginButton: UIButton = {
@@ -37,16 +58,16 @@ class AuthSplashScreenViewController: UIViewController {
         button.setTitle("Login", for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.UI.cornerRadius
-        button.backgroundColor = .systemBlue
-        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = .white
+        button.setTitleColor(.black, for: .normal)
         return button
     }()
     private let loginAnonymousButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Continue as Guest", for: .normal)
+        button.setTitle("CONTINUE AS GUEST", for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.UI.cornerRadius
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .clear
         button.setTitleColor(.white, for: .normal)
         return button
     }()
@@ -55,11 +76,18 @@ class AuthSplashScreenViewController: UIViewController {
         super.viewDidLoad()
         
         view.addSubview(background)
-        view.addSubview(overlay)
+        view.addSubview(appTitle)
+        view.addSubview(slogan)
+        view.addSubview(logo)
         view.addSubview(createAccountButton)
+        createAccountButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+
         view.addSubview(loginButton)
+        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+
         view.addSubview(loginAnonymousButton)
-        
+        loginAnonymousButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+
         view.backgroundColor = .systemBackground
         
         createAccountButton.addTarget(self, action: #selector(didTapCreateAccountButton), for: .touchUpInside)
@@ -68,10 +96,28 @@ class AuthSplashScreenViewController: UIViewController {
     }
     override func viewDidLayoutSubviews() {
         background.frame = view.bounds
-        overlay.frame = view.bounds
+        logo.frame = CGRect(
+            x: view.center.x-logoSize/2,
+            y: view.height/3.5-logoSize/2,
+            width: logoSize,
+            height: logoSize
+        )
+        appTitle.frame = CGRect(
+            x: 25,
+            y: logo.bottom + 20,
+            width: view.width-50,
+            height: 52
+        )
+        slogan.frame = CGRect(
+            x: 25,
+            y: appTitle.bottom + 10,
+            width: view.width-50,
+            height: 18
+        )
+
         createAccountButton.frame = CGRect(
             x: 25,
-            y: view.height/2 + 50,
+            y: view.height/2 + 80,
             width: view.width - 50,
             height: 52.0
         )
@@ -85,7 +131,7 @@ class AuthSplashScreenViewController: UIViewController {
             x: 25,
             y: loginButton.bottom + 10,
             width: view.width - 50,
-            height: 52.0
+            height: 32.0
         )
         
     }
