@@ -12,7 +12,7 @@ import Firebase
 class AuthSplashScreenViewController: UIViewController {
 
     let logoSize = CGFloat(80)
-    
+    let spacing = CGFloat(40)
     
     private let background: UIImageView = {
         let img = UIImageView()
@@ -103,34 +103,34 @@ class AuthSplashScreenViewController: UIViewController {
             height: logoSize
         )
         appTitle.frame = CGRect(
-            x: 25,
+            x: spacing,
             y: logo.bottom + 20,
-            width: view.width-50,
+            width: view.width-spacing*2,
             height: 52
         )
         slogan.frame = CGRect(
-            x: 25,
+            x: spacing,
             y: appTitle.bottom + 10,
-            width: view.width-50,
+            width: view.width-spacing*2,
             height: 18
         )
 
         createAccountButton.frame = CGRect(
-            x: 25,
+            x: 40,
             y: view.height/2 + 80,
-            width: view.width - 50,
+            width: view.width - 80,
             height: 52.0
         )
         loginButton.frame = CGRect(
-            x: 25,
-            y: createAccountButton.bottom + 10,
-            width: view.width - 50,
+            x: spacing,
+            y: createAccountButton.bottom + 15,
+            width: view.width - spacing*2,
             height: 52.0
         )
         loginAnonymousButton.frame = CGRect(
-            x: 25,
-            y: loginButton.bottom + 10,
-            width: view.width - 50,
+            x: spacing,
+            y: loginButton.bottom + 20,
+            width: view.width - spacing*2,
             height: 32.0
         )
         

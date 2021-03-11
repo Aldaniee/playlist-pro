@@ -11,24 +11,32 @@ class QueueViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .systemBackground
-        closeButton.addTarget(self, action: #selector(dismiss(animated:completion:)), for: .touchUpInside)
-
-        view.addSubview(closeButton)
-
-        tableView.frame = view.frame
         view.addSubview(tableView)
+        view.insertSubview(blurView, at: 0)
 
         tableView.dataSource = self
         tableView.delegate = self
+        view.backgroundColor = .clear
     }
-    private let tableView: UITableView = {
+    override func viewDidLayoutSubviews() {
+        tableView.frame = view.frame
+        blurView.frame = view.frame
+    }
+    override func viewDidAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
+    let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
+        tableView.backgroundColor = .clear
+
         return tableView
     }()
-    
-    var songID = ""
+    let blurView : UIVisualEffectView = {
+        let vis = UIVisualEffectView(effect: UIBlurEffect(style: .dark))
+        vis.translatesAutoresizingMaskIntoConstraints = false
+        return vis
+    }()
     let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.font = UIFont.boldSystemFont(ofSize: 18)
@@ -68,39 +76,33 @@ class QueueViewController: UIViewController {
         pBar.tintColor = Constants.UI.darkPink
         return pBar
     }()
-    
-    func updateDisplayedSong() {
-        let displayedSong: Dictionary<String, Any>
-        if QueueManager.shared.queue.count > 0 {
-            QueueManager.shared.unsuspend()
-            displayedSong = QueueManager.shared.queue.object(at: 0) as! Dictionary<String, Any>
-        } else {
-            QueueManager.shared.suspend()
-            displayedSong = Dictionary<String, Any>()
-        }
-
-        let songID = displayedSong["id"] as? String ?? ""
-        self.songID = songID
-        titleLabel.text = displayedSong["title"] as? String ?? ""
-        artistLabel.text = ((displayedSong["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", "))
-
-        progressBar.value = 0.0
-    }
 }
 extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        QueueManager.shared.queue.count
+    func numberOfSections(in tableView: UITableView) -> Int {
+        print("here")
+        return 2
     }
-    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        switch (section) {
+            case 0:
+                return 1
+            default:
+                print(QueueManager.shared.queue.count - 1)
+                return QueueManager.shared.queue.count - 1
+         }
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = QueueManager.shared.queue[indexPath.row] as! Dictionary<String, Any>
+        cell.songDict = QueueManager.shared.queue[indexPath.row + indexPath.section] as! Dictionary<String, Any>
         cell.refreshCell()
+        cell.setDarkStyle()
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return SongCell.rowHeight
     }
+    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
 
@@ -113,6 +115,18 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
         if (editingStyle == .delete) {
             QueueManager.shared.queue.removeObject(at: (QueueManager.shared.queue.count - 2 - indexPath.row) % QueueManager.shared.queue.count)
             tableView.reloadData()
+            
         }
     }
+    // Create a standard header that includes the returned text.
+    func tableView(_ tableView: UITableView, titleForHeaderInSection
+                                section: Int) -> String? {
+        if section == 0 {
+            return "Now Playing"
+        }
+        else {
+            return "Up Next"
+        }
+    }
+
 }

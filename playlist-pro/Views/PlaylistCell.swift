@@ -20,15 +20,21 @@ class PlaylistCell : UITableViewCell {
     var playlist : Playlist!
     
     // Display image for playlist
-    let thumbnailImageView: UIImageView = {
+    let playlistCoverImageView: UIImageView = {
         let imgView = UIImageView()
         return imgView
     }()
     // Playlist title
     let titleLabel: UILabel = {
         let lbl = UILabel()
-        lbl.font = UIFont.boldSystemFont(ofSize: 16)
         lbl.textAlignment = .left
+        return lbl
+    }()
+    // Playlist description
+    let descriptionLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.textAlignment = .left
+        lbl.textColor = Constants.UI.darkGray
         return lbl
     }()
 
@@ -37,20 +43,40 @@ class PlaylistCell : UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .clear
         
-        self.contentView.addSubview(thumbnailImageView)
-        thumbnailImageView.translatesAutoresizingMaskIntoConstraints = false
-        thumbnailImageView.leadingAnchor.constraint(equalTo: self.leadingAnchor, constant: 5).isActive = true
-        thumbnailImageView.centerYAnchor.constraint(equalTo: self.centerYAnchor).isActive = true
-        thumbnailImageView.heightAnchor.constraint(equalTo: self.heightAnchor, constant: -15).isActive = true
-        thumbnailImageView.widthAnchor.constraint(equalTo: thumbnailImageView.heightAnchor).isActive = true
-        thumbnailImageView.frame = CGRect(x: 20, y: contentView.width/2, width: 15.0, height: 15.0)
-
+        self.contentView.addSubview(playlistCoverImageView)
         self.contentView.addSubview(titleLabel)
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
-        titleLabel.leadingAnchor.constraint(equalTo: thumbnailImageView.trailingAnchor, constant: 30).isActive = true
-        titleLabel.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: -5).isActive = true
-        titleLabel.topAnchor.constraint(equalTo: thumbnailImageView.topAnchor, constant: 5).isActive = true
-        titleLabel.heightAnchor.constraint(equalTo: thumbnailImageView.heightAnchor, multiplier: 0.55, constant: -5).isActive = true
+        self.contentView.addSubview(descriptionLabel)
+
+    }
+    
+    let spacing = CGFloat(20)
+    let titleLabelSize = CGFloat(20)
+    let descriptionLabelSize = CGFloat(16)
+
+    override func layoutSubviews() {
+        let thumbnailImageSize = PlaylistCell.rowHeight - spacing
+        playlistCoverImageView.frame = CGRect(
+            x: spacing/2,
+            y: spacing/2,
+            width: thumbnailImageSize,
+            height: thumbnailImageSize)
+        titleLabel.frame = CGRect(
+            x: playlistCoverImageView.right + spacing,
+            y: spacing,
+            width: width - spacing - playlistCoverImageView.right,
+            height: titleLabelSize
+        )
+        titleLabel.font = UIFont.boldSystemFont(ofSize: titleLabelSize)
+        
+        descriptionLabel.frame = CGRect(
+            x: playlistCoverImageView.right + spacing,
+            y: titleLabel.bottom + 5,
+            width: width - spacing - playlistCoverImageView.right,
+            height: descriptionLabelSize
+        )
+        descriptionLabel.font = UIFont.systemFont(ofSize: descriptionLabelSize)
+
+
     }
     
     required init?(coder: NSCoder) {
@@ -58,22 +84,25 @@ class PlaylistCell : UITableViewCell {
     }
     
     func refreshCell() {
-        print("refreshing cell")
-        self.titleLabel.text = playlist.title
+        if playlist.title == LibraryManager.shared.LIBRARY_KEY {
+            self.titleLabel.text = LibraryManager.shared.LIBRARY_DISPLAY
+            self.descriptionLabel.text = "\(LibraryManager.shared.songLibrary.getSongList().count) songs"
+        }
+        else {
+            self.titleLabel.text = playlist.title
+        }
+        
         if playlist.count() > 0 {
             let firstSong = playlist.getSongList().object(at: 0) as! Dictionary<String, Any>
             let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong["id"] as? String ?? "").jpg"))
             if let imgData = imageData {
-                self.thumbnailImageView.image = cropToBounds(image: UIImage(data: imgData)!, height: 15.0)
+                self.playlistCoverImageView.image = cropToBounds(image: UIImage(data: imgData)!, height: 15.0)
             } else {
-                self.thumbnailImageView.image = UIImage(systemName: "list.bullet")
+                self.playlistCoverImageView.image = UIImage(systemName: "list.bullet")
             }
         }
-        else if titleLabel.text == "Create Playlist" {
-            self.thumbnailImageView.image = UIImage(systemName: "plus")
-        }
         else {
-            self.thumbnailImageView.image = UIImage(systemName: "list.bullet")
+            self.playlistCoverImageView.image = UIImage(systemName: "list.bullet")
         }
     }
     private func cropToBounds(image: UIImage, height: Double) -> UIImage {

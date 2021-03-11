@@ -13,6 +13,7 @@ class LibraryManager {
 
     static let shared = LibraryManager()
     final let LIBRARY_KEY = "LibraryArray"
+    final let LIBRARY_DISPLAY = "Music"
     
 	enum SongProperties: String {
 		case id = "id"

@@ -10,18 +10,17 @@ import MediaPlayer
 
 protocol QueueManagerDelegate: class {
     func updateDisplayedSong()
-    func changePlayPauseIcon(isPlaying: Bool)
     func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float)
 }
 
-public class QueueManager: NSObject, YYTAudioPlayerDelegate{
+public class QueueManager: NSObject {
     
     
     static let shared = QueueManager()
     weak var delegate: QueueManagerDelegate?
 
     final let PREV_CUTOFF_FOR_SONG_RESTART = 2.0 //seconds
-    private var audioPlayer: YYTAudioPlayer!
+    var audioPlayer: YYTAudioPlayer!
     
     var repeatSelection = RepeatType.playlist
     var shuffleStatus = false
@@ -31,7 +30,6 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
 	override init() {
 		super.init()
 		audioPlayer = YYTAudioPlayer()
-        audioPlayer.delegate = self
         
 
         queue = LibraryManager.shared.songLibrary.getSongList()
@@ -118,18 +116,16 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
     }
     /// Displays and plays the first song of the queue
     private func updateSongPlaying() {
-        delegate!.updateDisplayedSong()
         if audioPlayer.setupPlayer() {
             play()
         }
+        delegate?.updateDisplayedSong()
     }
     func play() {
         audioPlayer.play()
-        delegate?.changePlayPauseIcon(isPlaying: true)
     }
     func pause() {
         audioPlayer.pause()
-        delegate?.changePlayPauseIcon(isPlaying: false)
     }
     func isPlaying() -> Bool {
         return audioPlayer.isPlaying()
@@ -149,10 +145,7 @@ public class QueueManager: NSObject, YYTAudioPlayerDelegate{
     func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float) {
         delegate?.audioPlayerPeriodicUpdate(currentTime: currentTime, duration: duration)
     }
-    
-    func audioPlayerPlayingStatusChanged(isPlaying playing: Bool) {
-        delegate?.changePlayPauseIcon(isPlaying: playing)
-    }
+
     // MARK: Control from Control Center
     /*
     Support controlling background audio from the Control Center and iOS Lock screen.

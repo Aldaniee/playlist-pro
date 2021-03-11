@@ -20,7 +20,12 @@ class PlaylistContentsViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        navigationItem.title = playlist.title
+        if playlist.title == LibraryManager.shared.LIBRARY_KEY {
+            navigationItem.title = LibraryManager.shared.LIBRARY_DISPLAY
+        }
+        else {
+            navigationItem.title = playlist.title
+        }
         addTableView()
     }
     func setPlaylist(withPlaylist playlist: Playlist) {

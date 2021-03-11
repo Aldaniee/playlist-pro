@@ -20,7 +20,6 @@ class PlaylistsManager {
     func refreshPlaylistsFromLocalStorage() {
         playlists = [Playlist]()
         let playlistTitles = NSMutableArray(array: UserDefaults.standard.value(forKey: PLAYLISTS_KEY) as? NSArray ?? NSArray())
-        print(playlistTitles)
         for title in playlistTitles {
             print(title)
             print("building playlist")
