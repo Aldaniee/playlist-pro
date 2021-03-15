@@ -95,7 +95,7 @@ class LibraryManager {
 		Song Title -> will be set to Song ID
 		Thumbnail URL -> It will skip downloading a thumbnail image
 	*/
-    func addSongToLibrary(songTitle: String?, songUrl: URL, songExtension: String , thumbnailUrl: URL?, songID: String?, playlistTitle: String?, completion: (() -> Void)? = nil) {
+    func addSongToLibrary(songTitle: String?, artists: NSMutableArray, songUrl: URL, songExtension: String , thumbnailUrl: URL?, songID: String?, playlistTitle: String?, completion: (() -> Void)? = nil) {
 		let sID = songID == nil ? "dl_" + generateIDFromTimeStamp() : "yt_" + songID! + generateIDFromTimeStamp()
 		var newExtension: String
 		var errorStr: String?
@@ -155,7 +155,7 @@ class LibraryManager {
 				let link = songID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(songID ?? "UNKNOWN_ERROR")"
 				let songDict = ["id": sID,
                                 "title": songTitle ?? sID,
-                                "artists": "",
+                                "artists": artists,
                                 "album": "",
 								"releaseYear": "",
                                 "duration": duration,
@@ -195,6 +195,7 @@ class LibraryManager {
 		var key: String
 		let songID = songDict["id"] as! String
 		let songTitle = songDict["title"] as! String
+        let artists = songDict["artists"] as! NSMutableArray
 		let songAlbum = songDict["album"] as! String
 		let songYear = songDict["releaseYear"] as! String
 		for (k, val) in mdDict {
@@ -206,7 +207,7 @@ class LibraryManager {
 			if key == "title" && (songTitle == songID || songTitle == "") {  // if metadata has value and song title is set to default value or empty String
 				enrichredDict["title"] = val as! String
 				
-			} else if key == "artist" {
+			} else if key == "artists" && artists == NSMutableArray() {
 				(enrichredDict["artists"] as! NSMutableArray).add(val as! String)
 				
 			} else if key == "album" && songYear == "" {  // if metadata has value and song album is set to default value

@@ -563,3 +563,31 @@ extension NSMutableArray {
         })
     }
 }
+
+extension UIImage {
+    
+    func cropToSquare(size: Double) -> UIImage {
+        
+        let cgimage = self.cgImage!
+        let contextImage = UIImage(cgImage: cgimage)
+        let contextSize = contextImage.size
+        var posX: CGFloat = 0.0
+        var posY: CGFloat = 0.0
+        var cgwidth = CGFloat(size)
+        var cgheight = CGFloat(size)
+
+        posX = ((contextSize.width - contextSize.height) / 2)
+        posY = 0
+        cgwidth = contextSize.height
+        cgheight = contextSize.height
+
+        let rect: CGRect = CGRect(x: posX, y: posY, width: cgwidth, height: cgheight)
+
+        // Create bitmap image from context using the rect
+        let imageRef: CGImage = cgimage.cropping(to: rect)!
+
+        // Create a new image based on the imageRef and rotate back to the original orientation
+        return UIImage(cgImage: imageRef, scale: self.scale, orientation: self.imageOrientation)
+        
+    }
+}

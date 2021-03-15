@@ -17,12 +17,12 @@ struct AccountCellModel {
 final class AccountViewController: UIViewController {
     
     private var data = [[AccountCellModel]]()
-    static let cellReuseIdentifier = "AccountCell"
+    static let identifier = "AccountCell"
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero,
                                     style: .grouped)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
         return tableView
     }()
 
@@ -33,14 +33,15 @@ final class AccountViewController: UIViewController {
         view.backgroundColor = .systemBackground
         tableView.delegate = self
         tableView.dataSource = self
-        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
 
         view.addSubview(tableView)
         print(view.subviews)
 
         tableView.reloadData()
-        print(tableView.dataSource?.numberOfSections?(in: tableView) ?? "none")
         // Do any additional setup after loading the view.
+    }
+    override func viewDidLayoutSubviews() {
+        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
     }
     
     private func configureModels() {
@@ -97,7 +98,7 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: AccountViewController.cellReuseIdentifier, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: AccountViewController.identifier, for: indexPath)
         cell.textLabel!.text = data[indexPath.section][indexPath.row].title
         return cell
     }

@@ -69,10 +69,8 @@ class SearchVideoCell: UITableViewCell {
         
         // Set the title label
         self.titleLabel.text = self.video!.title
-        self.artistLabel.text = "Channel Name"
-        
-        print(self.titleLabel.text!)
-        
+        self.artistLabel.text = self.video!.artist
+                
         // Check cache before downloadiong data
         if let cachedData = CacheManager.getVideoCache(self.video!.thumbnail) {
             // if we are in here we know we found the data in cache

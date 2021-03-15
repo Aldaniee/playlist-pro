@@ -22,7 +22,7 @@ class MiniPlayerView: UIView {
 
     let progressBarThumbSize = CGFloat(3)
     let titleSize = CGFloat(14)
-    let artistSize = CGFloat(14)
+    let artistSize = CGFloat(12)
     let spacing = CGFloat(10)
     
     override func layoutSubviews() {
@@ -49,10 +49,10 @@ class MiniPlayerView: UIView {
         titleLabel.font = UIFont.systemFont(ofSize: titleSize)
 
         artistLabel.frame = CGRect(
-            x: albumCover.right,
-            y: height/2+artistSize,
+            x: albumCover.right + spacing,
+            y: titleLabel.bottom + spacing/2,
             width: pausePlayButton.left - albumCover.width,
-            height: titleSize
+            height: artistSize
         )
         artistLabel.font = UIFont.systemFont(ofSize: artistSize)
 

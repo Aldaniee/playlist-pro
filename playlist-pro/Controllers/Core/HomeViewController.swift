@@ -102,10 +102,10 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         print("Selected cell number \(indexPath.row) -> \(cell.playlist.title ?? "")")
         let playlistDetailViewController = PlaylistContentsViewController()
         if indexPath.row == 0 {
-            playlistDetailViewController.setPlaylist(withPlaylist: LibraryManager.shared.songLibrary)
+            playlistDetailViewController.playlist = LibraryManager.shared.songLibrary
         }
         else {
-            playlistDetailViewController.setPlaylist(withPlaylist: PlaylistsManager.shared.playlists[indexPath.row - 1])
+            playlistDetailViewController.playlist = PlaylistsManager.shared.playlists[indexPath.row - 1]
         }
         playlistDetailViewController.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(playlistDetailViewController, animated: true)

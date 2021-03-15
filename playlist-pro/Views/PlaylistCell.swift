@@ -96,7 +96,7 @@ class PlaylistCell : UITableViewCell {
             let firstSong = playlist.getSongList().object(at: 0) as! Dictionary<String, Any>
             let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong["id"] as? String ?? "").jpg"))
             if let imgData = imageData {
-                self.playlistCoverImageView.image = cropToBounds(image: UIImage(data: imgData)!, height: 15.0)
+                self.playlistCoverImageView.image = UIImage(data: imgData)!.cropToSquare(size: 15.0)
             } else {
                 self.playlistCoverImageView.image = UIImage(systemName: "list.bullet")
             }
@@ -104,29 +104,5 @@ class PlaylistCell : UITableViewCell {
         else {
             self.playlistCoverImageView.image = UIImage(systemName: "list.bullet")
         }
-    }
-    private func cropToBounds(image: UIImage, height: Double) -> UIImage {
-        
-        let cgimage = image.cgImage!
-        let contextImage = UIImage(cgImage: cgimage)
-        let contextSize = contextImage.size
-        var posX: CGFloat = 0.0
-        var posY: CGFloat = 0.0
-        var cgwidth = CGFloat(height)
-        var cgheight = CGFloat(height)
-
-        posX = ((contextSize.width - contextSize.height) / 2)
-        posY = 0
-        cgwidth = contextSize.height
-        cgheight = contextSize.height
-
-        let rect: CGRect = CGRect(x: posX, y: posY, width: cgwidth, height: cgheight)
-
-        // Create bitmap image from context using the rect
-        let imageRef: CGImage = cgimage.cropping(to: rect)!
-
-        // Create a new image based on the imageRef and rotate back to the original orientation
-        return UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
-        
     }
 }

@@ -15,6 +15,7 @@ struct Video : Decodable {
     var description = ""
     var thumbnail = ""
     var published = Date()
+    var artist = ""
     
     enum CodingKeys: String, CodingKey {
         
@@ -25,6 +26,7 @@ struct Video : Decodable {
         
         case published = "publishedAt"
         case title
+        case channel = "channelTitle"
         case description
         case thumbnail = "url"
         case videoId
@@ -35,9 +37,26 @@ struct Video : Decodable {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         let snippetContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .snippet)
         
-        // Parse the title
-        self.title = try snippetContainer.decode(String.self, forKey: .title)
-        
+
+        // Parse the title and channel name
+        let youtubeTitle = try snippetContainer.decode(String.self, forKey: .title)
+        if youtubeTitle.contains("-") {
+            let dashIndex = youtubeTitle.firstIndex(of: "-")
+            let titleStart = youtubeTitle.index(dashIndex!, offsetBy: 2)
+            let titleRange = titleStart...
+            let artistEndIndex = youtubeTitle.index(dashIndex!, offsetBy: -1)
+            let artistRange = ...artistEndIndex
+            self.artist = String(youtubeTitle[artistRange])
+            self.title = String(youtubeTitle[titleRange])
+            print("AAAAAAAAAA  \(title)")
+            print("AAAAAAAAAA  \(artist)")
+        }
+        else {
+            self.artist = try snippetContainer.decode(String.self, forKey: .channel)
+            self.title = youtubeTitle
+        }
+
+
         // Parse the description
         self.description = try snippetContainer.decode(String.self, forKey: .description)
         
@@ -53,7 +72,7 @@ struct Video : Decodable {
         let idContainer = try container.nestedContainer(keyedBy: CodingKeys.self, forKey: .id)
         self.videoId = try idContainer.decode(String.self, forKey: .videoId)
     }
-    
+
 /*
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)

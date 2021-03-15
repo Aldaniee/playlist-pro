@@ -7,8 +7,14 @@
 
 import UIKit
 
+protocol SongCellDelegate {
+    func optionsButtonTapped(tag: Int)
+}
+
 class SongCell : UITableViewCell {
   
+    var delegate: SongCellDelegate?
+    
     static let identifier = "SongCell"
     
     static let rowHeight = CGFloat(80)
@@ -29,6 +35,10 @@ class SongCell : UITableViewCell {
         lbl.textAlignment = .left
         return lbl
     }()
+    let optionsButton: UIButton = {
+        let btn = UIButton()
+        return btn
+    }()
 	
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -37,12 +47,20 @@ class SongCell : UITableViewCell {
         self.contentView.addSubview(albumCoverImageView)
         self.contentView.addSubview(titleLabel)
 		self.contentView.addSubview(artistLabel)
+        self.contentView.addSubview(optionsButton)
+        optionsButton.titleLabel!.numberOfLines = 0
+        optionsButton.titleLabel!.font = UIFont.systemFont(ofSize: optionsButtonHeight)
+        optionsButton.setTitle("···", for: UIControl.State.normal)
+        optionsButton.setTitleColor(.black, for: UIControl.State.normal)
+        optionsButton.addTarget(self, action: #selector(optionsButtonAction), for: .touchUpInside)
 
     }
     
     let spacing = CGFloat(20)
-    let titleLabelSize = CGFloat(20)
-    let artistLabelLabelSize = CGFloat(16)
+    let titleLabelSize = CGFloat(16)
+    let artistLabelLabelSize = CGFloat(12)
+    let optionsButtonHeight = CGFloat(30)
+    
     override func layoutSubviews() {
         let albumCoverImageSize = PlaylistCell.rowHeight - spacing
         albumCoverImageView.frame = CGRect(
@@ -50,10 +68,17 @@ class SongCell : UITableViewCell {
             y: spacing/2,
             width: albumCoverImageSize,
             height: albumCoverImageSize)
+        let optionsButtonWidth = optionsButtonHeight*2
+        optionsButton.frame = CGRect(
+            x: width-optionsButtonWidth,
+            y: height/2-optionsButtonHeight/2,
+            width: optionsButtonWidth,
+            height: optionsButtonHeight
+        )
         titleLabel.frame = CGRect(
             x: albumCoverImageView.right + spacing,
             y: spacing,
-            width: width - spacing - albumCoverImageView.right,
+            width: optionsButton.left - spacing - albumCoverImageView.right,
             height: titleLabelSize
         )
         titleLabel.font = UIFont.boldSystemFont(ofSize: titleLabelSize)
@@ -61,7 +86,7 @@ class SongCell : UITableViewCell {
         artistLabel.frame = CGRect(
             x: albumCoverImageView.right + spacing,
             y: titleLabel.bottom + 5,
-            width: width - spacing - albumCoverImageView.right,
+            width: optionsButton.left - spacing - albumCoverImageView.right,
             height: artistLabelLabelSize
         )
         artistLabel.font = UIFont.systemFont(ofSize: artistLabelLabelSize)
@@ -80,35 +105,16 @@ class SongCell : UITableViewCell {
 		self.artistLabel.text = (songDict["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
 		let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songDict["id"] as? String ?? "").jpg"))
 		if let imgData = imageData {
-            self.albumCoverImageView.image = cropToBounds(image: UIImage(data: imgData)!, height: Double(SongCell.rowHeight - spacing))
+            self.albumCoverImageView.image = UIImage(data: imgData)!.cropToSquare(size: Double(SongCell.rowHeight - spacing))
 		} else {
 			self.albumCoverImageView.image = UIImage(named: "placeholder")
 		}
         //self.durationLabel.text = songDict["duration"] as? String
 		
 	}
-    private func cropToBounds(image: UIImage, height: Double) -> UIImage {
-        
-        let cgimage = image.cgImage!
-        let contextImage = UIImage(cgImage: cgimage)
-        let contextSize = contextImage.size
-        var posX: CGFloat = 0.0
-        var posY: CGFloat = 0.0
-        var cgwidth = CGFloat(height)
-        var cgheight = CGFloat(height)
-
-        posX = ((contextSize.width - contextSize.height) / 2)
-        posY = 0
-        cgwidth = contextSize.height
-        cgheight = contextSize.height
-
-        let rect: CGRect = CGRect(x: posX, y: posY, width: cgwidth, height: cgheight)
-
-        // Create bitmap image from context using the rect
-        let imageRef: CGImage = cgimage.cropping(to: rect)!
-
-        // Create a new image based on the imageRef and rotate back to the original orientation
-        return UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
-        
+    
+    @objc func optionsButtonAction(_ sender: UIButton) {
+        print("song options pressed")
+        delegate?.optionsButtonTapped(tag: sender.tag)
     }
 }

@@ -7,9 +7,15 @@
 
 import UIKit
 
-class PlaylistContentsViewController: UIViewController {
+class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
 
     var playlist = Playlist(songList: NSMutableArray(), title: "Empty Playlist")
+    
+    let searchBar: UISearchBar = {
+        let searchBar = UISearchBar()
+        searchBar.sizeToFit()
+        return searchBar
+    }()
     
     let tableView: UITableView = {
         let tableView = UITableView()
@@ -26,18 +32,20 @@ class PlaylistContentsViewController: UIViewController {
         else {
             navigationItem.title = playlist.title
         }
-        addTableView()
-    }
-    func setPlaylist(withPlaylist playlist: Playlist) {
-        self.playlist = playlist
-    }
-    private func addTableView() {
-        tableView.frame = view.frame
-        view.addSubview(tableView)
-
+        searchBar.delegate = self
+        navigationItem.searchController = UISearchController(searchResultsController: nil)
+        navigationItem.hidesSearchBarWhenScrolling = true
+        
         tableView.dataSource = self
         tableView.delegate = self
+        view.addSubview(tableView)
     }
+    
+    override func viewDidLayoutSubviews() {
+        tableView.frame = view.frame
+
+    }
+
 }
 extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -48,7 +56,8 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
         cell.songDict = playlist.get(at: indexPath.row)
         cell.refreshCell()
-
+        cell.delegate = self
+        cell.optionsButton.tag = indexPath.row
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -56,7 +65,15 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
-
         print("Selected cell number \(indexPath.row) -> \(cell.songDict["title"] ?? "")")
     }
+}
+
+extension PlaylistContentsViewController: SongCellDelegate {
+    func optionsButtonTapped(tag: Int) {
+        let vc = SongOptionsViewController()
+        vc.setSong(songDict: playlist.get(at: tag))
+        present(vc, animated: true, completion: nil)
+    }
+    
 }

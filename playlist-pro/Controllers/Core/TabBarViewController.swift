@@ -167,8 +167,8 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         
         let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
         if let imgData = imageData {
-            miniPlayerView.albumCover.image = cropToBounds(image: UIImage(data: imgData) ?? UIImage(), height: Double(miniPlayerView.height))
-            nowPlayingVC.albumCoverImageView.image = cropToBounds(image: UIImage(data: imgData) ?? UIImage(), height: Double(nowPlayingVC.albumCoverImageView.height))
+            miniPlayerView.albumCover.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(size: Double(miniPlayerView.height))
+            nowPlayingVC.albumCoverImageView.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(size: Double(miniPlayerView.height))
 
         } else {
             miniPlayerView.albumCover.image = UIImage(named: "placeholder")

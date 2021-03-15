@@ -87,8 +87,8 @@ class NowPlayingViewController: UIViewController {
         return lbl
     }()
 
-    let progressBar: UISlider = {
-        let pBar = UISlider()
+    let progressBar: CustomSlider = {
+        let pBar = CustomSlider()
         pBar.tintColor = Constants.UI.darkPink
         pBar.backgroundColor = .clear
         pBar.minimumTrackTintColor = Constants.UI.darkPink
@@ -222,7 +222,10 @@ class NowPlayingViewController: UIViewController {
         let thumbView = UIImageView()
         thumbView.backgroundColor = Constants.UI.darkPink
 
-        thumbView.frame = CGRect(x: 0, y: progressBarThumbWidth/2, width: progressBarThumbWidth, height: progressBarThumbHeight)
+        thumbView.frame = CGRect(x: 0,
+                                 y: progressBarThumbWidth/2,
+                                 width: progressBarThumbWidth,
+                                 height: progressBarThumbHeight)
         let thumbImage = UIGraphicsImageRenderer(bounds: thumbView.bounds).image { rendererContext in
             thumbView.layer.render(in: rendererContext.cgContext)
         }

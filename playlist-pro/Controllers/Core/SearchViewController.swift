@@ -55,7 +55,9 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
                                  height: view.height)
     }
 
-    func downloadYouTubeVideo(videoID: String) {
+    func downloadYouTubeVideo(video: Video) {
+        let videoID = video.videoId
+        let artistArray = NSMutableArray(object: video.artist)
         print("Loading url: https://www.youtube.com/embed/\(videoID)")
         self.showSpinner(onView: self.view, withTitle: "Loading...")
         XCDYouTubeClient.default().getVideoWithIdentifier(videoID) { (video, error) in
@@ -68,7 +70,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
                 return
             }
             self.removeSpinner()
-            LibraryManager.shared.addSongToLibrary(songTitle: video!.title, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, playlistTitle: nil, completion: nil)
+            LibraryManager.shared.addSongToLibrary(songTitle: video!.title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, playlistTitle: nil, completion: nil)
         }
     }
     
@@ -153,7 +155,7 @@ extension SearchViewController: UITableViewDataSource {
         let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
         
         // Download the selected video
-        downloadYouTubeVideo(videoID: selectedVideo.videoId)
+        downloadYouTubeVideo(video: selectedVideo)
     }
     
 }
