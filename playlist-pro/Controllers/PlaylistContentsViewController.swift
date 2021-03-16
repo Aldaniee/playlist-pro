@@ -7,12 +7,9 @@
 
 import UIKit
 
-class PlaylistContentsViewController: UIViewController, UISearchBarDelegate, SongOptionsViewControllerDelegate {
+class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
     
-    func didTapRemoveFromLibrary() {
-        tableView.reloadData()
-    }
-    let songOptionsViewController = SongOptionsViewController()
+    private let songPlaylistOptionsViewController = SongPlaylistOptionsViewController()
 
     var playlist = Playlist(title: "Empty Playlist")
     
@@ -24,7 +21,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate, Son
     
     let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
+        tableView.register(SongPlaylistCell.self, forCellReuseIdentifier: SongPlaylistCell.identifier)
         return tableView
     }()
     
@@ -34,7 +31,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate, Son
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        songOptionsViewController.delegate = self
+        songPlaylistOptionsViewController.delegate = self
         if playlist.title == LibraryManager.shared.LIBRARY_KEY {
             navigationItem.title = LibraryManager.shared.LIBRARY_DISPLAY
         }
@@ -42,9 +39,8 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate, Son
             navigationItem.title = playlist.title
         }
         searchBar.delegate = self
-        navigationItem.searchController = UISearchController(searchResultsController: nil)
-        navigationItem.hidesSearchBarWhenScrolling = true
         
+        tableView.tableHeaderView = searchBar
         tableView.dataSource = self
         tableView.delegate = self
         view.addSubview(tableView)
@@ -61,26 +57,32 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = playlist.songList.object(at: indexPath.row) as! Dictionary<String, Any>
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongPlaylistCell.identifier, for: indexPath) as! SongPlaylistCell
+        cell.songDict = playlist.songList.object(at: indexPath.row) as? Dictionary<String, Any>
         cell.refreshCell()
         cell.delegate = self
         cell.optionsButton.tag = indexPath.row
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SongCell.rowHeight
+        return SongPlaylistCell.rowHeight
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! SongCell
-        print("Selected cell number \(indexPath.row) -> \(cell.songDict["title"] ?? "")")
+        let cell = tableView.cellForRow(at: indexPath) as! SongPlaylistCell
+        print("Selected cell number \(indexPath.row) -> \(cell.songDict!["title"] ?? "")")
         QueueManager.shared.setupQueue(with: playlist, startingAt: indexPath.row)
     }
 }
 
-extension PlaylistContentsViewController: SongCellDelegate {
+extension PlaylistContentsViewController: SongPlaylistCellDelegate {
     func optionsButtonTapped(tag: Int) {
-        songOptionsViewController.setSong(songDict: playlist.songList.object(at: tag) as! Dictionary<String, Any>)
-        present(songOptionsViewController, animated: true, completion: nil)
+        songPlaylistOptionsViewController.setSong(songDict: playlist.songList.object(at: tag) as! Dictionary<String, Any>)
+        present(songPlaylistOptionsViewController, animated: true, completion: nil)
+    }
+}
+
+extension PlaylistContentsViewController: SongOptionsViewControllerDelegate {
+    func reloadTableView() {
+        tableView.reloadData()
     }
 }

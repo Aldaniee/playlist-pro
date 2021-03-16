@@ -7,24 +7,26 @@
 
 import UIKit
 
-struct SongOptionsCellModel {
+struct SongPlaylistOptionsCellModel {
     let symbol: UIImage
     let title: String
     let handler: (() -> Void)
 }
 
 protocol SongOptionsViewControllerDelegate {
-    func didTapRemoveFromLibrary()
+    func reloadTableView()
 }
 
-class SongOptionsViewController: UIViewController {
+class SongPlaylistOptionsViewController: UIViewController {
 
-    private var data = [SongOptionsCellModel]()
+    private var data = [SongPlaylistOptionsCellModel]()
     
     var delegate : SongOptionsViewControllerDelegate!
     
-    private var songDict = Dictionary<String, Any>()
+    private var songDict : Dictionary<String, Any>?
     
+    private var playlist : Playlist?
+
     private let albumCoverImageView: UIImageView = {
         let img = UIImageView()
         return img
@@ -98,16 +100,16 @@ class SongOptionsViewController: UIViewController {
     
     private func configureModels() {
         let section = [
-            SongOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.plus")!, title: "Add to playlist") { [weak self] in
+            SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.plus")!, title: "Add to playlist") { [weak self] in
                 self?.didTapAddToPlaylist()
             },
-            SongOptionsCellModel(symbol: UIImage(systemName: "text.badge.plus")!, title: "Add to queue") { [weak self] in
+            SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "text.badge.plus")!, title: "Add to queue") { [weak self] in
                 self?.didTapAddToQueue()
             },
-            SongOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.minus")!, title: "Remove from playlist") { [weak self] in
+            SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.minus")!, title: "Remove from playlist") { [weak self] in
                 self?.didTapRemoveFromPlaylist()
             },
-            SongOptionsCellModel(symbol: UIImage(systemName: "minus.circle")!, title: "Remove from library") { [weak self] in
+            SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "minus.circle")!, title: "Remove from library") { [weak self] in
                 self?.didTapRemoveFromLibrary()
             }
         ]
@@ -126,6 +128,12 @@ class SongOptionsViewController: UIViewController {
             self.albumCoverImageView.image = UIImage(named: "placeholder")
         }
     }
+    func setPlaylist(playlist: Playlist) {
+        self.playlist = playlist
+        self.titleLabel.text = playlist.title
+        self.artistLabel.text = ""
+        self.albumCoverImageView.image = UIImage(named: "placeholder")
+    }
     
     @objc func didTapAddToPlaylist() {
         print("add to playlist pressed")
@@ -141,14 +149,14 @@ class SongOptionsViewController: UIViewController {
     
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
-        LibraryManager.shared.deleteSongFromLibrary(songID: songDict[SongValues.id] as! String)
-        QueueManager.shared.removeFromQueue(songId: songDict[SongValues.id] as! String)
-        delegate.didTapRemoveFromLibrary()
+        LibraryManager.shared.deleteSongFromLibrary(songID: songDict![SongValues.id] as! String)
+        QueueManager.shared.removeFromQueue(songId: songDict![SongValues.id] as! String)
+        delegate.reloadTableView()
         dismiss(animated: true, completion: nil)
     }
 
 }
-extension SongOptionsViewController: UITableViewDelegate, UITableViewDataSource {
+extension SongPlaylistOptionsViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count

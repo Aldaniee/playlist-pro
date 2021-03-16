@@ -79,7 +79,7 @@ class QueueViewController: UIViewController {
     }
     let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
+        tableView.register(SongPlaylistCell.self, forCellReuseIdentifier: SongPlaylistCell.identifier)
         tableView.backgroundColor = .clear
 
         return tableView
@@ -180,22 +180,22 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = QueueManager.shared.queue[indexPath.row + indexPath.section] as! Dictionary<String, Any>
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongPlaylistCell.identifier, for: indexPath) as! SongPlaylistCell
+        cell.songDict = QueueManager.shared.queue[indexPath.row + indexPath.section] as? Dictionary<String, Any>
         cell.refreshCell()
         cell.setDarkStyle()
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SongCell.rowHeight
+        return SongPlaylistCell.rowHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! SongCell
+        let cell = tableView.cellForRow(at: indexPath) as! SongPlaylistCell
 
-        print("Selected cell number \(indexPath.row) -> \(cell.songDict["title"] ?? "")")
+        print("Selected cell number \(indexPath.row) -> \(cell.songDict!["title"] ?? "")")
         
-        QueueManager.shared.didSelectSong(songDict: cell.songDict)
+        QueueManager.shared.didSelectSong(songDict: cell.songDict!)
         tableView.reloadData()
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {

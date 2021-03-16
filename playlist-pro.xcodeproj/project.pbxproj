@@ -14,7 +14,7 @@
 		EA05589E25B118DF00B1FF85 /* YYTRangeSliderTrackLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA05589B25B118DF00B1FF85 /* YYTRangeSliderTrackLayer.swift */; };
 		EA05589F25B118DF00B1FF85 /* YYTRangeSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA05589C25B118DF00B1FF85 /* YYTRangeSlider.swift */; };
 		EA0558A025B118DF00B1FF85 /* YYTAudioPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA05589D25B118DF00B1FF85 /* YYTAudioPlayer.swift */; };
-		EA0558A925B118EA00B1FF85 /* SongCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558A425B118EA00B1FF85 /* SongCell.swift */; };
+		EA0558A925B118EA00B1FF85 /* SongPlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558A425B118EA00B1FF85 /* SongPlaylistCell.swift */; };
 		EA0558BE25B1191700B1FF85 /* MiniPlayerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA0558BB25B1191700B1FF85 /* MiniPlayerView.swift */; };
 		EA5E9E8925B4BC560026E9AE /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */; };
 		EA5FBE77257AAD4A00473B56 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5FBE76257AAD4A00473B56 /* Video.swift */; };
@@ -26,7 +26,7 @@
 		EA637E022550B00200FCC983 /* SearchVideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637E012550B00200FCC983 /* SearchVideoCell.swift */; };
 		EA64603B25FBBE4300B73769 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64603A25FBBE4300B73769 /* CustomSlider.swift */; };
 		EA64604025FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64603F25FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift */; };
-		EA64604D25FC016A00B73769 /* SongOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64604C25FC016A00B73769 /* SongOptionsViewController.swift */; };
+		EA64604D25FC016A00B73769 /* SongPlaylistOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64604C25FC016A00B73769 /* SongPlaylistOptionsViewController.swift */; };
 		EA64605525FEC41E00B73769 /* SongOptionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64605425FEC41E00B73769 /* SongOptionsCell.swift */; };
 		EA64605D26000D4A00B73769 /* SongValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64605C26000D4A00B73769 /* SongValues.swift */; };
 		EA7E3FE325A67646009A4DAE /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7E3FE225A67646009A4DAE /* AccountViewController.swift */; };
@@ -45,7 +45,6 @@
 		EAC06E4B25DEB25E00E86162 /* DismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E4A25DEB25E00E86162 /* DismissAnimator.swift */; };
 		EAC06E5025DEB42B00E86162 /* Interactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E4F25DEB42B00E86162 /* Interactor.swift */; };
 		EAC06E5525DEC34B00E86162 /* QueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E5425DEC34B00E86162 /* QueueViewController.swift */; };
-		EAC06E5A25DEEA6D00E86162 /* PlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E5925DEEA6D00E86162 /* PlaylistCell.swift */; };
 		EAC06E5F25DEFEB600E86162 /* CreatePlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */; };
 		EAC2DC9025AB862A006EA7AF /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC8F25AB862A006EA7AF /* Alamofire */; };
 		EAC2DC9625AB86F5006EA7AF /* XCDYouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC9525AB86F5006EA7AF /* XCDYouTubeKit */; };
@@ -95,7 +94,7 @@
 		EA05589B25B118DF00B1FF85 /* YYTRangeSliderTrackLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YYTRangeSliderTrackLayer.swift; sourceTree = "<group>"; };
 		EA05589C25B118DF00B1FF85 /* YYTRangeSlider.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YYTRangeSlider.swift; sourceTree = "<group>"; };
 		EA05589D25B118DF00B1FF85 /* YYTAudioPlayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = YYTAudioPlayer.swift; sourceTree = "<group>"; };
-		EA0558A425B118EA00B1FF85 /* SongCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongCell.swift; sourceTree = "<group>"; };
+		EA0558A425B118EA00B1FF85 /* SongPlaylistCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SongPlaylistCell.swift; sourceTree = "<group>"; };
 		EA0558BB25B1191700B1FF85 /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		EA5FBE76257AAD4A00473B56 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
@@ -105,7 +104,7 @@
 		EA637E012550B00200FCC983 /* SearchVideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVideoCell.swift; sourceTree = "<group>"; };
 		EA64603A25FBBE4300B73769 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
 		EA64603F25FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
-		EA64604C25FC016A00B73769 /* SongOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SongOptionsViewController.swift; path = "playlist-pro/Controllers/SongOptionsViewController.swift"; sourceTree = SOURCE_ROOT; };
+		EA64604C25FC016A00B73769 /* SongPlaylistOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SongPlaylistOptionsViewController.swift; path = "playlist-pro/Controllers/SongPlaylistOptionsViewController.swift"; sourceTree = SOURCE_ROOT; };
 		EA64605425FEC41E00B73769 /* SongOptionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongOptionsCell.swift; sourceTree = "<group>"; };
 		EA64605C26000D4A00B73769 /* SongValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongValues.swift; sourceTree = "<group>"; };
 		EA7E3FE225A67646009A4DAE /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
@@ -124,7 +123,6 @@
 		EAC06E4A25DEB25E00E86162 /* DismissAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissAnimator.swift; sourceTree = "<group>"; };
 		EAC06E4F25DEB42B00E86162 /* Interactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interactor.swift; sourceTree = "<group>"; };
 		EAC06E5425DEC34B00E86162 /* QueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueViewController.swift; sourceTree = "<group>"; };
-		EAC06E5925DEEA6D00E86162 /* PlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistCell.swift; sourceTree = "<group>"; };
 		EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePlaylistViewController.swift; sourceTree = "<group>"; };
 		EAE145AF25858AFE00C09FE9 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
@@ -219,9 +217,8 @@
 			children = (
 				EA637E012550B00200FCC983 /* SearchVideoCell.swift */,
 				EA64603F25FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift */,
-				EA0558A425B118EA00B1FF85 /* SongCell.swift */,
+				EA0558A425B118EA00B1FF85 /* SongPlaylistCell.swift */,
 				EA64605425FEC41E00B73769 /* SongOptionsCell.swift */,
-				EAC06E5925DEEA6D00E86162 /* PlaylistCell.swift */,
 				EA0558BB25B1191700B1FF85 /* MiniPlayerView.swift */,
 				EA05589B25B118DF00B1FF85 /* YYTRangeSliderTrackLayer.swift */,
 				EA05589C25B118DF00B1FF85 /* YYTRangeSlider.swift */,
@@ -247,7 +244,7 @@
 				EAC06DD225DC1C6600E86162 /* Core */,
 				EA7E3FE225A67646009A4DAE /* AccountViewController.swift */,
 				EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */,
-				EA64604C25FC016A00B73769 /* SongOptionsViewController.swift */,
+				EA64604C25FC016A00B73769 /* SongPlaylistOptionsViewController.swift */,
 				EAC06DD325DC1CA300E86162 /* PlaylistContentsViewController.swift */,
 				EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */,
 				EAE145EC258593B400C09FE9 /* Onboarding */,
@@ -620,7 +617,6 @@
 				EA9D945025938AA80057493D /* AuthSplashScreenViewController.swift in Sources */,
 				EA05585425AFA39600B1FF85 /* LocalFilesManager.swift in Sources */,
 				EAC06E5525DEC34B00E86162 /* QueueViewController.swift in Sources */,
-				EAC06E5A25DEEA6D00E86162 /* PlaylistCell.swift in Sources */,
 				EA64605D26000D4A00B73769 /* SongValues.swift in Sources */,
 				EAC06DE025DC1CE800E86162 /* HapticsManager.swift in Sources */,
 				EAE431442550B6F700E5AEBF /* CacheManager.swift in Sources */,
@@ -628,12 +624,12 @@
 				EAC06E0725DC356B00E86162 /* Playlist.swift in Sources */,
 				EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */,
 				EA0558BE25B1191700B1FF85 /* MiniPlayerView.swift in Sources */,
-				EA64604D25FC016A00B73769 /* SongOptionsViewController.swift in Sources */,
+				EA64604D25FC016A00B73769 /* SongPlaylistOptionsViewController.swift in Sources */,
 				EAC06E5F25DEFEB600E86162 /* CreatePlaylistViewController.swift in Sources */,
 				EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */,
 				EAC06E4B25DEB25E00E86162 /* DismissAnimator.swift in Sources */,
 				EA96634B25F161BC00C8254C /* PlaylistsManager.swift in Sources */,
-				EA0558A925B118EA00B1FF85 /* SongCell.swift in Sources */,
+				EA0558A925B118EA00B1FF85 /* SongPlaylistCell.swift in Sources */,
 				EAC06E0825DC356B00E86162 /* LibraryManager.swift in Sources */,
 				EAC06E0925DC356B00E86162 /* QueueManager.swift in Sources */,
 				EA64605525FEC41E00B73769 /* SongOptionsCell.swift in Sources */,

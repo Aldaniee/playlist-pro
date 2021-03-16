@@ -9,13 +9,15 @@ import Foundation
 import UIKit
 import FirebaseAuth
 
-class HomeViewController: UIViewController, CreatePlaylistDelegate {
+class HomeViewController: UIViewController {
     
-    let createPlaylistViewController = CreatePlaylistViewController()
+    private let createPlaylistViewController = CreatePlaylistViewController()
 
+    private let songPlaylistOptionsViewController = SongPlaylistOptionsViewController()
+    
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(PlaylistCell.self, forCellReuseIdentifier: PlaylistCell.identifier)
+        tableView.register(SongPlaylistCell.self, forCellReuseIdentifier: SongPlaylistCell.identifier)
         return tableView
     }()
     private let addButton: UIButton = {
@@ -36,6 +38,7 @@ class HomeViewController: UIViewController, CreatePlaylistDelegate {
 		super.viewDidLoad()
         title = "Home"
         view.backgroundColor = .systemBackground
+        songPlaylistOptionsViewController.delegate = self
         tableView.frame = view.frame
         tableView.dataSource = self
         tableView.delegate = self
@@ -62,9 +65,6 @@ class HomeViewController: UIViewController, CreatePlaylistDelegate {
             self.reloadTableView()
         })
     }
-    func reloadTableView() {
-        tableView.reloadData()
-    }
     func handleNotAuthenticated() {
         // Check auth status and if the user is not logged in, put the auth splash screen in front with this as the root view controller
         if Auth.auth().currentUser == nil {
@@ -82,7 +82,8 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: PlaylistCell.identifier, for: indexPath) as! PlaylistCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongPlaylistCell.identifier, for: indexPath) as! SongPlaylistCell
+        
         if indexPath.row == 0 {
             cell.playlist = LibraryManager.shared.songLibrary
         }
@@ -90,16 +91,17 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             cell.playlist = PlaylistsManager.shared.playlists[indexPath.row - 1]
         }
         cell.refreshCell()
-
+        cell.delegate = self
+        cell.optionsButton.tag = indexPath.row
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return PlaylistCell.rowHeight
+        return SongPlaylistCell.rowHeight
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! PlaylistCell
+        let cell = tableView.cellForRow(at: indexPath) as! SongPlaylistCell
 
-        print("Selected cell number \(indexPath.row) -> \(cell.playlist.title)")
+        print("Selected cell number \(indexPath.row) -> \(cell.playlist?.title ?? "no playlist found")")
         let playlistDetailViewController = PlaylistContentsViewController()
         if indexPath.row == 0 {
             playlistDetailViewController.playlist = LibraryManager.shared.songLibrary
@@ -111,4 +113,22 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         navigationController?.pushViewController(playlistDetailViewController, animated: true)
     }
     
+}
+
+extension HomeViewController: SongPlaylistCellDelegate {
+    func optionsButtonTapped(tag: Int) {
+        if tag == 0 {
+            songPlaylistOptionsViewController.setPlaylist(playlist: LibraryManager.shared.songLibrary)
+        }
+        else {
+            songPlaylistOptionsViewController.setPlaylist(playlist: PlaylistsManager.shared.playlists[tag-1])
+        }
+        present(songPlaylistOptionsViewController, animated: true, completion: nil)
+    }
+}
+
+extension HomeViewController: CreatePlaylistDelegate, SongOptionsViewControllerDelegate {
+    func reloadTableView() {
+        tableView.reloadData()
+    }
 }

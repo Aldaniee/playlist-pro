@@ -51,7 +51,7 @@ final class LibraryViewController: UIViewController {
     }()
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
+        tableView.register(SongPlaylistCell.self, forCellReuseIdentifier: SongPlaylistCell.identifier)
         return tableView
     }()
     private let loginButton: UIButton = {
@@ -143,18 +143,18 @@ extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = LibraryManager.shared.songLibrary.songList.object(at: indexPath.row) as! Dictionary<String, Any>
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongPlaylistCell.identifier, for: indexPath) as! SongPlaylistCell
+        cell.songDict = LibraryManager.shared.songLibrary.songList.object(at: indexPath.row) as? Dictionary<String, Any>
         cell.refreshCell()
 
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SongCell.rowHeight
+        return SongPlaylistCell.rowHeight
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! SongCell
+        let cell = tableView.cellForRow(at: indexPath) as! SongPlaylistCell
 
-        print("Selected cell number \(indexPath.row) -> \(cell.songDict["title"] ?? "")")
+        print("Selected cell number \(indexPath.row) -> \(cell.songDict!["title"] ?? "")")
     }
 }

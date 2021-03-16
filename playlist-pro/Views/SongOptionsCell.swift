@@ -11,7 +11,7 @@ class SongOptionsCell: UITableViewCell {
     
     static let identifier = "SongOptionsCell"
     
-    var model : SongOptionsCellModel!
+    var model : SongPlaylistOptionsCellModel!
     
     let symbolImageView: UIImageView = {
         let imgView = UIImageView()

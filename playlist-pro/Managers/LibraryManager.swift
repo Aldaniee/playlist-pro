@@ -15,6 +15,8 @@ class LibraryManager {
     final let LIBRARY_KEY = "LibraryArray"
     final let LIBRARY_DISPLAY = "Music"
     
+    let userDefaults = UserDefaults.standard
+
 	enum ValueType {
 		case min
 		case max
@@ -24,7 +26,7 @@ class LibraryManager {
     
     // An array of playlists in the application
     init() {
-        self.songLibrary = Playlist(title: LIBRARY_KEY, songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()))
+        self.songLibrary = Playlist(title: LIBRARY_KEY, songList: NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()))
         updateLibraryToDatabase()
     }
     
@@ -44,8 +46,8 @@ class LibraryManager {
             }
         }
         self.downloadMissingSongs(newLibrary: newLibrary)
-        UserDefaults.standard.set(newLibrary, forKey: LIBRARY_KEY)
-        self.songLibrary.songList = NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
+        userDefaults.set(newLibrary, forKey: LIBRARY_KEY)
+        self.songLibrary.songList = NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
         deleteExcessSongs(songLibraryArray: songLibrary.songList)
 
     }
@@ -59,7 +61,7 @@ class LibraryManager {
         }
     }
     func refreshSongLibraryFromLocalStorage() {
-        songLibrary.songList = NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
+        songLibrary.songList = NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
     }
 
     func deleteExcessSongs(songLibraryArray: NSMutableArray) {
@@ -165,10 +167,10 @@ class LibraryManager {
                         PlaylistsManager.shared.playlists[playlistIndex].songList.add(enrichedDict)
                     }
                 }
-                UserDefaults.standard.set(self.songLibrary.songList, forKey: self.LIBRARY_KEY)
+                self.userDefaults.set(self.songLibrary.songList, forKey: self.LIBRARY_KEY)
                 self.updateLibraryToDatabase()
                 
-                self.songLibrary.songList = NSMutableArray(array: UserDefaults.standard.value(forKey: self.LIBRARY_KEY) as? NSArray ?? NSArray())
+                self.songLibrary.songList = NSMutableArray(array: self.userDefaults.value(forKey: self.LIBRARY_KEY) as? NSArray ?? NSArray())
 				completion?()
 			} else {	// In case of error in adding the song to the library
 				_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
@@ -305,7 +307,7 @@ class LibraryManager {
 			songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
             if songDict[SongValues.id] as! String == newSong[SongValues.id] as! String {
                 songLibrary.songList.replaceObject(at: i, with: newSong)
-                UserDefaults.standard.set(songLibrary.songList, forKey: LIBRARY_KEY)
+                userDefaults.set(songLibrary.songList, forKey: LIBRARY_KEY)
                 self.updateLibraryToDatabase()
 				break
 			}

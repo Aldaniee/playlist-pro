@@ -67,7 +67,7 @@ class PlaylistsManager {
             while hasPlaylist(title: title) {
                 nextNum += 1
             }
-            uniqueTitle = uniqueTitle + "\(nextNum)"
+            uniqueTitle = uniqueTitle + " \(nextNum)"
         }
         return uniqueTitle
     }
