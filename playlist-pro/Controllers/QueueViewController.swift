@@ -31,6 +31,9 @@ class QueueViewController: UIViewController {
         view.addSubview(previousButton)
         view.addSubview(nextButton)
     }
+    
+    
+    
     override func viewDidLayoutSubviews() {
         tableView.frame = CGRect(
             x: 0, y: 0, width: view.width, height: view.height - tableviewDist

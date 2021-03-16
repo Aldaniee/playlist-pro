@@ -142,6 +142,8 @@ class SongOptionsViewController: UIViewController {
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
         LibraryManager.shared.deleteSongFromLibrary(songID: songDict[SongValues.id] as! String)
+        QueueManager.shared.removeFromQueue(songId: songDict[SongValues.id] as! String)
+        delegate.didTapRemoveFromLibrary()
         dismiss(animated: true, completion: nil)
     }
 

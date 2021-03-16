@@ -52,7 +52,6 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate, Son
     
     override func viewDidLayoutSubviews() {
         tableView.frame = view.frame
-
     }
 
 }
@@ -84,5 +83,4 @@ extension PlaylistContentsViewController: SongCellDelegate {
         songOptionsViewController.setSong(songDict: playlist.get(at: tag))
         present(songOptionsViewController, animated: true, completion: nil)
     }
-    
 }
