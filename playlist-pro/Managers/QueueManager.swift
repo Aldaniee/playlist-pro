@@ -56,6 +56,16 @@ public class QueueManager: NSObject {
             play()
         }
     }
+    func removeFromQueue(songId: String) {
+        for index in 0..<queue.count {
+            let songDict = queue[index] as! Dictionary<String, Any>
+            if songDict[SongValues.id] as! String == songId {
+                queue.removeObject(at: index)
+            }
+            
+        }
+        updateSongPlaying()
+    }
     func shuffle() {
         shuffleStatus = !shuffleStatus
         if shuffleStatus {
