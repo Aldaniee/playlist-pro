@@ -9,6 +9,12 @@ import UIKit
 
 class QueueViewController: UIViewController {
     
+    let spacing = CGFloat(30)
+    let tableviewDist = CGFloat(120)
+    let pausePlaySize = CGFloat(70)
+    let nextPrevSize = CGFloat(40)
+    let repeatShuffleSize = CGFloat(30)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.addSubview(tableView)
@@ -17,10 +23,53 @@ class QueueViewController: UIViewController {
         tableView.dataSource = self
         tableView.delegate = self
         view.backgroundColor = .clear
+        
+        // MARK: Playback Controls
+        view.addSubview(shuffleButton)
+        view.addSubview(repeatButton)
+        view.addSubview(pausePlayButton)
+        view.addSubview(previousButton)
+        view.addSubview(nextButton)
     }
     override func viewDidLayoutSubviews() {
-        tableView.frame = view.frame
+        tableView.frame = CGRect(
+            x: 0, y: 0, width: view.width, height: view.height - tableviewDist
+        )
         blurView.frame = view.frame
+        
+        // MARK: Playback Controls
+        let playbackCenter = view.bottom - tableviewDist/2
+        pausePlayButton.frame = CGRect(
+            x: view.center.x - pausePlaySize/2,
+            y: playbackCenter - (pausePlaySize/2),
+            width: pausePlaySize,
+            height: pausePlaySize
+        )
+        nextButton.frame = CGRect(
+            x: pausePlayButton.right + spacing,
+            y: playbackCenter - nextPrevSize/2,
+            width: nextPrevSize,
+            height: nextPrevSize
+        )
+        previousButton.frame = CGRect(
+            x: pausePlayButton.left - nextPrevSize - spacing,
+            y: playbackCenter - nextPrevSize/2,
+            width: nextPrevSize,
+            height: nextPrevSize
+        )
+        shuffleButton.frame = CGRect(
+            x: nextButton.right + spacing,
+            y: playbackCenter - repeatShuffleSize/2,
+            width: repeatShuffleSize,
+            height: repeatShuffleSize
+        )
+        repeatButton.frame = CGRect(
+            x: previousButton.left - repeatShuffleSize - spacing,
+            y: playbackCenter - repeatShuffleSize/2,
+            width: repeatShuffleSize,
+            height: repeatShuffleSize
+        )
+        
     }
     override func viewDidAppear(_ animated: Bool) {
         tableView.reloadData()
@@ -52,17 +101,32 @@ class QueueViewController: UIViewController {
     }()
     let previousButton: UIButton = {
         let btn = UIButton()
-        btn.setImage(UIImage(named: "previous"), for: UIControl.State.normal)
+        btn.backgroundColor = .clear
+        btn.imageView!.contentMode = .scaleAspectFit
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "backward.end.fill", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
         return btn
     }()
     let pausePlayButton: UIButton = {
         let btn = UIButton()
-        btn.setImage(UIImage(named: "play"), for: UIControl.State.normal)
+        btn.backgroundColor = .clear
+        btn.imageView!.contentMode = .scaleAspectFit
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "play.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
         return btn
     }()
     let nextButton: UIButton = {
         let btn = UIButton()
-        btn.setImage(UIImage(named: "next"), for: UIControl.State.normal)
+        btn.backgroundColor = .clear
+        btn.imageView!.contentMode = .scaleAspectFit
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "forward.end.fill", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
         return btn
     }()
     let closeButton: UIButton = {
@@ -76,6 +140,26 @@ class QueueViewController: UIViewController {
         pBar.tintColor = Constants.UI.darkPink
         return pBar
     }()
+    let repeatButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        btn.imageView!.contentMode = .scaleAspectFit
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "repeat", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
+        return btn
+    }()
+    let shuffleButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .clear
+        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
+        let configuration = UIImage.SymbolConfiguration(font: font)
+        btn.setImage(UIImage(systemName: "shuffle", withConfiguration: configuration), for: UIControl.State.normal)
+        btn.tintColor = .white
+        return btn
+    }()
+    
 }
 extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
