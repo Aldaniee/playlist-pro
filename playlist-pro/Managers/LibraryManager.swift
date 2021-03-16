@@ -15,18 +15,6 @@ class LibraryManager {
     final let LIBRARY_KEY = "LibraryArray"
     final let LIBRARY_DISPLAY = "Music"
     
-	enum SongProperties: String {
-		case id = "id"
-		case link = "link"
-		case fileExtension = "fileExtension"
-		case title = "title"
-		case artists = "artists"
-		case album = "album"
-		case releaseYear = "releaseYear"
-		case duration = "duration"
-		case lyrics = "lyrics"
-		case tags = "tags"
-	}
 	enum ValueType {
 		case min
 		case max
@@ -96,7 +84,8 @@ class LibraryManager {
 		Thumbnail URL -> It will skip downloading a thumbnail image
 	*/
     func addSongToLibrary(songTitle: String?, artists: NSMutableArray, songUrl: URL, songExtension: String , thumbnailUrl: URL?, songID: String?, playlistTitle: String?, completion: (() -> Void)? = nil) {
-		let sID = songID == nil ? "dl_" + generateIDFromTimeStamp() : "yt_" + songID! + generateIDFromTimeStamp()
+
+        let sID = songID == nil ? "dl_" + generateIDFromTimeStamp() : "yt_" + songID! + generateIDFromTimeStamp()
 		var newExtension: String
 		var errorStr: String?
 		
@@ -272,8 +261,8 @@ class LibraryManager {
 		var songDict = Dictionary<String, Any>()
 		for i in 0 ..< songLibrary.count() {
             songDict = songLibrary.get(at: i)
-			if songDict["id"] as! String == songID {
-				let songExt = (songDict["fileExtension"] as? String) ?? "m4a"  //support legacy code
+			if songDict[SongValues.id] as! String == songID {
+				let songExt = (songDict[SongValues.id] as? String) ?? "m4a"  //support legacy code
 				if LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).\(songExt)") {
 					_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).jpg")
                     songLibrary.remove(song: songDict)
@@ -290,7 +279,7 @@ class LibraryManager {
 		var songDict = Dictionary<String, Any>()
 		for i in 0 ..< songLibrary.count() {
             songDict = songLibrary.get(at: i)
-			if songDict["link"] as! String == songLink {
+            if songDict[SongValues.link] as! String == songLink {
 				return true
 			}
 		}

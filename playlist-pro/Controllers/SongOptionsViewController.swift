@@ -13,11 +13,17 @@ struct SongOptionsCellModel {
     let handler: (() -> Void)
 }
 
+protocol SongOptionsViewControllerDelegate {
+    func didTapRemoveFromLibrary()
+}
+
 class SongOptionsViewController: UIViewController {
 
     private var data = [SongOptionsCellModel]()
     
-    private var song = Dictionary<String, Any>()
+    var delegate : SongOptionsViewControllerDelegate!
+    
+    private var songDict = Dictionary<String, Any>()
     
     private let albumCoverImageView: UIImageView = {
         let img = UIImageView()
@@ -109,7 +115,7 @@ class SongOptionsViewController: UIViewController {
     }
     
     func setSong(songDict: Dictionary<String, Any>) {
-        song = songDict
+        self.songDict = songDict
         let albumSize = CGFloat(view.width - albumSpacing)
         self.titleLabel.text = songDict["title"] as? String
         self.artistLabel.text = (songDict["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
@@ -127,17 +133,16 @@ class SongOptionsViewController: UIViewController {
     
     @objc func didTapAddToQueue() {
         print("add to queue pressed")
-
     }
     
     @objc func didTapRemoveFromPlaylist() {
         print("remove from playlist pressed")
-
     }
     
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
-
+        LibraryManager.shared.deleteSongFromLibrary(songID: songDict[SongValues.id] as! String)
+        dismiss(animated: true, completion: nil)
     }
 
 }

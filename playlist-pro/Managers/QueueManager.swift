@@ -19,30 +19,47 @@ public class QueueManager: NSObject {
     static let shared = QueueManager()
     weak var delegate: QueueManagerDelegate?
 
-    final let PREV_CUTOFF_FOR_SONG_RESTART = 2.0 //seconds
+    final let PREV_CUTOFF_FOR_SONG_RESTART = 2.0 // seconds before previous restarts the song
     var audioPlayer: YYTAudioPlayer!
     
     var repeatSelection = RepeatType.playlist
     var shuffleStatus = false
 
-    var queue = NSMutableArray()
+    var queue : NSMutableArray!
 
 	override init() {
 		super.init()
+        
 		audioPlayer = YYTAudioPlayer()
         
-
-        queue = LibraryManager.shared.songLibrary.getSongList()
+        queue = NSMutableArray(array: LibraryManager.shared.songLibrary.getSongList())
+        if queue.count > 0 {
+            initialSetup()
+        }
+        else {
+            print("Song Library Empty, queue setup paused")
+        }
+    }
+    func initialSetup() {
         if audioPlayer.setupPlayer(withQueue: queue) == false {
             print("setup failure")
         }
         setupRemoteTransportControls()
-
+    }
+    func setupQueue(with playlist: Playlist, startingAt: Int) {
+        self.queue = NSMutableArray(array: playlist.getSongList())
+        if !audioPlayer.isSuspended {
+            for _ in 0..<startingAt {
+                moveQueueForward()
+            }
+            updateSongPlaying()
+            play()
+        }
     }
     func shuffle() {
         shuffleStatus = !shuffleStatus
         if shuffleStatus {
-            var newQueue = queue.mutableCopy() as! NSMutableArray
+            var newQueue = NSMutableArray(array: queue)
             newQueue.removeObject(at: 0)
             newQueue = NSMutableArray(array: (newQueue as! Array<Dictionary<String,Any>>).shuffled())
             newQueue.add(queue.object(at: 0))
@@ -50,7 +67,7 @@ public class QueueManager: NSObject {
             
         }
         else {
-            queue = LibraryManager.shared.songLibrary.getSongList()
+            queue = NSMutableArray(array: LibraryManager.shared.songLibrary.getSongList())
         }
         if audioPlayer.setupPlayer(withQueue: queue) == false {
             print("setup failure")
@@ -71,17 +88,13 @@ public class QueueManager: NSObject {
 	func didSelectSong(songDict: Dictionary<String, Any>) {
         if !audioPlayer.isSuspended {
             for _ in 0..<queue.index(of: songDict) {
-                if repeatSelection == RepeatType.playlist {
-                    queue.add(queue.object(at: 0))
-                }
-                queue.removeObject(at: 0)
+                moveQueueForward()
             }
             updateSongPlaying()
         }
-
     }
     
-    func next() {
+    func nextButtonAction() {
         if !audioPlayer.isSuspended {
             if repeatSelection == RepeatType.song || queue.count == 1{
                 audioPlayer.audioPlayer.currentTime = 0.0
@@ -93,7 +106,7 @@ public class QueueManager: NSObject {
         }
     }
     
-    func prev() {
+    func prevButtonAction() {
         if !audioPlayer.isSuspended  {
             if audioPlayer.audioPlayer?.currentTime ?? 0 < PREV_CUTOFF_FOR_SONG_RESTART && repeatSelection != RepeatType.song {
                 moveQueueBackward()
@@ -103,7 +116,8 @@ public class QueueManager: NSObject {
             }
         }
     }
-    func nextRepeatType() {
+    
+    func toggleRepeatType() {
         if repeatSelection == RepeatType.none {
             repeatSelection = RepeatType.playlist
         }
@@ -116,8 +130,11 @@ public class QueueManager: NSObject {
     }
     /// Displays and plays the first song of the queue
     private func updateSongPlaying() {
-        if audioPlayer.setupPlayer() {
+        if audioPlayer.setupPlayer(withQueue: queue) {
             play()
+        }
+        else {
+            print("Setup Failure")
         }
         delegate?.updateDisplayedSong()
     }
@@ -181,13 +198,13 @@ public class QueueManager: NSObject {
         
         commandCenter.nextTrackCommand.addTarget { [unowned self] event in
             print("Next track command pressed")
-            self.next()
+            self.nextButtonAction()
             return .success
         }
         
         commandCenter.previousTrackCommand.addTarget { [unowned self] event in
             print("Previous track command pressed")
-            self.prev()
+            self.prevButtonAction()
             return .success
         }
         

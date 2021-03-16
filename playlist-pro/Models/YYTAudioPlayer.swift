@@ -131,9 +131,9 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	func setupNowPlaying() {
 		// Define Now Playing Info
 		var nowPlayingInfo = [String : Any]()
-		nowPlayingInfo[MPMediaItemPropertyTitle] = songDict["title"] as? String
+        nowPlayingInfo[MPMediaItemPropertyTitle] = songDict[SongValues.title] as? String
 
-		let songID = songDict["id"] as? String ?? ""
+        let songID = songDict[SongValues.id] as? String ?? ""
 		let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
 		let image: UIImage
 		if let imgData = imageData {
@@ -171,9 +171,9 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 		print("Audio player did finish playing: \(flag)")
 		if (flag) {
             if (QueueManager.shared.repeatSelection == RepeatType.song) {
-                QueueManager.shared.prev()
+                QueueManager.shared.prevButtonAction()
 			} else {
-                QueueManager.shared.next()
+                QueueManager.shared.nextButtonAction()
 			}
 		}
 	}

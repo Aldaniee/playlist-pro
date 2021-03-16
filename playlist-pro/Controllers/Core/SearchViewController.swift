@@ -57,6 +57,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
 
     func downloadYouTubeVideo(video: Video) {
         let videoID = video.videoId
+        let title = video.title
         let artistArray = NSMutableArray(object: video.artist)
         print("Loading url: https://www.youtube.com/embed/\(videoID)")
         self.showSpinner(onView: self.view, withTitle: "Loading...")
@@ -70,7 +71,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
                 return
             }
             self.removeSpinner()
-            LibraryManager.shared.addSongToLibrary(songTitle: video!.title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, playlistTitle: nil, completion: nil)
+            LibraryManager.shared.addSongToLibrary(songTitle: title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, playlistTitle: nil, completion: nil)
         }
     }
     

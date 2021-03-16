@@ -151,15 +151,17 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         if QueueManager.shared.queue.count > 0 {
             QueueManager.shared.unsuspend()
             displayedSong = QueueManager.shared.queue.object(at: 0) as! Dictionary<String, Any>
+            miniPlayerView.isHidden = false
         } else {
             QueueManager.shared.suspend()
             displayedSong = Dictionary<String, Any>()
+            miniPlayerView.isHidden = true
         }
 
-        let songID = displayedSong["id"] as? String ?? ""
+        let songID = displayedSong[SongValues.id] as? String ?? ""
         miniPlayerView.songID = songID
-        let title = displayedSong["title"] as? String ?? ""
-        let artist = (displayedSong["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
+        let title = displayedSong[SongValues.title] as? String ?? ""
+        let artist = (displayedSong[SongValues.artists] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
         miniPlayerView.titleLabel.text = title
         miniPlayerView.artistLabel.text = artist
         nowPlayingVC.songTitleLabel.text = title
@@ -178,7 +180,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         }
         miniPlayerView.progressBar.value = 0.0
         nowPlayingVC.progressBar.value = 0.0
-        nowPlayingVC.timeLeftLabel.text = displayedSong["duration"] as? String ?? "0:00"
+        nowPlayingVC.timeLeftLabel.text = displayedSong[SongValues.duration] as? String ?? "0:00"
         queueVC.tableView.reloadData()
     }
 
@@ -193,13 +195,13 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     
     @objc func nextButtonAction(sender: UIButton!) {
         print("Next Button tapped")
-        QueueManager.shared.next()
+        QueueManager.shared.nextButtonAction()
         updateDisplayedSong()
    }
     
     @objc func previousButtonAction(sender: UIButton!) {
         print("Previous Button tapped")
-        QueueManager.shared.prev()
+        QueueManager.shared.prevButtonAction()
         updateDisplayedSong()
     }
     
@@ -228,7 +230,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     
     @objc func repeatButtonAction(sender: UIButton!) {
         print("Repeat button tapped")
-        QueueManager.shared.nextRepeatType()
+        QueueManager.shared.toggleRepeatType()
         updateRepeatButton()
     }
 

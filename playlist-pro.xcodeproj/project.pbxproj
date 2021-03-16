@@ -28,6 +28,7 @@
 		EA64604025FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64603F25FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift */; };
 		EA64604D25FC016A00B73769 /* SongOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64604C25FC016A00B73769 /* SongOptionsViewController.swift */; };
 		EA64605525FEC41E00B73769 /* SongOptionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64605425FEC41E00B73769 /* SongOptionsCell.swift */; };
+		EA64605D26000D4A00B73769 /* SongValues.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64605C26000D4A00B73769 /* SongValues.swift */; };
 		EA7E3FE325A67646009A4DAE /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7E3FE225A67646009A4DAE /* AccountViewController.swift */; };
 		EA8F5AD625926BC50081E9AB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F5AD525926BC50081E9AB /* Extensions.swift */; };
 		EA96633425E9647700C8254C /* RepeatType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA96633325E9647700C8254C /* RepeatType.swift */; };
@@ -106,6 +107,7 @@
 		EA64603F25FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistHeaderCollectionReusableView.swift; sourceTree = "<group>"; };
 		EA64604C25FC016A00B73769 /* SongOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SongOptionsViewController.swift; path = "playlist-pro/Controllers/SongOptionsViewController.swift"; sourceTree = SOURCE_ROOT; };
 		EA64605425FEC41E00B73769 /* SongOptionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongOptionsCell.swift; sourceTree = "<group>"; };
+		EA64605C26000D4A00B73769 /* SongValues.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongValues.swift; sourceTree = "<group>"; };
 		EA7E3FE225A67646009A4DAE /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		EA8F5AD525926BC50081E9AB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA96633325E9647700C8254C /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
@@ -289,6 +291,7 @@
 				EAF920E32548DA1200D22ACF /* SceneDelegate.swift */,
 				EA8F5AD525926BC50081E9AB /* Extensions.swift */,
 				EA637DEA254B3EF200FCC983 /* Constants.swift */,
+				EA64605C26000D4A00B73769 /* SongValues.swift */,
 				EAE4314D2550BD4C00E5AEBF /* DateHelper.swift */,
 				EAF920EA2548DA1400D22ACF /* Assets.xcassets */,
 				EAC06E4A25DEB25E00E86162 /* DismissAnimator.swift */,
@@ -618,6 +621,7 @@
 				EA05585425AFA39600B1FF85 /* LocalFilesManager.swift in Sources */,
 				EAC06E5525DEC34B00E86162 /* QueueViewController.swift in Sources */,
 				EAC06E5A25DEEA6D00E86162 /* PlaylistCell.swift in Sources */,
+				EA64605D26000D4A00B73769 /* SongValues.swift in Sources */,
 				EAC06DE025DC1CE800E86162 /* HapticsManager.swift in Sources */,
 				EAE431442550B6F700E5AEBF /* CacheManager.swift in Sources */,
 				EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */,

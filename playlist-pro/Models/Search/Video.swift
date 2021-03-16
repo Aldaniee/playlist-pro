@@ -48,8 +48,6 @@ struct Video : Decodable {
             let artistRange = ...artistEndIndex
             self.artist = String(youtubeTitle[artistRange])
             self.title = String(youtubeTitle[titleRange])
-            print("AAAAAAAAAA  \(title)")
-            print("AAAAAAAAAA  \(artist)")
         }
         else {
             self.artist = try snippetContainer.decode(String.self, forKey: .channel)

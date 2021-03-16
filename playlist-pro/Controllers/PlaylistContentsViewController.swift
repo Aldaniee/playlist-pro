@@ -7,7 +7,12 @@
 
 import UIKit
 
-class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
+class PlaylistContentsViewController: UIViewController, UISearchBarDelegate, SongOptionsViewControllerDelegate {
+    
+    func didTapRemoveFromLibrary() {
+        tableView.reloadData()
+    }
+    let songOptionsViewController = SongOptionsViewController()
 
     var playlist = Playlist(songList: NSMutableArray(), title: "Empty Playlist")
     
@@ -23,9 +28,13 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         return tableView
     }()
     
+    override func viewDidAppear(_ animated: Bool) {
+        tableView.reloadData()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
+        songOptionsViewController.delegate = self
         if playlist.title == LibraryManager.shared.LIBRARY_KEY {
             navigationItem.title = LibraryManager.shared.LIBRARY_DISPLAY
         }
@@ -66,14 +75,14 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
         print("Selected cell number \(indexPath.row) -> \(cell.songDict["title"] ?? "")")
+        QueueManager.shared.setupQueue(with: playlist, startingAt: indexPath.row)
     }
 }
 
 extension PlaylistContentsViewController: SongCellDelegate {
     func optionsButtonTapped(tag: Int) {
-        let vc = SongOptionsViewController()
-        vc.setSong(songDict: playlist.get(at: tag))
-        present(vc, animated: true, completion: nil)
+        songOptionsViewController.setSong(songDict: playlist.get(at: tag))
+        present(songOptionsViewController, animated: true, completion: nil)
     }
     
 }
