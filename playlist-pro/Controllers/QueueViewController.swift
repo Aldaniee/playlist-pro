@@ -18,6 +18,9 @@ class QueueViewController: UIViewController {
         tableView.delegate = self
         view.backgroundColor = .clear
     }
+    
+    
+    
     override func viewDidLayoutSubviews() {
         tableView.frame = view.frame
         blurView.frame = view.frame

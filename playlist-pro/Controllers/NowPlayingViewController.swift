@@ -203,8 +203,6 @@ class NowPlayingViewController: UIViewController {
         view.backgroundColor = Constants.UI.blackGray
         //overlayView.addGestureRecognizer(UIPanGestureRecognizer(target:self, action: #selector(handleGesture)))
 
-        //view.addSubview(overlayView)
-        
         // MARK: Tab Bar
         view.addSubview(closeButton)
         view.addSubview(tabBarTitle)
@@ -256,6 +254,7 @@ class NowPlayingViewController: UIViewController {
         editButtonTextLabel.font = UIFont.systemFont(ofSize: editButtonTextSize)
         editButton.addSubview(editButtonImageView)
     }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let edgePadding = spacing/2
@@ -263,12 +262,15 @@ class NowPlayingViewController: UIViewController {
         // MARK: Tab Bar
         let topToTabBarMiddle = CGFloat(70)
         let closeButtonWidth = tabBarHeight*closeButtonScaleConstant
+        
+        
         closeButton.frame = CGRect(
             x: edgePadding,
             y: topToTabBarMiddle-tabBarHeight/2,
             width: closeButtonWidth,
             height: tabBarHeight
         )
+        
         tabBarTitle.frame = CGRect(
             x: spacing + closeButtonWidth,
             y: topToTabBarMiddle-tabBarHeight/2,
