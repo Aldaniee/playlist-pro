@@ -24,7 +24,7 @@ class LibraryManager {
     
     // An array of playlists in the application
     init() {
-        self.songLibrary = Playlist.init(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()), title: LIBRARY_KEY)
+        self.songLibrary = Playlist(title: LIBRARY_KEY, songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()))
         updateLibraryToDatabase()
     }
     
@@ -37,7 +37,7 @@ class LibraryManager {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
-        let newLibrary = DatabaseManager.shared.getLibrary(user: Auth.auth().currentUser!, oldLibrary: songLibrary.getSongList()) { error in
+        let newLibrary = DatabaseManager.shared.getLibrary(user: Auth.auth().currentUser!, oldLibrary: songLibrary.songList) { error in
             if(error) {
                 print("ERROR: \(error)")
                 return
@@ -45,12 +45,12 @@ class LibraryManager {
         }
         self.downloadMissingSongs(newLibrary: newLibrary)
         UserDefaults.standard.set(newLibrary, forKey: LIBRARY_KEY)
-        self.songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()))
-        deleteExcessSongs(songLibraryArray: songLibrary.getSongList())
+        self.songLibrary.songList = NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
+        deleteExcessSongs(songLibraryArray: songLibrary.songList)
 
     }
     func downloadMissingSongs(newLibrary: NSMutableArray) {
-        let oldLibrary = songLibrary.getSongList()
+        let oldLibrary = songLibrary.songList
         for song in newLibrary {
             if (!oldLibrary.contains(song)) {
                 // TODO: Download missing songs with song["link"]
@@ -59,7 +59,7 @@ class LibraryManager {
         }
     }
     func refreshSongLibraryFromLocalStorage() {
-        songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()))
+        songLibrary.songList = NSMutableArray(array: UserDefaults.standard.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
     }
 
     func deleteExcessSongs(songLibraryArray: NSMutableArray) {
@@ -153,7 +153,7 @@ class LibraryManager {
                                 SongValues.fileExtension: newExtension] as [String : Any]
 				let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
 				let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
-                self.songLibrary.add(song: enrichedDict)
+                self.songLibrary.songList.add(enrichedDict)
                 self.updateLibraryToDatabase()
                 if (playlistTitle != nil) {
                     print("Adding song to playlist: \(playlistTitle!)")
@@ -162,13 +162,13 @@ class LibraryManager {
                         print("Playlist not found")
                     }
                     else {
-                        PlaylistsManager.shared.playlists[playlistIndex].add(song: enrichedDict)
+                        PlaylistsManager.shared.playlists[playlistIndex].songList.add(enrichedDict)
                     }
                 }
-                UserDefaults.standard.set(self.songLibrary.getSongList(), forKey: self.LIBRARY_KEY)
+                UserDefaults.standard.set(self.songLibrary.songList, forKey: self.LIBRARY_KEY)
                 self.updateLibraryToDatabase()
                 
-                self.songLibrary.setSongList(songList: NSMutableArray(array: UserDefaults.standard.value(forKey: self.LIBRARY_KEY) as? NSArray ?? NSArray()))
+                self.songLibrary.songList = NSMutableArray(array: UserDefaults.standard.value(forKey: self.LIBRARY_KEY) as? NSArray ?? NSArray())
 				completion?()
 			} else {	// In case of error in adding the song to the library
 				_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
@@ -259,26 +259,26 @@ class LibraryManager {
     
 	func deleteSongFromLibrary(songID: String) {
 		var songDict = Dictionary<String, Any>()
-		for i in 0 ..< songLibrary.count() {
-            songDict = songLibrary.get(at: i)
+		for i in 0 ..< songLibrary.songList.count {
+            songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
 			if songDict[SongValues.id] as! String == songID {
 				let songExt = (songDict[SongValues.id] as? String) ?? "m4a"  //support legacy code
 				if LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).\(songExt)") {
 					_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).jpg")
-                    songLibrary.remove(song: songDict)
+                    songLibrary.songList.remove(songDict)
 				}
 				break
 			}
 		}
-        UserDefaults.standard.set(songLibrary.getSongList(), forKey: LIBRARY_KEY)
+        UserDefaults.standard.set(songLibrary.songList, forKey: LIBRARY_KEY)
         self.updateLibraryToDatabase()
 	}
 
 	func checkSongExistInLibrary(songLink: String) -> Bool {
         refreshSongLibraryFromLocalStorage()
 		var songDict = Dictionary<String, Any>()
-		for i in 0 ..< songLibrary.count() {
-            songDict = songLibrary.get(at: i)
+		for i in 0 ..< songLibrary.songList.count {
+            songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
             if songDict[SongValues.link] as! String == songLink {
 				return true
 			}
@@ -289,8 +289,8 @@ class LibraryManager {
 	func getSong(forID songID: String) -> Dictionary<String, Any> {
         refreshSongLibraryFromLocalStorage()
 		var songDict = Dictionary<String, Any>()
-		for i in 0 ..< songLibrary.count() {
-			songDict = songLibrary.get(at: i)
+		for i in 0 ..< songLibrary.songList.count {
+			songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
 			if songDict["id"] as! String == songID {
 				return songDict
 			}
@@ -301,11 +301,11 @@ class LibraryManager {
     func updateSong(newSong: Dictionary<String, Any>) {
         refreshSongLibraryFromLocalStorage()
 		var songDict = Dictionary<String, Any>()
-		for i in 0 ..< songLibrary.count() {
-			songDict = songLibrary.get(at: i)
+		for i in 0 ..< songLibrary.songList.count {
+			songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
             if songDict[SongValues.id] as! String == newSong[SongValues.id] as! String {
-                songLibrary.replace(index: i, song: newSong)
-                UserDefaults.standard.set(songLibrary.getSongList(), forKey: LIBRARY_KEY)
+                songLibrary.songList.replaceObject(at: i, with: newSong)
+                UserDefaults.standard.set(songLibrary.songList, forKey: LIBRARY_KEY)
                 self.updateLibraryToDatabase()
 				break
 			}

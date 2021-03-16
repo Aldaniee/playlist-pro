@@ -28,7 +28,7 @@ class HomeViewController: UIViewController, CreatePlaylistDelegate {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         handleNotAuthenticated()
-        PlaylistsManager.shared.refreshPlaylistsFromLocalStorage()
+        PlaylistsManager.shared.fetchPlaylistsFromStorage()
         tableView.reloadData()
     }
     // Called only when view instatiated
@@ -99,7 +99,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! PlaylistCell
 
-        print("Selected cell number \(indexPath.row) -> \(cell.playlist.title ?? "")")
+        print("Selected cell number \(indexPath.row) -> \(cell.playlist.title)")
         let playlistDetailViewController = PlaylistContentsViewController()
         if indexPath.row == 0 {
             playlistDetailViewController.playlist = LibraryManager.shared.songLibrary

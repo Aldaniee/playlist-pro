@@ -12,49 +12,64 @@ class PlaylistsManager {
     final let PLAYLISTS_KEY = "PlaylistsArray"
 
     var playlists = [Playlist]()
-
+    
+    let userDefaults = UserDefaults.standard
+    
     init() {
-        UserDefaults.standard.set(NSMutableArray(), forKey: PLAYLISTS_KEY)
-        refreshPlaylistsFromLocalStorage()
+        fetchPlaylistsFromStorage()
     }
-    func refreshPlaylistsFromLocalStorage() {
+    func fetchPlaylistsFromStorage() {
         playlists = [Playlist]()
-        let playlistTitles = NSMutableArray(array: UserDefaults.standard.value(forKey: PLAYLISTS_KEY) as? NSArray ?? NSArray())
-        for title in playlistTitles {
-            print(title)
-            print("building playlist")
-            let songListString = UserDefaults.standard.value(forKey: title as! String)
-            playlists.append(Playlist(storageString: songListString as! String, title: title as! String))
+        let numPlaylists = userDefaults.value(forKey: PLAYLISTS_KEY) as! Int? ?? 0
+        for index in 0..<numPlaylists {
+            let title = userDefaults.value(forKey: "playlist_title_\(index)") as! String
+            let songList = NSMutableArray(array: userDefaults.value(forKey: "playlist_songList_\(index)") as! NSArray? ?? NSArray())
+            playlists.append(Playlist(title: title, songList: songList))
         }
     }
-    func addPlaylist(playlist: Playlist) {
-        if playlist.title == "" {
-            playlist.title = "My Playlist"
-        }
-        var title = playlist.title ?? "My Playlist"
-        if hasPlaylist(title: title) {
-            // If the title is taken add a " 2" to the end
-            var nextNum = 2
-            // If that is still taken incriment the number by 1 and try again
-            while hasPlaylist(title: title) {
-                nextNum += 1
-                title = playlist.title ?? "My Playlist" + " \(nextNum)"
-            }
-        }
-        playlist.title = title
+
+    func addPlaylist(title: String) {
+        let uniqueTitle = getUniqueTitle(title: title)
+        let playlist = Playlist(title: uniqueTitle, songList: LibraryManager.shared.songLibrary.songList)
         playlists.append(playlist)
-        let titles = NSMutableArray(array: UserDefaults.standard.value(forKey: PLAYLISTS_KEY) as? NSArray ?? NSArray())
-        titles.add(playlist.title!)
-        UserDefaults.standard.set(titles, forKey: PLAYLISTS_KEY)
-        UserDefaults.standard.set(playlist.convertPlaylistForStorage(), forKey: playlist.title)
+        savePlaylistsToStorage()
     }
+    
+    func savePlaylistsToStorage() {
+        for index in 0..<playlists.count {
+            /*do {
+                let encodedData: Data = try NSKeyedArchiver.archivedData(withRootObject: playlists[index].songList, requiringSecureCoding: false)
+            } catch let error {
+                print("error when adding playlsit: \(error)")
+            }*/
+            userDefaults.set(playlists[index].songList, forKey: "playlist_songList_\(index)")
+            userDefaults.set(playlists[index].title, forKey: "playlist_title_\(index)")
+        }
+        userDefaults.set(playlists.count, forKey: PLAYLISTS_KEY)
+    }
+    
     func hasPlaylist(title: String) -> Bool {
         for playlist in playlists {
-            if playlist.title! == title {
+            if playlist.title == title {
                 return true
             }
         }
         return false
+    }
+    func getUniqueTitle(title: String) -> String{
+        var uniqueTitle = title
+        if uniqueTitle == "" {
+            uniqueTitle = "My Playlist"
+        }
+        if hasPlaylist(title: uniqueTitle) {
+            // If the title is taken add a " 2" to the end
+            var nextNum = 2  // If this is still taken incriment the number by 1 and try again
+            while hasPlaylist(title: title) {
+                nextNum += 1
+            }
+            uniqueTitle = uniqueTitle + "\(nextNum)"
+        }
+        return uniqueTitle
     }
     func getPlaylistIndex(title: String) -> Int {
         for playlistIndex in 0 ..< playlists.count {

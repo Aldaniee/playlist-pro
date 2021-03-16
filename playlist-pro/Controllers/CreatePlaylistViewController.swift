@@ -113,7 +113,7 @@ class CreatePlaylistViewController: UIViewController {
     
     @objc func onCreateButtonPressed() {
         let title = inputField.text ?? "My Playlist"
-        PlaylistsManager.shared.addPlaylist(playlist: Playlist(songList: LibraryManager.shared.songLibrary.getSongList(), title: title))
+        PlaylistsManager.shared.addPlaylist(title: title)
         dismiss(animated: true) {
             self.delegate?.reloadTableView()
         }

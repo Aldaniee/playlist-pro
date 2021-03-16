@@ -14,7 +14,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate, Son
     }
     let songOptionsViewController = SongOptionsViewController()
 
-    var playlist = Playlist(songList: NSMutableArray(), title: "Empty Playlist")
+    var playlist = Playlist(title: "Empty Playlist")
     
     let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
@@ -57,12 +57,12 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate, Son
 }
 extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return playlist.count()
+        return playlist.songList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = playlist.get(at: indexPath.row)
+        cell.songDict = playlist.songList.object(at: indexPath.row) as! Dictionary<String, Any>
         cell.refreshCell()
         cell.delegate = self
         cell.optionsButton.tag = indexPath.row
@@ -80,7 +80,7 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
 
 extension PlaylistContentsViewController: SongCellDelegate {
     func optionsButtonTapped(tag: Int) {
-        songOptionsViewController.setSong(songDict: playlist.get(at: tag))
+        songOptionsViewController.setSong(songDict: playlist.songList.object(at: tag) as! Dictionary<String, Any>)
         present(songOptionsViewController, animated: true, completion: nil)
     }
 }

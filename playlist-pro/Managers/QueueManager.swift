@@ -32,7 +32,7 @@ public class QueueManager: NSObject {
         
 		audioPlayer = YYTAudioPlayer()
         
-        queue = NSMutableArray(array: LibraryManager.shared.songLibrary.getSongList())
+        queue = NSMutableArray(array: LibraryManager.shared.songLibrary.songList)
         if queue.count > 0 {
             initialSetup()
         }
@@ -47,7 +47,7 @@ public class QueueManager: NSObject {
         setupRemoteTransportControls()
     }
     func setupQueue(with playlist: Playlist, startingAt: Int) {
-        self.queue = NSMutableArray(array: playlist.getSongList())
+        self.queue = NSMutableArray(array: playlist.songList)
         if !audioPlayer.isSuspended {
             for _ in 0..<startingAt {
                 moveQueueForward()
@@ -77,7 +77,7 @@ public class QueueManager: NSObject {
             
         }
         else {
-            queue = NSMutableArray(array: LibraryManager.shared.songLibrary.getSongList())
+            queue = NSMutableArray(array: LibraryManager.shared.songLibrary.songList)
         }
         if audioPlayer.setupPlayer(withQueue: queue) == false {
             print("setup failure")

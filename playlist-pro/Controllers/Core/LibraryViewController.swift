@@ -139,12 +139,12 @@ final class LibraryViewController: UIViewController {
 }
 extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return LibraryManager.shared.songLibrary.count()
+        return LibraryManager.shared.songLibrary.songList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = LibraryManager.shared.songLibrary.get(at: indexPath.row)
+        cell.songDict = LibraryManager.shared.songLibrary.songList.object(at: indexPath.row) as! Dictionary<String, Any>
         cell.refreshCell()
 
         return cell

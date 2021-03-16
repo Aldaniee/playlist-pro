@@ -49,7 +49,7 @@ public class DatabaseManager {
     func updateLibrary(library: Playlist, user: User, completion: @escaping (Bool) -> Void) {
         
         if(user.isAnonymous) {
-            database.child("anonymous-users/\(user.uid)/library").setValue(library.getSongList()) { error, _ in
+            database.child("anonymous-users/\(user.uid)/library").setValue(library.songList) { error, _ in
                 if error == nil {
                     // succeeded
                 }
@@ -65,7 +65,7 @@ public class DatabaseManager {
                 print("error missing email")
             }
             else {
-                database.child("\(user.email!.safeDatabaseKey())/library").setValue(library.getSongList()) { error, _ in
+                database.child("\(user.email!.safeDatabaseKey())/library").setValue(library.songList) { error, _ in
                     if error == nil {
                         // succeeded
                     }

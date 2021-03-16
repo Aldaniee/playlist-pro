@@ -86,14 +86,14 @@ class PlaylistCell : UITableViewCell {
     func refreshCell() {
         if playlist.title == LibraryManager.shared.LIBRARY_KEY {
             self.titleLabel.text = LibraryManager.shared.LIBRARY_DISPLAY
-            self.descriptionLabel.text = "\(LibraryManager.shared.songLibrary.getSongList().count) songs"
+            self.descriptionLabel.text = "\(LibraryManager.shared.songLibrary.songList.count) songs"
         }
         else {
             self.titleLabel.text = playlist.title
         }
         
-        if playlist.count() > 0 {
-            let firstSong = playlist.getSongList().object(at: 0) as! Dictionary<String, Any>
+        if playlist.songList.count > 0 {
+            let firstSong = playlist.songList.object(at: 0) as! Dictionary<String, Any>
             let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong["id"] as? String ?? "").jpg"))
             if let imgData = imageData {
                 self.playlistCoverImageView.image = UIImage(data: imgData)!.cropToSquare(size: 15.0)
