@@ -39,7 +39,6 @@ class HomeViewController: UIViewController {
         title = "Home"
         view.backgroundColor = .systemBackground
         songPlaylistOptionsViewController.delegate = self
-        tableView.frame = view.frame
         tableView.dataSource = self
         tableView.delegate = self
         createPlaylistViewController.delegate = self
@@ -52,11 +51,12 @@ class HomeViewController: UIViewController {
     let spacing = CGFloat(40)
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        addButton.frame = CGRect(
-            x: view.width - addButtonSize - spacing/2,
-            y: spacing*2,
-            width: addButtonSize,
-            height: addButtonSize
+        let tableViewSpacing = addButton.bottom + spacing
+        tableView.frame = CGRect(
+            x: 0,
+            y: tableViewSpacing,
+            width: view.width,
+            height: view.height - tableViewSpacing
         )
 
     }
@@ -75,6 +75,7 @@ class HomeViewController: UIViewController {
             present(loginVC, animated: false)
         }
     }
+    func openAddToPlaylistViewController(songDict: Dictionary<String,Any>) {}
 }
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -86,6 +87,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         
         if indexPath.row == 0 {
             cell.playlist = LibraryManager.shared.songLibrary
+            cell.optionsButton.isHidden = true
         }
         else {
             cell.playlist = PlaylistsManager.shared.playlists[indexPath.row - 1]
@@ -128,9 +130,7 @@ extension HomeViewController: SongPlaylistCellDelegate {
 }
 
 extension HomeViewController: CreatePlaylistDelegate, SongOptionsViewControllerDelegate {
-    func removeFromPlaylist(songDict: Dictionary<String, Any>) {
-        print("This should be inaccessible")
-    }
+    func removeFromPlaylist(songDict: Dictionary<String, Any>) {}
     
     func reloadTableView() {
         tableView.reloadData()

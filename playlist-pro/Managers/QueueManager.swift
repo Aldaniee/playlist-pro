@@ -25,6 +25,8 @@ public class QueueManager: NSObject {
     var repeatSelection = RepeatType.playlist
     var shuffleStatus = false
 
+    var currentPlaylist : Playlist?
+    
     var queue : NSMutableArray!
 
 	override init() {
@@ -32,29 +34,27 @@ public class QueueManager: NSObject {
         
 		audioPlayer = YYTAudioPlayer()
         
-        queue = NSMutableArray(array: LibraryManager.shared.songLibrary.songList)
-        if queue.count > 0 {
-            initialSetup()
-        }
-        else {
-            print("Song Library Empty, queue setup paused")
-        }
+        queue = NSMutableArray()
     }
-    func initialSetup() {
+    func setupAudioPlayer() {
         if audioPlayer.setupPlayer(withQueue: queue) == false {
             print("setup failure")
         }
         setupRemoteTransportControls()
     }
     func setupQueue(with playlist: Playlist, startingAt: Int) {
+        self.currentPlaylist = playlist
         self.queue = NSMutableArray(array: playlist.songList)
-        if !audioPlayer.isSuspended {
-            for _ in 0..<startingAt {
-                moveQueueForward()
-            }
-            updateSongPlaying()
-            play()
+        if audioPlayer.isSuspended {
+            audioPlayer.unsuspend()
+            print("Audio Player Force Unsuspended")
         }
+        for _ in 0..<startingAt {
+            moveQueueForward()
+        }
+        setupAudioPlayer()
+        updateSongPlaying()
+        play()
     }
     func removeFromQueue(songId: String) {
         for index in 0..<queue.count {
@@ -101,6 +101,9 @@ public class QueueManager: NSObject {
                 moveQueueForward()
             }
             updateSongPlaying()
+        }
+        else {
+            print("Audio Player Suspended")
         }
     }
     

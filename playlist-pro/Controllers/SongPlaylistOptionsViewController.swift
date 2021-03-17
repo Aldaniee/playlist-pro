@@ -16,6 +16,7 @@ struct SongPlaylistOptionsCellModel {
 protocol SongOptionsViewControllerDelegate {
     func reloadTableView()
     func removeFromPlaylist(songDict: Dictionary<String,Any>)
+    func openAddToPlaylistViewController(songDict: Dictionary<String,Any>)
 }
 
 class SongPlaylistOptionsViewController: UIViewController {
@@ -60,6 +61,7 @@ class SongPlaylistOptionsViewController: UIViewController {
         vis.translatesAutoresizingMaskIntoConstraints = false
         return vis
     }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.insertSubview(blurView, at: 0)
@@ -149,6 +151,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     @objc func didTapAddToPlaylist() {
         print("add to playlist pressed")
+        delegate.openAddToPlaylistViewController(songDict: songDict!)
         delegate.reloadTableView()
         dismiss(animated: true, completion: nil)
     }

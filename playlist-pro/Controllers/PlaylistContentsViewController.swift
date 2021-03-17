@@ -95,4 +95,15 @@ extension PlaylistContentsViewController: SongOptionsViewControllerDelegate {
     func reloadTableView() {
         tableView.reloadData()
     }
+    func openAddToPlaylistViewController(songDict: Dictionary<String, Any>) {
+        let vc = AddToPlaylistViewController()
+        vc.songDict = songDict
+        let secondsDelay = 0.7
+        DispatchQueue.main.asyncAfter(deadline: .now() + secondsDelay) {
+            self.present(vc, animated: true, completion: {
+                self.reloadTableView()
+            })
+        }
+    }
+
 }

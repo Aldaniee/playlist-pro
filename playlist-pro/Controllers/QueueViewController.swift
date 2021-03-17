@@ -10,10 +10,10 @@ import UIKit
 class QueueViewController: UIViewController {
     
     let spacing = CGFloat(30)
-    let tableviewDist = CGFloat(120)
-    let pausePlaySize = CGFloat(70)
-    let nextPrevSize = CGFloat(40)
-    let repeatShuffleSize = CGFloat(30)
+    let tableViewDist = CGFloat(160)
+    let pausePlaySize = CGFloat(80)
+    let nextPrevSize = CGFloat(30)
+    let repeatShuffleSize = CGFloat(20)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,12 +36,12 @@ class QueueViewController: UIViewController {
     
     override func viewDidLayoutSubviews() {
         tableView.frame = CGRect(
-            x: 0, y: 0, width: view.width, height: view.height - tableviewDist
+            x: 0, y: 0, width: view.width, height: view.height - tableViewDist
         )
         blurView.frame = view.frame
         
         // MARK: Playback Controls
-        let playbackCenter = view.bottom - tableviewDist/2
+        let playbackCenter = view.bottom - tableViewDist/2
         pausePlayButton.frame = CGRect(
             x: view.center.x - pausePlaySize/2,
             y: playbackCenter - (pausePlaySize/2),
@@ -61,13 +61,13 @@ class QueueViewController: UIViewController {
             height: nextPrevSize
         )
         shuffleButton.frame = CGRect(
-            x: nextButton.right + spacing,
+            x: previousButton.left - repeatShuffleSize - spacing,
             y: playbackCenter - repeatShuffleSize/2,
             width: repeatShuffleSize,
             height: repeatShuffleSize
         )
         repeatButton.frame = CGRect(
-            x: previousButton.left - repeatShuffleSize - spacing,
+            x: nextButton.right + spacing,
             y: playbackCenter - repeatShuffleSize/2,
             width: repeatShuffleSize,
             height: repeatShuffleSize
@@ -205,15 +205,24 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
             
         }
     }
-    // Create a standard header that includes the returned text.
-    func tableView(_ tableView: UITableView, titleForHeaderInSection
-                                section: Int) -> String? {
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 30))
+        headerView.backgroundColor = .clear
+        var title = "Next From: \(QueueManager.shared.currentPlaylist?.title ?? "")"
         if section == 0 {
-            return "Now Playing"
+            title = "Now Playing"
         }
-        else {
-            return "Up Next"
-        }
+        let label: UILabel = {
+            let lbl = UILabel()
+            lbl.textColor = .white
+            lbl.font = UIFont.boldSystemFont(ofSize: 18)
+            lbl.textAlignment = .left
+            lbl.text = title
+            return lbl
+        }()
+        headerView.addSubview(label)
+        label.frame = CGRect(x: 10, y: 10, width: headerView.width, height: 18)
+        return headerView
     }
-
 }

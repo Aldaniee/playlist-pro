@@ -48,6 +48,7 @@
 		EAC06E5F25DEFEB600E86162 /* CreatePlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */; };
 		EAC2DC9025AB862A006EA7AF /* Alamofire in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC8F25AB862A006EA7AF /* Alamofire */; };
 		EAC2DC9625AB86F5006EA7AF /* XCDYouTubeKit in Frameworks */ = {isa = PBXBuildFile; productRef = EAC2DC9525AB86F5006EA7AF /* XCDYouTubeKit */; };
+		EADD20712601904F002AA641 /* AddToPlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD20702601904F002AA641 /* AddToPlaylistViewController.swift */; };
 		EAE145B025858AFE00C09FE9 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145AF25858AFE00C09FE9 /* LibraryViewController.swift */; };
 		EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */; };
 		EAE145E22585933000C09FE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EAE145E12585933000C09FE9 /* GoogleService-Info.plist */; };
@@ -124,6 +125,7 @@
 		EAC06E4F25DEB42B00E86162 /* Interactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interactor.swift; sourceTree = "<group>"; };
 		EAC06E5425DEC34B00E86162 /* QueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueViewController.swift; sourceTree = "<group>"; };
 		EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePlaylistViewController.swift; sourceTree = "<group>"; };
+		EADD20702601904F002AA641 /* AddToPlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddToPlaylistViewController.swift; sourceTree = "<group>"; };
 		EAE145AF25858AFE00C09FE9 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		EAE145E12585933000C09FE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -250,6 +252,7 @@
 				EAE145EC258593B400C09FE9 /* Onboarding */,
 				EAC06E3F25DD92FA00E86162 /* NowPlayingViewController.swift */,
 				EAC06E5425DEC34B00E86162 /* QueueViewController.swift */,
+				EADD20702601904F002AA641 /* AddToPlaylistViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -645,6 +648,7 @@
 				EA637DEB254B3EF200FCC983 /* Constants.swift in Sources */,
 				EA0558A025B118DF00B1FF85 /* YYTAudioPlayer.swift in Sources */,
 				EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */,
+				EADD20712601904F002AA641 /* AddToPlaylistViewController.swift in Sources */,
 				EA637E022550B00200FCC983 /* SearchVideoCell.swift in Sources */,
 				EAE145F52585966D00C09FE9 /* DatabaseManager.swift in Sources */,
 				EAC06E5025DEB42B00E86162 /* Interactor.swift in Sources */,
