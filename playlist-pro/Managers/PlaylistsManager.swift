@@ -27,7 +27,19 @@ class PlaylistsManager {
             playlists.append(Playlist(title: title, songList: songList))
         }
     }
-
+    func removePlaylist(playlist: Playlist) {
+        if hasPlaylist(title: playlist.title) {
+            for i in 0..<playlists.count {
+                if playlists[i].title == playlist.title {
+                    playlists.remove(at: i)
+                }
+            }
+            savePlaylistsToStorage()
+        }
+        else {
+            print("ERROR: Incorrect Playlist Name Removed")
+        }
+    }
     func addPlaylist(title: String) {
         let uniqueTitle = getUniqueTitle(title: title)
         let playlist = Playlist(title: uniqueTitle, songList: LibraryManager.shared.songLibrary.songList)

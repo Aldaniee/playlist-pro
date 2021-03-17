@@ -15,6 +15,7 @@ struct SongPlaylistOptionsCellModel {
 
 protocol SongOptionsViewControllerDelegate {
     func reloadTableView()
+    func removeFromPlaylist(songDict: Dictionary<String,Any>)
 }
 
 class SongPlaylistOptionsViewController: UIViewController {
@@ -25,12 +26,16 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     private var songDict : Dictionary<String, Any>?
     
+    private var isInLibrary = false
+    
     private var playlist : Playlist?
 
     private let albumCoverImageView: UIImageView = {
         let img = UIImageView()
         return img
     }()
+    
+    let placeholder = UIImage(named: "placeholder")
     
     private let titleLabel: UILabel = {
         let lbl = UILabel()
@@ -99,24 +104,31 @@ class SongPlaylistOptionsViewController: UIViewController {
     }
     
     private func configureModels() {
-        let section = [
-            SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.plus")!, title: "Add to playlist") { [weak self] in
+        if songDict != nil {
+            data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.plus")!, title: "Add to playlist") { [weak self] in
                 self?.didTapAddToPlaylist()
-            },
-            SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "text.badge.plus")!, title: "Add to queue") { [weak self] in
+            })
+            data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "text.badge.plus")!, title: "Add to queue") { [weak self] in
                 self?.didTapAddToQueue()
-            },
-            SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.minus")!, title: "Remove from playlist") { [weak self] in
-                self?.didTapRemoveFromPlaylist()
-            },
-            SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "minus.circle")!, title: "Remove from library") { [weak self] in
-                self?.didTapRemoveFromLibrary()
+            })
+            if isInLibrary == false {
+                data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.minus")!, title: "Remove from playlist") { [weak self] in
+                    self?.didTapRemoveFromPlaylist()
+                })
             }
-        ]
-        data.append(contentsOf: section)
+            data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "minus.circle")!, title: "Remove from library") { [weak self] in
+                self?.didTapRemoveFromLibrary()
+            })
+        }
+        if playlist != nil {
+            data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "minus.circle")!, title: "Remove playlist") { [weak self] in
+                self?.didTapRemovePlaylist()
+            })
+        }
     }
     
-    func setSong(songDict: Dictionary<String, Any>) {
+    func setSong(songDict: Dictionary<String, Any>, isLibrary: Bool) {
+        self.isInLibrary = isLibrary
         self.songDict = songDict
         let albumSize = CGFloat(view.width - albumSpacing)
         self.titleLabel.text = songDict["title"] as? String
@@ -125,32 +137,46 @@ class SongPlaylistOptionsViewController: UIViewController {
         if let imgData = imageData {
             self.albumCoverImageView.image = UIImage(data: imgData)!.cropToSquare(size: Double(albumSize))
         } else {
-            self.albumCoverImageView.image = UIImage(named: "placeholder")
+            self.albumCoverImageView.image = placeholder
         }
     }
     func setPlaylist(playlist: Playlist) {
         self.playlist = playlist
         self.titleLabel.text = playlist.title
         self.artistLabel.text = ""
-        self.albumCoverImageView.image = UIImage(named: "placeholder")
+        self.albumCoverImageView.image = placeholder
     }
     
     @objc func didTapAddToPlaylist() {
         print("add to playlist pressed")
+        delegate.reloadTableView()
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapAddToQueue() {
         print("add to queue pressed")
+        QueueManager.shared.queue.add(songDict ?? playlist!.songList)
+        delegate.reloadTableView()
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapRemoveFromPlaylist() {
         print("remove from playlist pressed")
+        delegate.removeFromPlaylist(songDict: songDict!)
+        delegate.reloadTableView()
+        dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
         LibraryManager.shared.deleteSongFromLibrary(songID: songDict![SongValues.id] as! String)
         QueueManager.shared.removeFromQueue(songId: songDict![SongValues.id] as! String)
+        delegate.reloadTableView()
+        dismiss(animated: true, completion: nil)
+    }
+    @objc func didTapRemovePlaylist() {
+        print("remove playlist pressed")
+        PlaylistsManager.shared.removePlaylist(playlist: playlist!)
         delegate.reloadTableView()
         dismiss(animated: true, completion: nil)
     }
@@ -163,7 +189,7 @@ extension SongPlaylistOptionsViewController: UITableViewDelegate, UITableViewDat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SongOptionsCell.identifier, for: indexPath) as! SongOptionsCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongOptionsCell.identifier) as! SongOptionsCell
         cell.model = data[indexPath.row]
         cell.refreshCell()
         return cell

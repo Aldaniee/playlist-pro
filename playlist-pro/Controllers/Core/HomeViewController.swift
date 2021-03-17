@@ -128,6 +128,10 @@ extension HomeViewController: SongPlaylistCellDelegate {
 }
 
 extension HomeViewController: CreatePlaylistDelegate, SongOptionsViewControllerDelegate {
+    func removeFromPlaylist(songDict: Dictionary<String, Any>) {
+        print("This should be inaccessible")
+    }
+    
     func reloadTableView() {
         tableView.reloadData()
     }

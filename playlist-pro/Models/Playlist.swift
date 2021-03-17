@@ -7,7 +7,7 @@
 //  Object to store a playlist (or collection of songs) within the app
 
 import Foundation
-
+import UIKit
 struct Playlist {
     
     
@@ -17,6 +17,6 @@ struct Playlist {
      */
     var title : String
     var songList = NSMutableArray()
-    
-    
+    var description : String?
+    var image : UIImage?
 }

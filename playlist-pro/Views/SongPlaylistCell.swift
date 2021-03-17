@@ -109,6 +109,7 @@ class SongPlaylistCell : UITableViewCell {
     func setDarkStyle() {
         titleLabel.textColor = .white
         secondaryLabel.textColor = Constants.UI.lightGray
+        optionsButton.setTitleColor(.white, for: .normal)
     }
 	func refreshCell() {
         if (songDict != nil) {

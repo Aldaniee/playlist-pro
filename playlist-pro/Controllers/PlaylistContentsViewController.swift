@@ -76,12 +76,22 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
 
 extension PlaylistContentsViewController: SongPlaylistCellDelegate {
     func optionsButtonTapped(tag: Int) {
-        songPlaylistOptionsViewController.setSong(songDict: playlist.songList.object(at: tag) as! Dictionary<String, Any>)
+        songPlaylistOptionsViewController.setSong(songDict: playlist.songList.object(at: tag) as! Dictionary<String, Any>, isLibrary: playlist.title == LibraryManager.shared.LIBRARY_KEY)
         present(songPlaylistOptionsViewController, animated: true, completion: nil)
     }
 }
 
 extension PlaylistContentsViewController: SongOptionsViewControllerDelegate {
+    
+    func removeFromPlaylist(songDict: Dictionary<String, Any>) {
+        if playlist.title != LibraryManager.shared.LIBRARY_KEY { // Should always be true
+            playlist.songList.remove(songDict)
+        }
+        else {
+            print("This should be inaccessible")
+        }
+    }
+    
     func reloadTableView() {
         tableView.reloadData()
     }
