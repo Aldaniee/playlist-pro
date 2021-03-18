@@ -61,13 +61,13 @@ class QueueViewController: UIViewController {
             height: nextPrevSize
         )
         shuffleButton.frame = CGRect(
-            x: previousButton.left - repeatShuffleSize - spacing,
+            x: spacing,
             y: playbackCenter - repeatShuffleSize/2,
             width: repeatShuffleSize,
             height: repeatShuffleSize
         )
         repeatButton.frame = CGRect(
-            x: nextButton.right + spacing,
+            x: view.width - spacing - repeatShuffleSize,
             y: playbackCenter - repeatShuffleSize/2,
             width: repeatShuffleSize,
             height: repeatShuffleSize
@@ -79,7 +79,7 @@ class QueueViewController: UIViewController {
     }
     let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(SongPlaylistCell.self, forCellReuseIdentifier: SongPlaylistCell.identifier)
+        tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
         tableView.backgroundColor = .clear
 
         return tableView
@@ -180,27 +180,29 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SongPlaylistCell.identifier, for: indexPath) as! SongPlaylistCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
         cell.songDict = QueueManager.shared.queue[indexPath.row + indexPath.section] as? Dictionary<String, Any>
         cell.refreshCell()
         cell.setDarkStyle()
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SongPlaylistCell.rowHeight
+        return SongCell.rowHeight
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! SongPlaylistCell
+        let cell = tableView.cellForRow(at: indexPath) as! SongCell
 
-        print("Selected cell number \(indexPath.row) -> \(cell.songDict!["title"] ?? "")")
+        print("Selected cell number \(indexPath.row) -> \(cell.songDict![SongValues.title] ?? "")")
         
-        QueueManager.shared.didSelectSong(songDict: cell.songDict!)
+        QueueManager.shared.didSelectSong(index: indexPath.row + indexPath.section)
         tableView.reloadData()
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath) as! SongCell
+
         if (editingStyle == .delete) {
-            QueueManager.shared.queue.removeObject(at: (QueueManager.shared.queue.count - 2 - indexPath.row) % QueueManager.shared.queue.count)
+            QueueManager.shared.removeFromQueue(songID: cell.songDict![SongValues.id] as! String)
             tableView.reloadData()
             
         }
@@ -209,16 +211,20 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 30))
         headerView.backgroundColor = .clear
-        var title = "Next From: \(QueueManager.shared.currentPlaylist?.title ?? "")"
+        var playlistTitle = QueueManager.shared.currentPlaylist?.title ?? ""
+        if playlistTitle == LibraryManager.shared.LIBRARY_KEY {
+            playlistTitle = LibraryManager.shared.LIBRARY_DISPLAY
+        }
+        var headerTitle = "Next From: \(playlistTitle)"
         if section == 0 {
-            title = "Now Playing"
+            headerTitle = "Now Playing"
         }
         let label: UILabel = {
             let lbl = UILabel()
             lbl.textColor = .white
             lbl.font = UIFont.boldSystemFont(ofSize: 18)
             lbl.textAlignment = .left
-            lbl.text = title
+            lbl.text = headerTitle
             return lbl
         }()
         headerView.addSubview(label)

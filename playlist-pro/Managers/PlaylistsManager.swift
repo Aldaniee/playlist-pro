@@ -32,12 +32,20 @@ class PlaylistsManager {
             for i in 0..<playlists.count {
                 if playlists[i].title == playlist.title {
                     playlists.remove(at: i)
+                    savePlaylistsToStorage()
+                    return
                 }
             }
-            savePlaylistsToStorage()
         }
         else {
             print("ERROR: Incorrect Playlist Name Removed")
+        }
+    }
+    func removeFromPlaylist(playlist: Playlist, index: Int) {
+        if hasPlaylist(title: playlist.title) {
+            let indexOfPlaylist = getPlaylistIndex(title: playlist.title)
+            playlists[indexOfPlaylist].songList.removeObject(at: index)
+            savePlaylistsToStorage()
         }
     }
     func addPlaylist(title: String) {

@@ -49,38 +49,45 @@ public class QueueManager: NSObject {
             audioPlayer.unsuspend()
             print("Audio Player Force Unsuspended")
         }
-        for _ in 0..<startingAt {
-            moveQueueForward()
-        }
+        didSelectSong(index: startingAt)
         setupAudioPlayer()
-        updateSongPlaying()
         play()
     }
-    func removeFromQueue(songId: String) {
+    func removeFromQueue(songID: String) {
         for index in 0..<queue.count {
             let songDict = queue[index] as! Dictionary<String, Any>
-            if songDict[SongValues.id] as! String == songId {
-                queue.removeObject(at: index)
+            if songDict[SongValues.id] as! String == songID {
+                if index == 0 {
+                    removePlayingSong()
+                }
+                else {
+                    queue.removeObject(at: index)
+                }
+                return
             }
-            
         }
+    }
+    func removePlayingSong() {
+        audioPlayer.pause()
+        updateSongPlaying()
+        queue.removeObject(at: 0)
+        pause()
         updateSongPlaying()
     }
     func shuffle() {
         shuffleStatus = !shuffleStatus
+        let playingSong = queue.object(at: 0)
         if shuffleStatus {
             var newQueue = NSMutableArray(array: queue)
             newQueue.removeObject(at: 0)
             newQueue = NSMutableArray(array: (newQueue as! Array<Dictionary<String,Any>>).shuffled())
-            newQueue.add(queue.object(at: 0))
+            newQueue.insert(playingSong, at: 0)
             queue = newQueue
-            
         }
         else {
-            queue = NSMutableArray(array: LibraryManager.shared.songLibrary.songList)
-        }
-        if audioPlayer.setupPlayer(withQueue: queue) == false {
-            print("setup failure")
+            let playingSongPlaylistIndex = currentPlaylist!.songList.index(of: playingSong)
+            queue = NSMutableArray(array: currentPlaylist!.songList)
+            moveQueueForward(to: playingSongPlaylistIndex)
         }
     }
 	func moveQueueForward() {
@@ -94,12 +101,16 @@ public class QueueManager: NSObject {
         queue.insert(queue.lastObject!, at: 0)
         queue.removeObject(at: queue.endIndex())
 	}
+    
+    func moveQueueForward(to index: Int) {
+        for _ in 0..<index {
+            moveQueueForward()
+        }
+    }
 	
-	func didSelectSong(songDict: Dictionary<String, Any>) {
+	func didSelectSong(index: Int) {
         if !audioPlayer.isSuspended {
-            for _ in 0..<queue.index(of: songDict) {
-                moveQueueForward()
-            }
+            moveQueueForward(to: index)
             updateSongPlaying()
         }
         else {

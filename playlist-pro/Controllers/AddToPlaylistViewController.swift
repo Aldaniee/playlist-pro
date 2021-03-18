@@ -7,13 +7,13 @@
 
 import UIKit
 
-class AddToPlaylistViewController: UIViewController, SongPlaylistCellDelegate {
+class AddToPlaylistViewController: UIViewController, PlaylistCellDelegate {
 
     var songDict = Dictionary<String, Any>()
 
     let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(SongPlaylistCell.self, forCellReuseIdentifier: SongPlaylistCell.identifier)
+        tableView.register(PlaylistCell.self, forCellReuseIdentifier: PlaylistCell.identifier)
         tableView.backgroundColor = .clear
 
         return tableView
@@ -53,7 +53,7 @@ extension AddToPlaylistViewController: UITableViewDataSource, UITableViewDelegat
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SongPlaylistCell.identifier, for: indexPath) as! SongPlaylistCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: PlaylistCell.identifier, for: indexPath) as! PlaylistCell
         cell.playlist = PlaylistsManager.shared.playlists[indexPath.row]
         cell.refreshCell()
         cell.setDarkStyle()
@@ -62,10 +62,10 @@ extension AddToPlaylistViewController: UITableViewDataSource, UITableViewDelegat
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SongPlaylistCell.rowHeight
+        return PlaylistCell.rowHeight
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! SongPlaylistCell
+        let cell = tableView.cellForRow(at: indexPath) as! PlaylistCell
         let playlist = cell.playlist!
         print("Selected cell number \(indexPath.row) -> \(cell.playlist!.title)")
         playlist.songList.add(songDict)

@@ -7,16 +7,16 @@
 
 import UIKit
 
-protocol SongPlaylistCellDelegate {
+protocol PlaylistCellDelegate {
     func optionsButtonTapped(tag: Int)
 }
 
-class SongPlaylistCell : UITableViewCell {
+class PlaylistCell : UITableViewCell {
   
-    var delegate: SongPlaylistCellDelegate?
+    var delegate: PlaylistCellDelegate?
     
     // Used by tableview controller to identify the cell
-    static let identifier = "SongPlaylistCell"
+    static let identifier = "PlaylistCell"
 
     // Height of a cell within the table view
     static let rowHeight = CGFloat(80)
@@ -72,7 +72,7 @@ class SongPlaylistCell : UITableViewCell {
     let optionsButtonHeight = CGFloat(30)
     
     override func layoutSubviews() {
-        let albumCoverImageSize = SongPlaylistCell.rowHeight - spacing
+        let albumCoverImageSize = PlaylistCell.rowHeight - spacing
         coverImageView.frame = CGRect(
             x: spacing/2,
             y: spacing/2,
@@ -117,7 +117,7 @@ class SongPlaylistCell : UITableViewCell {
             self.secondaryLabel.text = (songDict!["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
             let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songDict!["id"] as? String ?? "").jpg"))
             if let imgData = imageData {
-                self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(size: Double(SongPlaylistCell.rowHeight - spacing))
+                self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(size: Double(PlaylistCell.rowHeight - spacing))
             } else {
                 self.coverImageView.image = UIImage(named: "placeholder")
             }

@@ -93,7 +93,12 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         nowPlayingVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
         nowPlayingVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
         nowPlayingVC.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
-
+        
+        queueVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+        queueVC.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
+        queueVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
+        queueVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
+        queueVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
 
     }
 
@@ -140,9 +145,11 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         if isPlaying {
             miniPlayerView.pausePlayButton.setImage(UIImage(systemName: "pause.fill"), for: UIControl.State.normal)
             nowPlayingVC.pausePlayButton.setImage(UIImage(systemName: "pause.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
+            queueVC.pausePlayButton.setImage(UIImage(systemName: "pause.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
         } else {
             miniPlayerView.pausePlayButton.setImage(UIImage(systemName: "play.fill"), for: UIControl.State.normal)
             nowPlayingVC.pausePlayButton.setImage(UIImage(systemName: "play.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
+            queueVC.pausePlayButton.setImage(UIImage(systemName: "play.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
         }
     }
     
@@ -226,6 +233,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         print("Shuffle button tapped")
         QueueManager.shared.shuffle()
         updateShuffleButton()
+        queueVC.tableView.reloadData()
     }
     
     @objc func repeatButtonAction(sender: UIButton!) {
@@ -268,22 +276,30 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         if QueueManager.shared.repeatSelection == RepeatType.none {
             nowPlayingVC.repeatButton.tintColor = .white
             nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
+            queueVC.repeatButton.tintColor = .white
+            queueVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
         }
         else if QueueManager.shared.repeatSelection == RepeatType.playlist {
             nowPlayingVC.repeatButton.tintColor = Constants.UI.darkPink
             nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
+            queueVC.repeatButton.tintColor = Constants.UI.darkPink
+            queueVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
         }
         else {
             nowPlayingVC.repeatButton.tintColor = Constants.UI.darkPink
             nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
+            queueVC.repeatButton.tintColor = Constants.UI.darkPink
+            queueVC.repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
         }
     }
     func updateShuffleButton() {
         if QueueManager.shared.shuffleStatus {
             nowPlayingVC.shuffleButton.tintColor = Constants.UI.darkPink
+            queueVC.shuffleButton.tintColor = Constants.UI.darkPink
         }
         else {
             nowPlayingVC.shuffleButton.tintColor = .white
+            queueVC.shuffleButton.tintColor = .white
         }
     }
     private func cropToBounds(image: UIImage, height: Double) -> UIImage {

@@ -17,7 +17,7 @@ class HomeViewController: UIViewController {
     
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(SongPlaylistCell.self, forCellReuseIdentifier: SongPlaylistCell.identifier)
+        tableView.register(PlaylistCell.self, forCellReuseIdentifier: PlaylistCell.identifier)
         return tableView
     }()
     private let addButton: UIButton = {
@@ -51,13 +51,13 @@ class HomeViewController: UIViewController {
     let spacing = CGFloat(40)
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        let tableViewSpacing = addButton.bottom + spacing
-        tableView.frame = CGRect(
-            x: 0,
-            y: tableViewSpacing,
-            width: view.width,
-            height: view.height - tableViewSpacing
+        addButton.frame = CGRect(
+            x: view.width-addButtonSize-10,
+            y: 140,
+            width: addButtonSize,
+            height: addButtonSize
         )
+        tableView.frame = view.frame
 
     }
     @objc func addButtonAction() {
@@ -83,7 +83,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SongPlaylistCell.identifier, for: indexPath) as! SongPlaylistCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: PlaylistCell.identifier, for: indexPath) as! PlaylistCell
         
         if indexPath.row == 0 {
             cell.playlist = LibraryManager.shared.songLibrary
@@ -98,10 +98,10 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SongPlaylistCell.rowHeight
+        return PlaylistCell.rowHeight
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! SongPlaylistCell
+        let cell = tableView.cellForRow(at: indexPath) as! PlaylistCell
 
         print("Selected cell number \(indexPath.row) -> \(cell.playlist?.title ?? "no playlist found")")
         let playlistDetailViewController = PlaylistContentsViewController()
@@ -117,20 +117,20 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     
 }
 
-extension HomeViewController: SongPlaylistCellDelegate {
+extension HomeViewController: PlaylistCellDelegate {
     func optionsButtonTapped(tag: Int) {
         if tag == 0 {
-            songPlaylistOptionsViewController.setPlaylist(playlist: LibraryManager.shared.songLibrary)
+            songPlaylistOptionsViewController.setPlaylist(playlist: LibraryManager.shared.songLibrary, index: -1)
         }
         else {
-            songPlaylistOptionsViewController.setPlaylist(playlist: PlaylistsManager.shared.playlists[tag-1])
+            songPlaylistOptionsViewController.setPlaylist(playlist: PlaylistsManager.shared.playlists[tag-1], index: tag - 1)
         }
         present(songPlaylistOptionsViewController, animated: true, completion: nil)
     }
 }
 
-extension HomeViewController: CreatePlaylistDelegate, SongOptionsViewControllerDelegate {
-    func removeFromPlaylist(songDict: Dictionary<String, Any>) {}
+extension HomeViewController: CreatePlaylistDelegate, SongPlaylistOptionsViewControllerDelegate {
+    func removeFromPlaylist(index: Int) {}
     
     func reloadTableView() {
         tableView.reloadData()

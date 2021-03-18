@@ -21,7 +21,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
     
     let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(SongPlaylistCell.self, forCellReuseIdentifier: SongPlaylistCell.identifier)
+        tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
         return tableView
     }()
     
@@ -32,6 +32,8 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         songPlaylistOptionsViewController.delegate = self
+        songPlaylistOptionsViewController.setPlaylist(playlist: playlist, index: PlaylistsManager.shared.getPlaylistIndex(title: playlist.title))
+
         if playlist.title == LibraryManager.shared.LIBRARY_KEY {
             navigationItem.title = LibraryManager.shared.LIBRARY_DISPLAY
         }
@@ -39,7 +41,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
             navigationItem.title = playlist.title
         }
         searchBar.delegate = self
-        
+
         tableView.tableHeaderView = searchBar
         tableView.dataSource = self
         tableView.delegate = self
@@ -57,7 +59,7 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SongPlaylistCell.identifier, for: indexPath) as! SongPlaylistCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
         cell.songDict = playlist.songList.object(at: indexPath.row) as? Dictionary<String, Any>
         cell.refreshCell()
         cell.delegate = self
@@ -65,27 +67,29 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return SongPlaylistCell.rowHeight
+        return SongCell.rowHeight
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! SongPlaylistCell
+        let cell = tableView.cellForRow(at: indexPath) as! SongCell
         print("Selected cell number \(indexPath.row) -> \(cell.songDict!["title"] ?? "")")
         QueueManager.shared.setupQueue(with: playlist, startingAt: indexPath.row)
     }
 }
 
-extension PlaylistContentsViewController: SongPlaylistCellDelegate {
+extension PlaylistContentsViewController: SongCellDelegate {
     func optionsButtonTapped(tag: Int) {
-        songPlaylistOptionsViewController.setSong(songDict: playlist.songList.object(at: tag) as! Dictionary<String, Any>, isLibrary: playlist.title == LibraryManager.shared.LIBRARY_KEY)
+        let songDict = playlist.songList.object(at: tag) as! Dictionary<String, Any>
+        let isLibrary = playlist.title == LibraryManager.shared.LIBRARY_KEY
+        songPlaylistOptionsViewController.setSong(songDict: songDict, isLibrary: isLibrary, index: tag)
         present(songPlaylistOptionsViewController, animated: true, completion: nil)
     }
 }
 
-extension PlaylistContentsViewController: SongOptionsViewControllerDelegate {
+extension PlaylistContentsViewController: SongPlaylistOptionsViewControllerDelegate {
     
-    func removeFromPlaylist(songDict: Dictionary<String, Any>) {
+    func removeFromPlaylist(index: Int) {
         if playlist.title != LibraryManager.shared.LIBRARY_KEY { // Should always be true
-            playlist.songList.remove(songDict)
+            PlaylistsManager.shared.removeFromPlaylist(playlist: playlist, index: index)
         }
         else {
             print("This should be inaccessible")

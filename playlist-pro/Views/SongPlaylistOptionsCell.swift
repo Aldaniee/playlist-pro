@@ -7,7 +7,7 @@
 
 import UIKit
 
-class SongOptionsCell: UITableViewCell {
+class SongPlaylistOptionsCell: UITableViewCell {
     
     static let identifier = "SongOptionsCell"
     
