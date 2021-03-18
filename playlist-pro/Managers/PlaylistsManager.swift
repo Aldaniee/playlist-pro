@@ -99,5 +99,31 @@ class PlaylistsManager {
         }
         return -1
     }
+    func removeFromAllPlaylists(songID: String) {
+        for playlist in playlists {
+            if hasSong(playlist: playlist, songID: songID) {
+                removeAllInstancesOf(songID: songID, playlist: playlist)
+            }
+        }
+    }
+    
+    func hasSong(playlist: Playlist, songID: String) -> Bool {
+        for songDict in playlist.songList {
+            let song = (songDict as! Dictionary<String, Any>)
+            if (song[SongValues.id] as! String == songID) {
+                return true
+            }
+        }
+        return false
+    }
+
+    func removeAllInstancesOf(songID: String, playlist: Playlist) {
+        for index in 0..<playlist.songList.count {
+            let song = (playlist.songList[index] as! Dictionary<String, Any>)
+            if (song[SongValues.id] as! String == songID) {
+                removeFromPlaylist(playlist: playlist, index: index)
+            }
+        }
+    }
 
 }

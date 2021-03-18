@@ -261,7 +261,7 @@ class LibraryManager {
     
 	func deleteSongFromLibrary(songID: String) {
         QueueManager.shared.removeFromQueue(songID: songID)
-
+        PlaylistsManager.shared.removeFromAllPlaylists(songID: songID)
 		var songDict = Dictionary<String, Any>()
 		for i in 0 ..< songLibrary.songList.count {
             songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
