@@ -51,7 +51,7 @@ final class LibraryViewController: UIViewController {
     }()
     private let tableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(SongCell.self, forCellReuseIdentifier: PlaylistCell.identifier)
+        tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
         return tableView
     }()
     private let loginButton: UIButton = {
@@ -143,7 +143,7 @@ extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! PlaylistCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
         cell.songDict = LibraryManager.shared.songLibrary.songList.object(at: indexPath.row) as? Dictionary<String, Any>
         cell.refreshCell()
 

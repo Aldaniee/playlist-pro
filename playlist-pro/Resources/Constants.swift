@@ -23,7 +23,8 @@ public struct Constants {
     struct SPOTIFY {
         static let CLIENT_ID = "***REMOVED***"
         static let SECRET_ID = "***REMOVED***"
-        static let REDIRECT_URL = "playlist-pro://login-callback"
+        static let REDIRECT_URL = "https://www.google.com"//"playlist-pro://login-callback"
+        static let tokenAPIURL = "https://accounts.spotify.com/api/token"
     }
     struct UI {
         static let cornerRadius: CGFloat = 11.0

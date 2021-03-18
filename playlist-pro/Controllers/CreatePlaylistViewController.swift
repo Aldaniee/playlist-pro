@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import WebKit
 protocol CreatePlaylistDelegate: class {
     func reloadTableView()
 }
@@ -17,6 +17,8 @@ class CreatePlaylistViewController: UIViewController {
     let spacing = CGFloat(60)
     let buttonHeight = CGFloat(50)
     let lineHeight = CGFloat(4)
+    
+    
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
@@ -59,20 +61,18 @@ class CreatePlaylistViewController: UIViewController {
         button.setTitle("Import From Spotify", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
         button.setTitleColor(.black, for: .normal)
-        button.addTarget(self, action: #selector(onCreateButtonPressed), for: .touchUpInside)
+        button.addTarget(self, action: #selector(onImportButtonPressed), for: .touchUpInside)
         button.layer.cornerRadius = Constants.UI.cornerRadius
         return button
     }()
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         view.backgroundColor = Constants.UI.hardlyGray
         view.addSubview(titleLabel)
         view.addSubview(inputField)
         view.addSubview(horizontalLine)
         view.addSubview(createButton)
         view.addSubview(importButton)
-
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -112,11 +112,18 @@ class CreatePlaylistViewController: UIViewController {
     }
     
     @objc func onCreateButtonPressed() {
+        print("Create Button Pressed")
+
         let title = inputField.text ?? "My Playlist"
         PlaylistsManager.shared.addPlaylist(title: title)
         dismiss(animated: true) {
             self.delegate?.reloadTableView()
         }
+    }
+    
+    @objc func onImportButtonPressed() {
+        print("Import Button Pressed")
+        
     }
 
 }

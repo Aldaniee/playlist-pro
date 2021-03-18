@@ -9,6 +9,8 @@ import UIKit
 
 class RegistrationViewController: UIViewController {
     
+    private var isSpotifySignedIn = false
+    
     private let usernameField: UITextField = {
         let field = UITextField()
         field.placeholder = "Username"
@@ -70,7 +72,21 @@ class RegistrationViewController: UIViewController {
         view.addSubview(passwordField)
         view.addSubview(registerButton)
         view.backgroundColor = .systemBackground
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if SpotifyAuthManager.shared.isSignedIn {
+            let username = "spotify_user"
+            let email = "spotify_email"
 
+            usernameField.text = username
+            emailField.text = email
+            let alert = UIAlertController(title: "You're logged into your Spotify account",
+                                          message: "Enter a password to create a Playlist Pro account.", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            present(alert, animated: true, completion: nil)
+        }
     }
     
     override func viewDidLayoutSubviews() {
