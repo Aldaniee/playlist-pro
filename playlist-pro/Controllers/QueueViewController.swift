@@ -166,22 +166,29 @@ class QueueViewController: UIViewController {
 }
 extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
     func numberOfSections(in tableView: UITableView) -> Int {
-        print("here")
-        return 2
+        return 3
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         switch (section) {
             case 0:
                 return 1
+            case 1:
+                return QueueManager.shared.addedQueue.count
             default:
-                print(QueueManager.shared.queue.count - 1)
-                return QueueManager.shared.queue.count - 1
+                return QueueManager.shared.playlistQueue.count
          }
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = QueueManager.shared.queue[indexPath.row + indexPath.section] as? Dictionary<String, Any>
+        switch (indexPath.section) {
+            case 0:
+                cell.songDict = QueueManager.shared.nowPlaying
+            case 1:
+                cell.songDict = QueueManager.shared.addedQueue[indexPath.row] as? Dictionary<String, Any>
+            default:
+                cell.songDict = QueueManager.shared.playlistQueue[indexPath.row] as? Dictionary<String, Any>
+         }
         cell.refreshCell()
         cell.setDarkStyle()
         return cell
@@ -192,19 +199,14 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
-
         print("Selected cell number \(indexPath.row) -> \(cell.songDict![SongValues.title] ?? "")")
-        
-        QueueManager.shared.didSelectSong(index: indexPath.row + indexPath.section)
+        QueueManager.shared.didSelectSong(index: getIndex(indexPath: indexPath))
         tableView.reloadData()
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        let cell = tableView.cellForRow(at: indexPath) as! SongCell
-
         if (editingStyle == .delete) {
-            QueueManager.shared.removeFromQueue(songID: cell.songDict![SongValues.id] as! String)
+            QueueManager.shared.removeFromQueue(section: indexPath.section, index: indexPath.row)
             tableView.reloadData()
-            
         }
     }
     
@@ -215,9 +217,17 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
         if playlistTitle == LibraryManager.shared.LIBRARY_KEY {
             playlistTitle = LibraryManager.shared.LIBRARY_DISPLAY
         }
-        var headerTitle = "Next From: \(playlistTitle)"
+        var headerTitle : String!
         if section == 0 {
             headerTitle = "Now Playing"
+        }
+        else if section == 1 {
+            headerTitle = "Up Next"
+            headerView.isHidden = QueueManager.shared.addedQueue.count == 0
+        }
+        else {
+            headerTitle = "Next From: \(playlistTitle)"
+            headerView.isHidden = QueueManager.shared.playlistQueue.count == 0
         }
         let label: UILabel = {
             let lbl = UILabel()
@@ -230,5 +240,17 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
         headerView.addSubview(label)
         label.frame = CGRect(x: 10, y: 10, width: headerView.width, height: 18)
         return headerView
+    }
+    
+    func getIndex(indexPath: IndexPath) -> Int {
+        let row = indexPath.row
+        let section = indexPath.section
+        if section == 0 || section == 1 {
+            return row + section
+        }
+        else {
+            let startIndex = QueueManager.shared.addedQueue.count
+            return indexPath.row + startIndex
+        }
     }
 }

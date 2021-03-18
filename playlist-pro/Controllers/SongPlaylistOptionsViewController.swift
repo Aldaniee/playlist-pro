@@ -124,6 +124,9 @@ class SongPlaylistOptionsViewController: UIViewController {
             })
         }
         else {
+            data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "text.badge.plus")!, title: "Add to queue") { _ in
+                self.didTapAddToQueue()
+            })
             data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "minus.circle")!, title: "Remove playlist") { _ in
                 self.didTapRemovePlaylist()
             })
@@ -161,7 +164,12 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     @objc func didTapAddToQueue() {
         print("add to queue pressed")
-        QueueManager.shared.queue.add(songDict ?? playlist!.songList)
+        if songDict != nil {
+            QueueManager.shared.addToQueue(songDict: songDict)
+        }
+        else {
+            QueueManager.shared.addToQueue(playlist: playlist!)
+        }
         delegate.reloadTableView()
         dismiss(animated: true, completion: nil)
     }

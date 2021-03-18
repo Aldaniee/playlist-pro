@@ -9,6 +9,7 @@ import UIKit
 
 class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueManagerDelegate {
     
+    
     let tabBarBackground: UIView = {
         let view = UIView()
         view.backgroundColor = Constants.UI.blackGray
@@ -155,9 +156,9 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     
 
     func updateDisplayedSong() {
-        if QueueManager.shared.queue.count > 0 {
+        if QueueManager.shared.nowPlaying.isEmpty == false {
             QueueManager.shared.unsuspend()
-            displayedSong = QueueManager.shared.queue.object(at: 0) as! Dictionary<String, Any>
+            displayedSong = QueueManager.shared.nowPlaying
             miniPlayerView.isHidden = false
         } else {
             QueueManager.shared.suspend()
@@ -301,6 +302,9 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
             nowPlayingVC.shuffleButton.tintColor = .white
             queueVC.shuffleButton.tintColor = .white
         }
+    }
+    func refreshQueueVC() {
+        queueVC.tableView.reloadData()
     }
     private func cropToBounds(image: UIImage, height: Double) -> UIImage {
         

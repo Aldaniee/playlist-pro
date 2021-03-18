@@ -51,8 +51,8 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	
 	func setupPlayer(withSong songDict: Dictionary<String, Any>) -> Bool {
 		self.songDict = songDict
-		let songID = songDict["id"] as! String
-		let songExt = songDict["fileExtension"] as? String ?? "m4a"  //support legacy code
+        let songID = songDict[SongValues.id] as! String
+        let songExt = songDict[SongValues.fileExtension] as? String ?? "m4a"  //support legacy code
 		let url = LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).\(songExt)")
 		do {
 			if audioPlayer != nil {

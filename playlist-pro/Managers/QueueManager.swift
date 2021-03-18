@@ -11,6 +11,7 @@ import MediaPlayer
 protocol QueueManagerDelegate: class {
     func updateDisplayedSong()
     func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float)
+    func refreshQueueVC()
 }
 
 public class QueueManager: NSObject {
@@ -26,84 +27,146 @@ public class QueueManager: NSObject {
     var shuffleStatus = false
 
     var currentPlaylist : Playlist?
+    var nowPlaying = Dictionary<String, Any>()
+    var nowPlayingSource = "playlist"
+    var playlistQueue : NSMutableArray!
+    var addedQueue : NSMutableArray!
     
-    var queue : NSMutableArray!
-
 	override init() {
 		super.init()
         
 		audioPlayer = YYTAudioPlayer()
         
-        queue = NSMutableArray()
+        playlistQueue = NSMutableArray()
+        addedQueue = NSMutableArray()
     }
+    
+    func combinedQueue() -> NSMutableArray {
+        let combined = NSMutableArray(array: addedQueue.addingObjects(from: playlistQueue as [AnyObject]))
+        combined.insert(nowPlaying, at: 0)
+
+        return combined
+    }
+    
     func setupAudioPlayer() {
-        if audioPlayer.setupPlayer(withQueue: queue) == false {
+        if audioPlayer.setupPlayer(withQueue: combinedQueue()) == false {
             print("setup failure")
         }
         setupRemoteTransportControls()
     }
+    
     func setupQueue(with playlist: Playlist, startingAt: Int) {
         self.currentPlaylist = playlist
-        self.queue = NSMutableArray(array: playlist.songList)
+        self.playlistQueue = NSMutableArray(array: playlist.songList)
         if audioPlayer.isSuspended {
             audioPlayer.unsuspend()
             print("Audio Player Force Unsuspended")
         }
         didSelectSong(index: startingAt)
+        if nowPlaying.isEmpty {
+            moveQueueForward()
+        }
         setupAudioPlayer()
         play()
     }
-    func removeFromQueue(songID: String) {
-        for index in 0..<queue.count {
-            let songDict = queue[index] as! Dictionary<String, Any>
-            if songDict[SongValues.id] as! String == songID {
-                if index == 0 {
-                    removePlayingSong()
+    
+    func addToQueue(songDict: Dictionary<String, Any>) {
+        addedQueue.add(songDict)
+        delegate?.refreshQueueVC()
+    }
+    func addToQueue(playlist: Playlist) {
+        addedQueue = NSMutableArray(array: NSMutableArray(array: playlist.songList).addingObjects(from: addedQueue as [AnyObject]))
+        delegate?.refreshQueueVC()
+    }
+    
+    func removeFromQueue(section: Int, index: Int) {
+        switch (section) {
+            case 0:
+                if addedQueue.count == 0 {
+                    nowPlaying = playlistQueue.object(at: 0) as! Dictionary<String, Any>
+                    nowPlayingSource = "playlist"
+                    playlistQueue.removeObject(at: 0)
                 }
                 else {
-                    queue.removeObject(at: index)
+                    nowPlaying = addedQueue.object(at: 0) as! Dictionary<String, Any>
+                    nowPlayingSource = "added"
+                    addedQueue.removeObject(at: 0)
                 }
                 return
+            case 1:
+                addedQueue.remove(index)
+                return
+            default:
+                playlistQueue.remove(index)
+                return
+            
+        }
+    }
+    func removeAllInstancesFromQueue(songID: String) {
+        if songID == nowPlaying[SongValues.id] as! String {
+            removeFromQueue(section: 0, index: 0)
+        }
+        for index in 0..<playlistQueue.count {
+            let songDict = playlistQueue[index] as! Dictionary<String, Any>
+            if songID == songDict[SongValues.id] as! String {
+                removeFromQueue(section: 1, index: index)
+            }
+        }
+        for index in 0..<addedQueue.count {
+            let songDict = addedQueue[index] as! Dictionary<String, Any>
+            if songID == songDict[SongValues.id] as! String {
+                removeFromQueue(section: 2, index: index)
             }
         }
     }
-    func removePlayingSong() {
-        audioPlayer.pause()
-        updateSongPlaying()
-        queue.removeObject(at: 0)
-        pause()
-        updateSongPlaying()
-    }
+//    func removeFromCombinedQueue(at index: Int) {
+//        if index < addedQueue.count - 1 {
+//            addedQueue.removeObject(at: index)
+//        }
+//        else {
+//            playlistQueue.removeObject(at: index - addedQueue.count)
+//        }
+//    }
+//
     func shuffle() {
         shuffleStatus = !shuffleStatus
-        let playingSong = queue.object(at: 0)
         if shuffleStatus {
-            var newQueue = NSMutableArray(array: queue)
-            newQueue.removeObject(at: 0)
-            newQueue = NSMutableArray(array: (newQueue as! Array<Dictionary<String,Any>>).shuffled())
-            newQueue.insert(playingSong, at: 0)
-            queue = newQueue
+            playlistQueue = NSMutableArray(array: (playlistQueue as! Array<Dictionary<String,Any>>).shuffled())
         }
         else {
-            let playingSongPlaylistIndex = currentPlaylist!.songList.index(of: playingSong)
-            queue = NSMutableArray(array: currentPlaylist!.songList)
+            let playingSongPlaylistIndex = currentPlaylist!.songList.index(of: nowPlaying)
+            playlistQueue = NSMutableArray(array: currentPlaylist!.songList)
             moveQueueForward(to: playingSongPlaylistIndex)
         }
     }
 	func moveQueueForward() {
-        if repeatSelection == RepeatType.playlist {
-            queue.add(queue.object(at: 0))
+        if addedQueue.count == 0 {
+            if repeatSelection == RepeatType.playlist && nowPlayingSource == "playlist" {
+                if nowPlaying.isEmpty == false {
+                    playlistQueue.add(nowPlaying)
+                }
+            }
+            nowPlaying = playlistQueue.object(at: 0) as! Dictionary<String, Any>
+            nowPlayingSource = "playlist"
+            playlistQueue.removeObject(at: 0)
         }
-        queue.removeObject(at: 0)
+        else {
+            nowPlaying = addedQueue.object(at: 0) as! Dictionary<String, Any>
+            nowPlayingSource = "added"
+            addedQueue.removeObject(at: 0)
+        }
 	}
 	
 	func moveQueueBackward() {
-        queue.insert(queue.lastObject!, at: 0)
-        queue.removeObject(at: queue.endIndex())
+        playlistQueue.add(nowPlaying)
+        nowPlaying = playlistQueue.object(at: playlistQueue.endIndex()) as! Dictionary<String, Any>
+        nowPlayingSource = "playlist"
+
+        playlistQueue.removeObject(at: playlistQueue.endIndex())
 	}
     
     func moveQueueForward(to index: Int) {
-        for _ in 0..<index {
+        for _ in 0..<index+1 {
             moveQueueForward()
         }
     }
@@ -111,6 +174,7 @@ public class QueueManager: NSObject {
 	func didSelectSong(index: Int) {
         if !audioPlayer.isSuspended {
             moveQueueForward(to: index)
+            print(nowPlaying)
             updateSongPlaying()
         }
         else {
@@ -120,7 +184,7 @@ public class QueueManager: NSObject {
     
     func nextButtonAction() {
         if !audioPlayer.isSuspended {
-            if repeatSelection == RepeatType.song || queue.count == 1{
+            if repeatSelection == RepeatType.song || playlistQueue.count == 1{
                 audioPlayer.audioPlayer.currentTime = 0.0
             }
             else {
@@ -154,7 +218,7 @@ public class QueueManager: NSObject {
     }
     /// Displays and plays the first song of the queue
     private func updateSongPlaying() {
-        if audioPlayer.setupPlayer(withQueue: queue) {
+        if audioPlayer.setupPlayer(withQueue: combinedQueue()) {
             play()
         }
         else {
