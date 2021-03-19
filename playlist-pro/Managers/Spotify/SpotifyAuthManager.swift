@@ -45,7 +45,7 @@ final class SpotifyAuthManager {
         let fiveMinutes: TimeInterval = 300
         return currentDate.addingTimeInterval(fiveMinutes) >= expirationDate
     }
-    private func storeTokens(result: AuthResponse) {
+    private func storeTokens(result: SpotifyAuthResponse) {
         UserDefaults.standard.setValue(result.access_token, forKey: "access_token")
         UserDefaults.standard.setValue(result.refresh_token, forKey: "refresh_token")
         UserDefaults.standard.setValue(Date().addingTimeInterval(TimeInterval(result.expires_in)), forKey: "expirationDate")
@@ -87,7 +87,7 @@ final class SpotifyAuthManager {
             }
             
             do {
-                let result = try JSONDecoder().decode(AuthResponse.self, from: data)
+                let result = try JSONDecoder().decode(SpotifyAuthResponse.self, from: data)
                 self?.storeTokens(result: result)
                 completion(true)
             }
@@ -122,6 +122,7 @@ final class SpotifyAuthManager {
         }
     }
 
+    
     public func refreshIfNeeded(completion: ((Bool) -> Void)?) {
         guard !refreshingToken else {
             return
@@ -177,7 +178,7 @@ final class SpotifyAuthManager {
             }
 
             do {
-                let result = try JSONDecoder().decode(AuthResponse.self, from: data)
+                let result = try JSONDecoder().decode(SpotifyAuthResponse.self, from: data)
                 self?.onRefreshBlocks.forEach { $0(result.access_token) }
                 self?.onRefreshBlocks.removeAll()
                 self?.cacheToken(result: result)
@@ -191,10 +192,10 @@ final class SpotifyAuthManager {
         task.resume()
     }
 
-    private func cacheToken(result: AuthResponse) {
+    private func cacheToken(result: SpotifyAuthResponse) {
         UserDefaults.standard.setValue(result.access_token,
                                        forKey: "access_token")
-        if let refresh_token = result.refresh_token {
+        if result.refresh_token != nil {
             UserDefaults.standard.setValue(Constants.SPOTIFY.REDIRECT_URL,
                                            forKey: "refresh_token")
         }

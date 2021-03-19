@@ -19,7 +19,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     var miniPlayerView = MiniPlayerView(frame: .zero)
     var nowPlayingVC = NowPlayingViewController()
     var queueVC = QueueViewController()
-    var displayedSong: Dictionary<String, Any> = [:]
+    var displayedSong: Song = [:]
 
     var isProgressBarSliding = false
 
@@ -162,7 +162,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
             miniPlayerView.isHidden = false
         } else {
             QueueManager.shared.suspend()
-            displayedSong = Dictionary<String, Any>()
+            displayedSong = Song()
             miniPlayerView.isHidden = true
         }
 

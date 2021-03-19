@@ -16,7 +16,7 @@ struct SongPlaylistOptionsCellModel {
 protocol SongPlaylistOptionsViewControllerDelegate {
     func reloadTableView()
     func removeFromPlaylist(index: Int)
-    func openAddToPlaylistViewController(songDict: Dictionary<String,Any>)
+    func openAddToPlaylistViewController(songDict: Song)
 }
 
 class SongPlaylistOptionsViewController: UIViewController {
@@ -25,7 +25,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     var delegate : SongPlaylistOptionsViewControllerDelegate!
     
-    private var songDict : Dictionary<String, Any>!
+    private var songDict : Song!
     
     private var songPlaylistPos : Int!
     
@@ -133,7 +133,7 @@ class SongPlaylistOptionsViewController: UIViewController {
         }
     }
     
-    func setSong(songDict: Dictionary<String, Any>, isLibrary: Bool, index: Int) {
+    func setSong(songDict: Song, isLibrary: Bool, index: Int) {
         self.isInLibrary = isLibrary
         self.songPlaylistPos = index
         self.songDict = songDict

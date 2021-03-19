@@ -12,7 +12,7 @@ struct Playlist {
     
     
     /*
-     * songList: Songs are stored in an NSMutableArray and are defined as a Dictionary<String, Any>
+     * songList: Songs are stored in an NSMutableArray and are defined as a Song
      * title: Unique title of the playlist
      */
     var title : String

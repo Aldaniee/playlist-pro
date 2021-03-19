@@ -185,9 +185,9 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
             case 0:
                 cell.songDict = QueueManager.shared.nowPlaying
             case 1:
-                cell.songDict = QueueManager.shared.addedQueue[indexPath.row] as? Dictionary<String, Any>
+                cell.songDict = QueueManager.shared.addedQueue[indexPath.row] as? Song
             default:
-                cell.songDict = QueueManager.shared.playlistQueue[indexPath.row] as? Dictionary<String, Any>
+                cell.songDict = QueueManager.shared.playlistQueue[indexPath.row] as? Song
          }
         cell.refreshCell()
         cell.setDarkStyle()

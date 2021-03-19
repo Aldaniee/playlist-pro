@@ -9,7 +9,7 @@ import UIKit
 
 class AddToPlaylistViewController: UIViewController, PlaylistCellDelegate {
 
-    var songDict = Dictionary<String, Any>()
+    var songDict = Song()
 
     let tableView: UITableView = {
         let tableView = UITableView()

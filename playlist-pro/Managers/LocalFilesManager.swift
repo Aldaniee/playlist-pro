@@ -75,8 +75,8 @@ class LocalFilesManager {
 		return TimeInterval(CMTimeGetSeconds(asset.duration)).stringFromTimeInterval()
 	}
 
-	static func extractSongMetadata(songID: String, songExtension: String) -> Dictionary<String, Any> {
-		var dict = Dictionary<String, Any>()
+	static func extractSongMetadata(songID: String, songExtension: String) -> Song {
+		var dict = Song()
 		let asset = AVAsset(url: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).\(songExtension)"))
 		for item in asset.metadata {
 //			print(String(describing: item.commonKey?.rawValue) + "\t" + String(describing: item.key) + " -> " + String(describing: item.value))

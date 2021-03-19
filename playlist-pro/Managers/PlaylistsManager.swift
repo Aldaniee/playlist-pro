@@ -109,7 +109,7 @@ class PlaylistsManager {
     
     func hasSong(playlist: Playlist, songID: String) -> Bool {
         for songDict in playlist.songList {
-            let song = (songDict as! Dictionary<String, Any>)
+            let song = (songDict as! Song)
             if (song[SongValues.id] as! String == songID) {
                 return true
             }
@@ -119,7 +119,7 @@ class PlaylistsManager {
 
     func removeAllInstancesOf(songID: String, playlist: Playlist) {
         for index in 0..<playlist.songList.count {
-            let song = (playlist.songList[index] as! Dictionary<String, Any>)
+            let song = (playlist.songList[index] as! Song)
             if (song[SongValues.id] as! String == songID) {
                 removeFromPlaylist(playlist: playlist, index: index)
             }

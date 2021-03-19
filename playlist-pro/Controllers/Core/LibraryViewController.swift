@@ -144,7 +144,7 @@ extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = LibraryManager.shared.songLibrary.songList.object(at: indexPath.row) as? Dictionary<String, Any>
+        cell.songDict = LibraryManager.shared.songLibrary.songList.object(at: indexPath.row) as? Song
         cell.refreshCell()
 
         return cell

@@ -51,7 +51,7 @@ class SpotifyAuthViewController : UIViewController, WKNavigationDelegate {
         SpotifyAuthManager.shared.exchangeCodeForToken(code: code, completion: { [weak self] success in
             DispatchQueue.main.async {
                 self?.completionHandler?(success)
-                self?.navigationController?.dismiss(animated: true, completion: nil)
+                self?.dismiss(animated: true, completion: nil)
             }
         })
     }

@@ -27,7 +27,7 @@ public class QueueManager: NSObject {
     var shuffleStatus = false
 
     var currentPlaylist : Playlist?
-    var nowPlaying = Dictionary<String, Any>()
+    var nowPlaying = Song()
     var nowPlayingSource = "playlist"
     var playlistQueue : NSMutableArray!
     var addedQueue : NSMutableArray!
@@ -70,7 +70,7 @@ public class QueueManager: NSObject {
         play()
     }
     
-    func addToQueue(songDict: Dictionary<String, Any>) {
+    func addToQueue(songDict: Song) {
         addedQueue.add(songDict)
         delegate?.refreshQueueVC()
     }
@@ -83,12 +83,12 @@ public class QueueManager: NSObject {
         switch (section) {
             case 0:
                 if addedQueue.count == 0 {
-                    nowPlaying = playlistQueue.object(at: 0) as! Dictionary<String, Any>
+                    nowPlaying = playlistQueue.object(at: 0) as! Song
                     nowPlayingSource = "playlist"
                     playlistQueue.removeObject(at: 0)
                 }
                 else {
-                    nowPlaying = addedQueue.object(at: 0) as! Dictionary<String, Any>
+                    nowPlaying = addedQueue.object(at: 0) as! Song
                     nowPlayingSource = "added"
                     addedQueue.removeObject(at: 0)
                 }
@@ -107,13 +107,13 @@ public class QueueManager: NSObject {
             removeFromQueue(section: 0, index: 0)
         }
         for index in 0..<playlistQueue.count {
-            let songDict = playlistQueue[index] as! Dictionary<String, Any>
+            let songDict = playlistQueue[index] as! Song
             if songID == songDict[SongValues.id] as! String {
                 removeFromQueue(section: 1, index: index)
             }
         }
         for index in 0..<addedQueue.count {
-            let songDict = addedQueue[index] as! Dictionary<String, Any>
+            let songDict = addedQueue[index] as! Song
             if songID == songDict[SongValues.id] as! String {
                 removeFromQueue(section: 2, index: index)
             }
@@ -146,12 +146,12 @@ public class QueueManager: NSObject {
                     playlistQueue.add(nowPlaying)
                 }
             }
-            nowPlaying = playlistQueue.object(at: 0) as! Dictionary<String, Any>
+            nowPlaying = playlistQueue.object(at: 0) as! Song
             nowPlayingSource = "playlist"
             playlistQueue.removeObject(at: 0)
         }
         else {
-            nowPlaying = addedQueue.object(at: 0) as! Dictionary<String, Any>
+            nowPlaying = addedQueue.object(at: 0) as! Song
             nowPlayingSource = "added"
             addedQueue.removeObject(at: 0)
         }
@@ -159,7 +159,7 @@ public class QueueManager: NSObject {
 	
 	func moveQueueBackward() {
         playlistQueue.add(nowPlaying)
-        nowPlaying = playlistQueue.object(at: playlistQueue.endIndex()) as! Dictionary<String, Any>
+        nowPlaying = playlistQueue.object(at: playlistQueue.endIndex()) as! Song
         nowPlayingSource = "playlist"
 
         playlistQueue.removeObject(at: playlistQueue.endIndex())

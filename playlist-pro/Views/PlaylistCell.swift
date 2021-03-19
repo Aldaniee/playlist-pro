@@ -22,7 +22,7 @@ class PlaylistCell : UITableViewCell {
     static let rowHeight = CGFloat(80)
     
     // Song to be displayed
-    var songDict : Dictionary<String, Any>?
+    var songDict : Song?
     
     // Playlist to be displayed
     var playlist : Playlist?
@@ -133,7 +133,7 @@ class PlaylistCell : UITableViewCell {
             }
             
             if playlist!.songList.count > 0 {
-                let firstSong = playlist!.songList.object(at: 0) as! Dictionary<String, Any>
+                let firstSong = playlist!.songList.object(at: 0) as! Song
                 let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong["id"] as? String ?? "").jpg"))
                 if let imgData = imageData {
                     self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(size: 15.0)

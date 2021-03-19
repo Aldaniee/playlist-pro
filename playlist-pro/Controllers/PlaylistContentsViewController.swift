@@ -60,7 +60,7 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = playlist.songList.object(at: indexPath.row) as? Dictionary<String, Any>
+        cell.songDict = playlist.songList.object(at: indexPath.row) as? Song
         cell.refreshCell()
         cell.delegate = self
         cell.optionsButton.tag = indexPath.row
@@ -78,7 +78,7 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
 
 extension PlaylistContentsViewController: SongCellDelegate {
     func optionsButtonTapped(tag: Int) {
-        let songDict = playlist.songList.object(at: tag) as! Dictionary<String, Any>
+        let songDict = playlist.songList.object(at: tag) as! Song
         let isLibrary = playlist.title == LibraryManager.shared.LIBRARY_KEY
         songPlaylistOptionsViewController.setSong(songDict: songDict, isLibrary: isLibrary, index: tag)
         present(songPlaylistOptionsViewController, animated: true, completion: nil)
@@ -99,7 +99,7 @@ extension PlaylistContentsViewController: SongPlaylistOptionsViewControllerDeleg
     func reloadTableView() {
         tableView.reloadData()
     }
-    func openAddToPlaylistViewController(songDict: Dictionary<String, Any>) {
+    func openAddToPlaylistViewController(songDict: Song) {
         let vc = AddToPlaylistViewController()
         vc.songDict = songDict
         let secondsDelay = 0.7

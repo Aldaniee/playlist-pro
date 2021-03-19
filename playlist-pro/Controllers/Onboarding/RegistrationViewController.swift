@@ -11,9 +11,9 @@ class RegistrationViewController: UIViewController {
     
     private var isSpotifySignedIn = false
     
-    private let usernameField: UITextField = {
+    private let displayNameField: UITextField = {
         let field = UITextField()
-        field.placeholder = "Username"
+        field.placeholder = "Display Name"
         field.returnKeyType = .next
         field.leftViewMode = .always
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
@@ -67,7 +67,7 @@ class RegistrationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Create Account"
-        view.addSubview(usernameField)
+        view.addSubview(displayNameField)
         view.addSubview(emailField)
         view.addSubview(passwordField)
         view.addSubview(registerButton)
@@ -77,14 +77,21 @@ class RegistrationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if SpotifyAuthManager.shared.isSignedIn {
-            let username = "spotify_user"
-            let email = "spotify_email"
-
-            usernameField.text = username
-            emailField.text = email
+            APICaller.shared.getCurrentUserProfile { (result) in
+                switch result {
+                case .success(let model):
+                    print("Fetched Spotify User Profile Success")
+                    DispatchQueue.main.async {
+                        self.displayNameField.text = model.display_name
+                        self.emailField.text = model.email
+                    }
+                case .failure(let error):
+                    print(error.localizedDescription)
+                }
+            }
             let alert = UIAlertController(title: "You're logged into your Spotify account",
                                           message: "Enter a password to create a Playlist Pro account.", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
             present(alert, animated: true, completion: nil)
         }
     }
@@ -94,24 +101,24 @@ class RegistrationViewController: UIViewController {
         registerButton.addTarget(self,
                                  action: #selector(didTapRegister),
                                  for: .touchUpInside)
-        usernameField.delegate = self
+        displayNameField.delegate = self
         emailField.delegate = self
         passwordField.delegate = self
-        usernameField.frame = CGRect(x: 20, y: view.safeAreaInsets.top+100, width: view.width-40, height: 52)
-        emailField.frame = CGRect(x: 20, y: usernameField.bottom+10, width: view.width-40, height: 52)
+        displayNameField.frame = CGRect(x: 20, y: view.safeAreaInsets.top+100, width: view.width-40, height: 52)
+        emailField.frame = CGRect(x: 20, y: displayNameField.bottom+10, width: view.width-40, height: 52)
         passwordField.frame = CGRect(x: 20, y: emailField.bottom+10, width: view.width-40, height: 52)
         registerButton.frame = CGRect(x: 20, y: passwordField.bottom+10, width: view.width-40, height: 52)
     }
     @objc private func didTapRegister() {
         emailField.resignFirstResponder()
-        usernameField.resignFirstResponder()
+        displayNameField.resignFirstResponder()
         passwordField.resignFirstResponder()
         
-        guard let username = usernameField.text, !username.isEmpty else {
-            print("Username Insufficient Error")
+        guard let displayName = displayNameField.text, !displayName.isEmpty else {
+            print("Name Insufficient Error")
             // error occurred
-            let alert = UIAlertController(title: "Username Error",
-                                          message: "Please enter a valid username.",
+            let alert = UIAlertController(title: "Name Empty",
+                                          message: "Please enter a name",
                                           preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Dismiss",
                                           style: .cancel,
@@ -145,7 +152,7 @@ class RegistrationViewController: UIViewController {
             return
         }
         
-        AuthManager.shared.registerNewUser(username: username, email: email, password: password) { registered in
+        AuthManager.shared.registerNewUser(displayName: displayName, email: email, password: password) { registered in
             DispatchQueue.main.async {
                 if registered {
                     // dismiss all view controllers down to the root
@@ -171,7 +178,7 @@ class RegistrationViewController: UIViewController {
 
 extension RegistrationViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == usernameField {
+        if textField == displayNameField {
             emailField.becomeFirstResponder()
         }
         else if textField == emailField {

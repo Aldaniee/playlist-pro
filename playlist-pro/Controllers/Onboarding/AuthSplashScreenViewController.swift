@@ -33,8 +33,8 @@ class AuthSplashScreenViewController: UIViewController {
     private let slogan: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
-        lbl.text = "For The Best Playlist In The Room"
-        lbl.font = .systemFont(ofSize: 18, weight: .regular)
+        lbl.text = "Take Control Of Your Music"
+        lbl.font = .systemFont(ofSize: 16, weight: .regular)
         lbl.textAlignment = .center
 
         lbl.textColor = .white
@@ -61,7 +61,7 @@ class AuthSplashScreenViewController: UIViewController {
         button.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
         return button
     }()
-    private let loginWithSpotifyButton: UIButton = {
+    private let createAccountWithSpotifyButton: UIButton = {
         let button = UIButton()
         button.backgroundColor = Constants.UI.spotifyGreen
         button.setTitle("Login with Spotify", for: .normal)
@@ -94,8 +94,8 @@ class AuthSplashScreenViewController: UIViewController {
 
         view.addSubview(loginButton)
         loginButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
-        view.addSubview(loginWithSpotifyButton)
-        loginWithSpotifyButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
+        view.addSubview(createAccountWithSpotifyButton)
+        createAccountWithSpotifyButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
 
         view.addSubview(loginAnonymousButton)
         loginAnonymousButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .semibold)
@@ -140,7 +140,7 @@ class AuthSplashScreenViewController: UIViewController {
             width: view.width - spacing*2,
             height: 52.0
         )
-        loginWithSpotifyButton.frame = CGRect(
+        createAccountWithSpotifyButton.frame = CGRect(
             x: spacing,
             y: loginButton.bottom + 15,
             width: view.width - spacing*2,
@@ -148,7 +148,7 @@ class AuthSplashScreenViewController: UIViewController {
         )
         loginAnonymousButton.frame = CGRect(
             x: spacing,
-            y: loginWithSpotifyButton.bottom + spacing/2,
+            y: createAccountWithSpotifyButton.bottom + spacing/2,
             width: view.width - spacing*2,
             height: 32.0
         )

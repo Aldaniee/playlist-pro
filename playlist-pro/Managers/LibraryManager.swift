@@ -181,7 +181,7 @@ class LibraryManager {
 		}
     }
 	
-	func enrichSongDict(_ songDict: Dictionary<String, Any>, fromMetadataDict mdDict: Dictionary<String, Any>) -> Dictionary<String, Any> {
+	func enrichSongDict(_ songDict: Song, fromMetadataDict mdDict: Song) -> Song {
 		var enrichredDict = songDict
 		var key: String
         let songID = songDict[SongValues.id] as! String
@@ -262,9 +262,9 @@ class LibraryManager {
 	func deleteSongFromLibrary(songID: String) {
         QueueManager.shared.removeAllInstancesFromQueue(songID: songID)
         PlaylistsManager.shared.removeFromAllPlaylists(songID: songID)
-		var songDict = Dictionary<String, Any>()
+		var songDict = Song()
 		for i in 0 ..< songLibrary.songList.count {
-            songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
+            songDict = songLibrary.songList.object(at: i) as! Song
 			if songDict[SongValues.id] as! String == songID {
 				let songExt = (songDict[SongValues.id] as? String) ?? "m4a"  //support legacy code
 				if LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).\(songExt)") {
@@ -280,9 +280,9 @@ class LibraryManager {
 
 	func checkSongExistInLibrary(songLink: String) -> Bool {
         refreshSongLibraryFromLocalStorage()
-		var songDict = Dictionary<String, Any>()
+		var songDict = Song()
 		for i in 0 ..< songLibrary.songList.count {
-            songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
+            songDict = songLibrary.songList.object(at: i) as! Song
             if songDict[SongValues.link] as! String == songLink {
 				return true
 			}
@@ -290,11 +290,11 @@ class LibraryManager {
 		return false
 	}
 
-	func getSong(forID songID: String) -> Dictionary<String, Any> {
+	func getSong(forID songID: String) -> Song {
         refreshSongLibraryFromLocalStorage()
-		var songDict = Dictionary<String, Any>()
+		var songDict = Song()
 		for i in 0 ..< songLibrary.songList.count {
-			songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
+			songDict = songLibrary.songList.object(at: i) as! Song
 			if songDict["id"] as! String == songID {
 				return songDict
 			}
@@ -302,11 +302,11 @@ class LibraryManager {
 		return Dictionary()
 	}
 
-    func updateSong(newSong: Dictionary<String, Any>) {
+    func updateSong(newSong: Song) {
         refreshSongLibraryFromLocalStorage()
-		var songDict = Dictionary<String, Any>()
+		var songDict = Song()
 		for i in 0 ..< songLibrary.songList.count {
-			songDict = songLibrary.songList.object(at: i) as! Dictionary<String, Any>
+			songDict = songLibrary.songList.object(at: i) as! Song
             if songDict[SongValues.id] as! String == newSong[SongValues.id] as! String {
                 songLibrary.songList.replaceObject(at: i, with: newSong)
                 userDefaults.set(songLibrary.songList, forKey: LIBRARY_KEY)

@@ -21,6 +21,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         let window = UIWindow(frame: UIScreen.main.bounds)
         
+        if #available(iOS 13.0, *) {
+            window.overrideUserInterfaceStyle = .light
+        }
+        
         if AuthManager.shared.isSignedIn {
             window.rootViewController = TabBarViewController()
         }

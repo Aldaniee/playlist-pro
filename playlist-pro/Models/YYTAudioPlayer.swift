@@ -21,7 +21,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 
 	private(set) var audioPlayer: AVAudioPlayer!
 	private var songsQueue: NSMutableArray!
-	private(set) var songDict: Dictionary<String, Any>!
+	private(set) var songDict: Song!
 	private var updater = CADisplayLink()
 	private(set) var isSuspended: Bool = false
 	var isSongRepeat: Bool = false
@@ -46,10 +46,10 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	}
 	
 	func setupPlayer() -> Bool {
-		return setupPlayer(withSong: songsQueue.object(at: 0) as! Dictionary<String, Any>)
+		return setupPlayer(withSong: songsQueue.object(at: 0) as! Song)
 	}
 	
-	func setupPlayer(withSong songDict: Dictionary<String, Any>) -> Bool {
+	func setupPlayer(withSong songDict: Song) -> Bool {
 		self.songDict = songDict
         let songID = songDict[SongValues.id] as! String
         let songExt = songDict[SongValues.fileExtension] as? String ?? "m4a"  //support legacy code
