@@ -14,6 +14,7 @@ target 'playlist-pro' do
   use_frameworks!
 
   # Pods for playlist-pro
+  pod 'SDWebImage'
   pod 'Firebase/Core'
   pod 'Firebase/Auth'
   pod 'Firebase/Database'

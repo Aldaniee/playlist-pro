@@ -41,7 +41,7 @@ class PlaylistCell : UITableViewCell {
     // Artist Label or Playlist description
     let secondaryLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = Constants.UI.darkGray
+        lbl.textColor = .darkGray
         lbl.textAlignment = .left
         return lbl
     }()
@@ -108,7 +108,7 @@ class PlaylistCell : UITableViewCell {
     }
     func setDarkStyle() {
         titleLabel.textColor = .white
-        secondaryLabel.textColor = Constants.UI.lightGray
+        secondaryLabel.textColor = .lightGray
         optionsButton.setTitleColor(.white, for: .normal)
     }
 	func refreshCell() {

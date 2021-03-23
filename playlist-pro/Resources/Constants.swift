@@ -28,32 +28,37 @@ public struct Constants {
     }
     struct UI {
         static let cornerRadius: CGFloat = 11.0
-        
-        static let orange = UIColor(
-            red: 244/255, green: 111/255, blue: 52/255, alpha: 1.00
-        )
-        
-        static let spotifyGreen = UIColor(
-            red: 97/255, green: 232/255, blue: 123/255, alpha: 1.00
-        )
-        static let darkPink = UIColor(
-            red: 255/255, green: 41/255, blue: 107/255, alpha: 1.00
-        )
-        static let lightPink = UIColor(
-            red: 231/255, green: 125/255, blue: 235/255, alpha: 1.00
-        )
-        static let darkGray = UIColor(
-            red: 118/255, green: 118/255, blue: 118/255, alpha: 1.00
-        )
-        static let blackGray = UIColor(
-            red: 47/255, green: 47/255, blue: 47/255, alpha: 1.00
-        )
-        static let lightGray = UIColor(
-            red: 222/255, green: 222/255, blue: 222/255, alpha: 1.00
-        )
-        static let hardlyGray = UIColor(
-            red: 248/255, green: 248/255, blue: 248/255, alpha: 1.00
-        )
-        static let orangePinkPair = [orange.cgColor, lightPink.cgColor]
+
     }
+}
+
+extension UIColor {
+    static let darkGray = UIColor(
+        red: 118/255, green: 118/255, blue: 118/255, alpha: 1.00
+    )
+    static let cornerRadius: CGFloat = 11.0
+    
+    static let orange = UIColor(
+        red: 244/255, green: 111/255, blue: 52/255, alpha: 1.00
+    )
+    
+    static let spotifyGreen = UIColor(
+        red: 97/255, green: 232/255, blue: 123/255, alpha: 1.00
+    )
+    static let darkPink = UIColor(
+        red: 255/255, green: 41/255, blue: 107/255, alpha: 1.00
+    )
+    static let lightPink = UIColor(
+        red: 231/255, green: 125/255, blue: 235/255, alpha: 1.00
+    )
+
+    static let blackGray = UIColor(
+        red: 47/255, green: 47/255, blue: 47/255, alpha: 1.00
+    )
+    static let lightGray = UIColor(
+        red: 222/255, green: 222/255, blue: 222/255, alpha: 1.00
+    )
+    static let hardlyGray = UIColor(
+        red: 248/255, green: 248/255, blue: 248/255, alpha: 1.00
+    )
 }

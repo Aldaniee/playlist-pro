@@ -36,13 +36,11 @@
 		EA9D945025938AA80057493D /* AuthSplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D944F25938AA80057493D /* AuthSplashScreenViewController.swift */; };
 		EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */; };
 		EAC06DD425DC1CA300E86162 /* PlaylistContentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06DD325DC1CA300E86162 /* PlaylistContentsViewController.swift */; };
-		EAC06DE025DC1CE800E86162 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06DDF25DC1CE800E86162 /* HapticsManager.swift */; };
 		EAC06DE525DC1D4F00E86162 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06DE425DC1D4F00E86162 /* TabBarViewController.swift */; };
 		EAC06E0725DC356B00E86162 /* Playlist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E0425DC356B00E86162 /* Playlist.swift */; };
 		EAC06E0825DC356B00E86162 /* LibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E0525DC356B00E86162 /* LibraryManager.swift */; };
 		EAC06E0925DC356B00E86162 /* QueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E0625DC356B00E86162 /* QueueManager.swift */; };
 		EAC06E4025DD92FA00E86162 /* NowPlayingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E3F25DD92FA00E86162 /* NowPlayingViewController.swift */; };
-		EAC06E4B25DEB25E00E86162 /* DismissAnimator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E4A25DEB25E00E86162 /* DismissAnimator.swift */; };
 		EAC06E5025DEB42B00E86162 /* Interactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E4F25DEB42B00E86162 /* Interactor.swift */; };
 		EAC06E5525DEC34B00E86162 /* QueueViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E5425DEC34B00E86162 /* QueueViewController.swift */; };
 		EAC06E5F25DEFEB600E86162 /* CreatePlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */; };
@@ -57,6 +55,17 @@
 		EADD20F826050060002AA641 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD20F726050060002AA641 /* UserProfile.swift */; };
 		EADD2103260500ED002AA641 /* APIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD2102260500ED002AA641 /* APIImage.swift */; };
 		EADD211026050AD8002AA641 /* Song.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD210F26050AD8002AA641 /* Song.swift */; };
+		EADD211B260521A6002AA641 /* SpotifyPlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD211A260521A6002AA641 /* SpotifyPlaylist.swift */; };
+		EADD21232605224C002AA641 /* PlaylistDetailsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD21222605224C002AA641 /* PlaylistDetailsResponse.swift */; };
+		EADD212826052269002AA641 /* LibraryPlaylistsResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD212726052269002AA641 /* LibraryPlaylistsResponse.swift */; };
+		EADD212D26052285002AA641 /* AudioTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD212C26052285002AA641 /* AudioTrack.swift */; };
+		EADD2132260522E4002AA641 /* Artist.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD2131260522E3002AA641 /* Artist.swift */; };
+		EADD213726052318002AA641 /* Album.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD213626052318002AA641 /* Album.swift */; };
+		EADD213C26052523002AA641 /* SpotifyPlaylistCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD213B26052523002AA641 /* SpotifyPlaylistCell.swift */; };
+		EADD215A26052ACA002AA641 /* SpotifyPlaylistCellViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD215926052ACA002AA641 /* SpotifyPlaylistCellViewModel.swift */; };
+		EADD216226052E46002AA641 /* HapticsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD216126052E46002AA641 /* HapticsManager.swift */; };
+		EADD216A2605370A002AA641 /* YoutubeSearchManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD21692605370A002AA641 /* YoutubeSearchManager.swift */; };
+		EADD21752609666D002AA641 /* CustomPresentationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EADD21742609666D002AA641 /* CustomPresentationController.swift */; };
 		EAE145B025858AFE00C09FE9 /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145AF25858AFE00C09FE9 /* LibraryViewController.swift */; };
 		EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */; };
 		EAE145E22585933000C09FE9 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = EAE145E12585933000C09FE9 /* GoogleService-Info.plist */; };
@@ -123,13 +132,11 @@
 		EA9D944F25938AA80057493D /* AuthSplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSplashScreenViewController.swift; sourceTree = "<group>"; };
 		EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyImportViewController.swift; sourceTree = "<group>"; };
 		EAC06DD325DC1CA300E86162 /* PlaylistContentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistContentsViewController.swift; sourceTree = "<group>"; };
-		EAC06DDF25DC1CE800E86162 /* HapticsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticsManager.swift; sourceTree = "<group>"; };
 		EAC06DE425DC1D4F00E86162 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
 		EAC06E0425DC356B00E86162 /* Playlist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Playlist.swift; sourceTree = "<group>"; };
 		EAC06E0525DC356B00E86162 /* LibraryManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryManager.swift; sourceTree = "<group>"; };
 		EAC06E0625DC356B00E86162 /* QueueManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QueueManager.swift; sourceTree = "<group>"; };
 		EAC06E3F25DD92FA00E86162 /* NowPlayingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NowPlayingViewController.swift; sourceTree = "<group>"; };
-		EAC06E4A25DEB25E00E86162 /* DismissAnimator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DismissAnimator.swift; sourceTree = "<group>"; };
 		EAC06E4F25DEB42B00E86162 /* Interactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Interactor.swift; sourceTree = "<group>"; };
 		EAC06E5425DEC34B00E86162 /* QueueViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QueueViewController.swift; sourceTree = "<group>"; };
 		EAC06E5E25DEFEB600E86162 /* CreatePlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreatePlaylistViewController.swift; sourceTree = "<group>"; };
@@ -142,6 +149,17 @@
 		EADD20F726050060002AA641 /* UserProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		EADD2102260500ED002AA641 /* APIImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = APIImage.swift; sourceTree = "<group>"; };
 		EADD210F26050AD8002AA641 /* Song.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Song.swift; sourceTree = "<group>"; };
+		EADD211A260521A6002AA641 /* SpotifyPlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlaylist.swift; sourceTree = "<group>"; };
+		EADD21222605224C002AA641 /* PlaylistDetailsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlaylistDetailsResponse.swift; sourceTree = "<group>"; };
+		EADD212726052269002AA641 /* LibraryPlaylistsResponse.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LibraryPlaylistsResponse.swift; sourceTree = "<group>"; };
+		EADD212C26052285002AA641 /* AudioTrack.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AudioTrack.swift; sourceTree = "<group>"; };
+		EADD2131260522E3002AA641 /* Artist.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Artist.swift; sourceTree = "<group>"; };
+		EADD213626052318002AA641 /* Album.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Album.swift; sourceTree = "<group>"; };
+		EADD213B26052523002AA641 /* SpotifyPlaylistCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlaylistCell.swift; sourceTree = "<group>"; };
+		EADD215926052ACA002AA641 /* SpotifyPlaylistCellViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlaylistCellViewModel.swift; sourceTree = "<group>"; };
+		EADD216126052E46002AA641 /* HapticsManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = HapticsManager.swift; path = "../../../Spotify-iOS/Spotify/Managers/HapticsManager.swift"; sourceTree = "<group>"; };
+		EADD21692605370A002AA641 /* YoutubeSearchManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = YoutubeSearchManager.swift; sourceTree = "<group>"; };
+		EADD21742609666D002AA641 /* CustomPresentationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CustomPresentationController.swift; path = "playlist-pro/Resources/CustomPresentationController.swift"; sourceTree = SOURCE_ROOT; };
 		EAE145AF25858AFE00C09FE9 /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
 		EAE145BB25858C5C00C09FE9 /* RegistrationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegistrationViewController.swift; sourceTree = "<group>"; };
 		EAE145E12585933000C09FE9 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
@@ -236,6 +254,7 @@
 				EA637E012550B00200FCC983 /* SearchVideoCell.swift */,
 				EA64603F25FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift */,
 				EA0558A425B118EA00B1FF85 /* PlaylistCell.swift */,
+				EADD213B26052523002AA641 /* SpotifyPlaylistCell.swift */,
 				EADD207E2602D81E002AA641 /* SongCell.swift */,
 				EA64605425FEC41E00B73769 /* SongPlaylistOptionsCell.swift */,
 				EA0558BB25B1191700B1FF85 /* MiniPlayerView.swift */,
@@ -295,10 +314,11 @@
 				EAE145F42585966D00C09FE9 /* DatabaseManager.swift */,
 				EA05585325AFA39600B1FF85 /* LocalFilesManager.swift */,
 				EAE431432550B6F700E5AEBF /* CacheManager.swift */,
-				EAC06DDF25DC1CE800E86162 /* HapticsManager.swift */,
 				EAC06E0525DC356B00E86162 /* LibraryManager.swift */,
 				EA96634A25F161BC00C8254C /* PlaylistsManager.swift */,
 				EAC06E0625DC356B00E86162 /* QueueManager.swift */,
+				EADD216126052E46002AA641 /* HapticsManager.swift */,
+				EADD21692605370A002AA641 /* YoutubeSearchManager.swift */,
 			);
 			path = Managers;
 			sourceTree = "<group>";
@@ -316,8 +336,15 @@
 			isa = PBXGroup;
 			children = (
 				EADD20F726050060002AA641 /* UserProfile.swift */,
+				EADD215926052ACA002AA641 /* SpotifyPlaylistCellViewModel.swift */,
 				EADD2102260500ED002AA641 /* APIImage.swift */,
 				EADD20E92603A994002AA641 /* SpotifyAuthResponse.swift */,
+				EADD211A260521A6002AA641 /* SpotifyPlaylist.swift */,
+				EADD21222605224C002AA641 /* PlaylistDetailsResponse.swift */,
+				EADD212726052269002AA641 /* LibraryPlaylistsResponse.swift */,
+				EADD212C26052285002AA641 /* AudioTrack.swift */,
+				EADD213626052318002AA641 /* Album.swift */,
+				EADD2131260522E3002AA641 /* Artist.swift */,
 			);
 			path = Spotify;
 			sourceTree = "<group>";
@@ -331,9 +358,9 @@
 				EA8F5AD525926BC50081E9AB /* Extensions.swift */,
 				EA637DEA254B3EF200FCC983 /* Constants.swift */,
 				EA64605C26000D4A00B73769 /* SongValues.swift */,
+				EADD21742609666D002AA641 /* CustomPresentationController.swift */,
 				EAE4314D2550BD4C00E5AEBF /* DateHelper.swift */,
 				EAF920EA2548DA1400D22ACF /* Assets.xcassets */,
-				EAC06E4A25DEB25E00E86162 /* DismissAnimator.swift */,
 				EAC06E4F25DEB42B00E86162 /* Interactor.swift */,
 			);
 			path = Resources;
@@ -654,28 +681,34 @@
 			files = (
 				EAE145E7258593A600C09FE9 /* LoginViewController.swift in Sources */,
 				EAF920E62548DA1200D22ACF /* SearchViewController.swift in Sources */,
+				EADD212826052269002AA641 /* LibraryPlaylistsResponse.swift in Sources */,
+				EADD216A2605370A002AA641 /* YoutubeSearchManager.swift in Sources */,
 				EA64604025FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift in Sources */,
+				EADD2132260522E4002AA641 /* Artist.swift in Sources */,
 				EA5FBE77257AAD4A00473B56 /* Video.swift in Sources */,
 				EADD20EA2603A994002AA641 /* SpotifyAuthResponse.swift in Sources */,
 				EA5E9E8925B4BC560026E9AE /* HomeViewController.swift in Sources */,
 				EA9D945025938AA80057493D /* AuthSplashScreenViewController.swift in Sources */,
+				EADD21752609666D002AA641 /* CustomPresentationController.swift in Sources */,
 				EA05585425AFA39600B1FF85 /* LocalFilesManager.swift in Sources */,
 				EAC06E5525DEC34B00E86162 /* QueueViewController.swift in Sources */,
 				EA64605D26000D4A00B73769 /* SongValues.swift in Sources */,
 				EADD209A26039937002AA641 /* SpotifyAuthViewController.swift in Sources */,
-				EAC06DE025DC1CE800E86162 /* HapticsManager.swift in Sources */,
+				EADD216226052E46002AA641 /* HapticsManager.swift in Sources */,
 				EAE431442550B6F700E5AEBF /* CacheManager.swift in Sources */,
 				EADD20F22604FE8A002AA641 /* APICaller.swift in Sources */,
+				EADD213C26052523002AA641 /* SpotifyPlaylistCell.swift in Sources */,
 				EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */,
 				EAC06E0725DC356B00E86162 /* Playlist.swift in Sources */,
 				EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */,
 				EA0558BE25B1191700B1FF85 /* MiniPlayerView.swift in Sources */,
 				EADD2103260500ED002AA641 /* APIImage.swift in Sources */,
+				EADD212D26052285002AA641 /* AudioTrack.swift in Sources */,
 				EA64604D25FC016A00B73769 /* SongPlaylistOptionsViewController.swift in Sources */,
 				EAC06E5F25DEFEB600E86162 /* CreatePlaylistViewController.swift in Sources */,
 				EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */,
 				EADD207F2602D81E002AA641 /* SongCell.swift in Sources */,
-				EAC06E4B25DEB25E00E86162 /* DismissAnimator.swift in Sources */,
+				EADD213726052318002AA641 /* Album.swift in Sources */,
 				EA96634B25F161BC00C8254C /* PlaylistsManager.swift in Sources */,
 				EA0558A925B118EA00B1FF85 /* PlaylistCell.swift in Sources */,
 				EAC06E0825DC356B00E86162 /* LibraryManager.swift in Sources */,
@@ -694,6 +727,7 @@
 				EA637DEB254B3EF200FCC983 /* Constants.swift in Sources */,
 				EA0558A025B118DF00B1FF85 /* YYTAudioPlayer.swift in Sources */,
 				EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */,
+				EADD211B260521A6002AA641 /* SpotifyPlaylist.swift in Sources */,
 				EADD20712601904F002AA641 /* AddToPlaylistViewController.swift in Sources */,
 				EA637E022550B00200FCC983 /* SearchVideoCell.swift in Sources */,
 				EAE145F52585966D00C09FE9 /* DatabaseManager.swift in Sources */,
@@ -701,7 +735,9 @@
 				EAE145B025858AFE00C09FE9 /* LibraryViewController.swift in Sources */,
 				EA637DFD254B821200FCC983 /* Response.swift in Sources */,
 				EADD211026050AD8002AA641 /* Song.swift in Sources */,
+				EADD21232605224C002AA641 /* PlaylistDetailsResponse.swift in Sources */,
 				EA7E3FE325A67646009A4DAE /* AccountViewController.swift in Sources */,
+				EADD215A26052ACA002AA641 /* SpotifyPlaylistCellViewModel.swift in Sources */,
 				EA96633425E9647700C8254C /* RepeatType.swift in Sources */,
 				EAC06DD425DC1CA300E86162 /* PlaylistContentsViewController.swift in Sources */,
 				EADD20F826050060002AA641 /* UserProfile.swift in Sources */,

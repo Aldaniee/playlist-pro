@@ -41,6 +41,8 @@ public class QueueManager: NSObject {
         addedQueue = NSMutableArray()
     }
     
+    /// Returns the queue in full which is a combination of the up next song,
+    /// addedQueue, and playlistQueue. This is used as the array of songs playback
     func combinedQueue() -> NSMutableArray {
         let combined = NSMutableArray(array: addedQueue.addingObjects(from: playlistQueue as [AnyObject]))
         combined.insert(nowPlaying, at: 0)
@@ -79,6 +81,8 @@ public class QueueManager: NSObject {
         delegate?.refreshQueueVC()
     }
     
+    /// Removes a song from the queue at the position of index
+    ///
     func removeFromQueue(section: Int, index: Int) {
         switch (section) {
             case 0:
@@ -99,7 +103,6 @@ public class QueueManager: NSObject {
             default:
                 playlistQueue.remove(index)
                 return
-            
         }
     }
     func removeAllInstancesFromQueue(songID: String) {
@@ -119,15 +122,7 @@ public class QueueManager: NSObject {
             }
         }
     }
-//    func removeFromCombinedQueue(at index: Int) {
-//        if index < addedQueue.count - 1 {
-//            addedQueue.removeObject(at: index)
-//        }
-//        else {
-//            playlistQueue.removeObject(at: index - addedQueue.count)
-//        }
-//    }
-//
+
     func shuffle() {
         shuffleStatus = !shuffleStatus
         if shuffleStatus {

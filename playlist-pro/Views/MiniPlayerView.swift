@@ -72,7 +72,7 @@ class MiniPlayerView: UIView {
     let miniPlayerButton: UIButton = {
         let button = UIButton()
         button.layer.masksToBounds = true
-        button.backgroundColor = Constants.UI.blackGray
+        button.backgroundColor = .blackGray
         button.setTitleColor(.black, for: .normal)
         return button
     }()
@@ -89,7 +89,7 @@ class MiniPlayerView: UIView {
     }()
     let artistLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = Constants.UI.lightGray
+        lbl.textColor = .lightGray
         lbl.textAlignment = .left
         return lbl
     }()
@@ -101,17 +101,17 @@ class MiniPlayerView: UIView {
 	}()
     let progressBar: UISlider = {
         let pBar = UISlider()
-        pBar.tintColor = Constants.UI.darkPink
+        pBar.tintColor = .darkPink
         pBar.backgroundColor = .clear
-        pBar.minimumTrackTintColor = Constants.UI.darkPink
-        pBar.maximumTrackTintColor = Constants.UI.darkGray
+        pBar.minimumTrackTintColor = .darkPink
+        pBar.maximumTrackTintColor = .darkGray
         return pBar
     }()
     
     func makeThumbImage() -> UIImage {
 
         let thumbView = UIImageView()
-        thumbView.backgroundColor = Constants.UI.darkPink
+        thumbView.backgroundColor = .darkPink
         thumbView.frame = CGRect(x: 0,
                                  y: progressBarThumbSize/2,
                                  width: progressBarThumbSize,

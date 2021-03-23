@@ -9,29 +9,8 @@ import UIKit
 
 class NowPlayingViewController: UIViewController {
     
-    let spacing = CGFloat(40)
-
-    // MARK: Tab Bar
-    let tabBarHeight = CGFloat(18)
-    let closeButtonScaleConstant = CGFloat(1.5)
-    // MARK: Playback Display
-    let artistLabelHeight = CGFloat(14)
-    let progressBarHeight = CGFloat(5)
-    let progressBarThumbHeight = CGFloat(20)
-    let progressBarThumbWidth = CGFloat(3)
-    let pausePlaySize = CGFloat(80)
-    let nextPrevSize = CGFloat(30)
-    let repeatShuffleSize = CGFloat(20)
-    // MARK: Playback Controls
-    let timeLabelSize = CGFloat(10)
-    let timeLabelScaleConstant = CGFloat(3.5)
-    // MARK: Bottom Bar
-    let queueButtonSize = CGFloat(20)
-    let editButtonSize = CGFloat(38)
-    let editButtonTextSize = CGFloat(18)
-    let editButtonImageViewSize = CGFloat(10)
-
-    var interactor: Interactor? = nil
+    var hasSetPointOrigin = false
+    var pointOrigin: CGPoint?
     
     // MARK: Background
     let blurView : UIVisualEffectView = {
@@ -82,17 +61,17 @@ class NowPlayingViewController: UIViewController {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.backgroundColor = .clear
-        lbl.textColor = Constants.UI.darkGray
+        lbl.textColor = .darkGray
         lbl.textAlignment = .left
         return lbl
     }()
 
     let progressBar: CustomSlider = {
         let pBar = CustomSlider()
-        pBar.tintColor = Constants.UI.darkPink
+        pBar.tintColor = .darkPink
         pBar.backgroundColor = .clear
-        pBar.minimumTrackTintColor = Constants.UI.darkPink
-        pBar.maximumTrackTintColor = Constants.UI.darkGray
+        pBar.minimumTrackTintColor = .darkPink
+        pBar.maximumTrackTintColor = .darkGray
         return pBar
     }()
 
@@ -187,22 +166,46 @@ class NowPlayingViewController: UIViewController {
         let font = UIFont.boldSystemFont(ofSize: 999) // max size so the icon scales to the image frame
         let configuration = UIImage.SymbolConfiguration(font: font)
         imgView.image = UIImage(systemName: "chevron.down", withConfiguration: configuration)
-        imgView.tintColor = Constants.UI.darkPink
+        imgView.tintColor = .darkPink
         return imgView
     }()
     /*let playbackRateButton: UIButton = {
         let btn = UIButton()
-        btn.backgroundColor = Constants.UI.orange
+        btn.backgroundColor = .orange
         btn.titleLabel?.textColor = .white
         btn.titleLabel?.font = UIFont.boldSystemFont(ofSize: 11)
         btn.setTitle("x1", for: .normal)
         return btn
     }()*/
+    let spacing = CGFloat(40)
+
+    // MARK: Tab Bar
+    let tabBarHeight = CGFloat(18)
+    let closeButtonScaleConstant = CGFloat(1.5)
+    // MARK: Playback Display
+    let artistLabelHeight = CGFloat(14)
+    let progressBarHeight = CGFloat(5)
+    let progressBarThumbHeight = CGFloat(20)
+    let progressBarThumbWidth = CGFloat(3)
+    let pausePlaySize = CGFloat(80)
+    let nextPrevSize = CGFloat(30)
+    let repeatShuffleSize = CGFloat(20)
+    // MARK: Playback Controls
+    let timeLabelSize = CGFloat(10)
+    let timeLabelScaleConstant = CGFloat(3.5)
+    // MARK: Bottom Bar
+    let queueButtonSize = CGFloat(20)
+    let editButtonSize = CGFloat(38)
+    let editButtonTextSize = CGFloat(18)
+    let editButtonImageViewSize = CGFloat(10)
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = Constants.UI.blackGray
-        //overlayView.addGestureRecognizer(UIPanGestureRecognizer(target:self, action: #selector(handleGesture)))
+        view.backgroundColor = .blackGray
 
+        let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerAction))
+        view.addGestureRecognizer(panGesture)
+        
         // MARK: Tab Bar
         view.addSubview(closeButton)
         view.addSubview(tabBarTitle)
@@ -212,13 +215,11 @@ class NowPlayingViewController: UIViewController {
         optionsButton.titleLabel!.font = UIFont.systemFont(ofSize: tabBarHeight)
         optionsButton.setTitle("···", for: UIControl.State.normal)
 
-
-        
         // MARK: Playback Display
         view.addSubview(albumCoverImageView)
         view.addSubview(progressBar)
         let thumbView = UIImageView()
-        thumbView.backgroundColor = Constants.UI.darkPink
+        thumbView.backgroundColor = .darkPink
 
         thumbView.frame = CGRect(x: 0,
                                  y: progressBarThumbWidth/2,
@@ -259,6 +260,11 @@ class NowPlayingViewController: UIViewController {
         super.viewDidLayoutSubviews()
         let edgePadding = spacing/2
 
+        if !hasSetPointOrigin {
+            hasSetPointOrigin = true
+            pointOrigin = self.view.frame.origin
+        }
+        
         // MARK: Tab Bar
         let topToTabBarMiddle = CGFloat(70)
         let closeButtonWidth = tabBarHeight*closeButtonScaleConstant
@@ -360,6 +366,28 @@ class NowPlayingViewController: UIViewController {
                                            height: editButtonImageViewSize)
     }
     
+
+    @objc func panGestureRecognizerAction(sender: UIPanGestureRecognizer) {
+        let translation = sender.translation(in: view)
+        
+        // Not allowing the user to drag the view upward
+        guard translation.y >= 0 else { return }
+        
+        // setting x as 0 because we don't want users to move the frame side ways, only want straight up or down
+        view.frame.origin = CGPoint(x: 0, y: self.pointOrigin!.y + translation.y)
+        
+        if sender.state == .ended {
+            let dragVelocity = sender.velocity(in: view)
+            if dragVelocity.y >= 1300 {
+                self.dismiss(animated: true, completion: nil)
+            } else {
+                // Set back to original position of the view controller
+                UIView.animate(withDuration: 0.3) {
+                    self.view.frame.origin = self.pointOrigin ?? CGPoint(x: 0, y: 0)
+                }
+            }
+        }
+    }
     /*private func addPlaybackRateButton() {
         playbackRateButton.addTarget(self, action: #selector(playbackRateButtonAction), for: .touchUpInside)
         songControlView.addSubview(playbackRateButton)
@@ -369,40 +397,6 @@ class NowPlayingViewController: UIViewController {
         playbackRateButton.centerYAnchor.constraint(equalTo: songControlView.centerYAnchor).isActive = true
         playbackRateButton.heightAnchor.constraint(equalTo: songControlView.heightAnchor).isActive = true
 
-    }*/
-
-    /*
-    @objc func handleGesture(sender: UIPanGestureRecognizer) {
-
-        let percentThreshold:CGFloat = 0.3
-
-        // convert y-position to downward pull progress (percentage)
-        let translation = sender.translation(in: view)
-        let verticalMovement = translation.y / view.bounds.height
-        let downwardMovement = fmaxf(Float(verticalMovement), 0.0)
-        let downwardMovementPercent = fminf(downwardMovement, 1.0)
-        let progress = CGFloat(downwardMovementPercent)
-        
-        guard let interactor = interactor else { return }
-        
-        switch sender.state {
-        case .began:
-            interactor.hasStarted = true
-            dismiss(animated: true, completion: nil)
-        case .changed:
-            interactor.shouldFinish = progress > percentThreshold
-            interactor.update(progress)
-        case .cancelled:
-            interactor.hasStarted = false
-            interactor.cancel()
-        case .ended:
-            interactor.hasStarted = false
-            interactor.shouldFinish
-                ? interactor.finish()
-                : interactor.cancel()
-        default:
-            break
-        }
     }*/
 
 }

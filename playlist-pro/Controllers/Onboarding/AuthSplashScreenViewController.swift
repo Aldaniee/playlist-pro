@@ -25,7 +25,6 @@ class AuthSplashScreenViewController: UIViewController {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.text = "Playlist Pro"
-        lbl.font = .systemFont(ofSize: 52, weight: .semibold)
         lbl.textAlignment = .center
         lbl.textColor = .white
         return lbl
@@ -34,9 +33,7 @@ class AuthSplashScreenViewController: UIViewController {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.text = "Take Control Of Your Music"
-        lbl.font = .systemFont(ofSize: 16, weight: .regular)
         lbl.textAlignment = .center
-
         lbl.textColor = .white
 
         return lbl
@@ -47,7 +44,7 @@ class AuthSplashScreenViewController: UIViewController {
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.UI.cornerRadius
         button.backgroundColor = .white
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.blackGray, for: .normal)
         button.addTarget(self, action: #selector(didTapCreateAccountButton), for: .touchUpInside)
         return button
     }()
@@ -57,16 +54,16 @@ class AuthSplashScreenViewController: UIViewController {
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.UI.cornerRadius
         button.backgroundColor = .white
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.blackGray, for: .normal)
         button.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
         return button
     }()
     private let createAccountWithSpotifyButton: UIButton = {
         let button = UIButton()
-        button.backgroundColor = Constants.UI.spotifyGreen
+        button.backgroundColor = .spotifyGreen
         button.setTitle("Login with Spotify", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.blackGray, for: .normal)
         button.layer.cornerRadius = Constants.UI.cornerRadius
         button.addTarget(self, action: #selector(didTapLoginWithSpotifyButton), for: .touchUpInside)
         return button
@@ -119,14 +116,17 @@ class AuthSplashScreenViewController: UIViewController {
             x: spacing,
             y: logo.bottom + spacing/2,
             width: view.width-spacing*2,
-            height: 52
+            height: 52+3
         )
+        appTitle.font = .systemFont(ofSize: 52, weight: .semibold)
+
         slogan.frame = CGRect(
             x: spacing,
             y: appTitle.bottom + spacing/4,
             width: view.width-spacing*2,
-            height: 18
+            height: 16+3
         )
+        slogan.font = .systemFont(ofSize: 16, weight: .regular)
 
         createAccountButton.frame = CGRect(
             x: 40,

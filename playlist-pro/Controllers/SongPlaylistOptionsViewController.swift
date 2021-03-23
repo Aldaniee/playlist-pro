@@ -42,12 +42,12 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     private let titleLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = Constants.UI.lightGray
+        lbl.textColor = .lightGray
         return lbl
     }()
     private let artistLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = Constants.UI.lightGray
+        lbl.textColor = .lightGray
         return lbl
     }()
     

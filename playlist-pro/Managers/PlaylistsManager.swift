@@ -28,7 +28,7 @@ class PlaylistsManager {
         }
     }
     func removePlaylist(playlist: Playlist) {
-        if hasPlaylist(title: playlist.title) {
+        if hasPlaylist(named: playlist.title) {
             for i in 0..<playlists.count {
                 if playlists[i].title == playlist.title {
                     playlists.remove(at: i)
@@ -42,33 +42,40 @@ class PlaylistsManager {
         }
     }
     func removeFromPlaylist(playlist: Playlist, index: Int) {
-        if hasPlaylist(title: playlist.title) {
+        if hasPlaylist(named: playlist.title) {
             let indexOfPlaylist = getPlaylistIndex(title: playlist.title)
             playlists[indexOfPlaylist].songList.removeObject(at: index)
             savePlaylistsToStorage()
         }
     }
-    func addPlaylist(title: String) {
-        let uniqueTitle = getUniqueTitle(title: title)
-        let playlist = Playlist(title: uniqueTitle, songList: LibraryManager.shared.songLibrary.songList)
+    
+    func addSongToPlaylist(song: Song, playlistName: String) {
+        if hasPlaylist(named: playlistName) {
+            let index = getPlaylistIndex(title: playlistName)
+            playlists[index].songList.add(song)
+            print("Added song \(song[SongValues.title] as! String) to playlist \(playlistName)")
+        }
+        else {
+            print("Tried adding song \(song[SongValues.title] as! String) to playlist \(playlistName) but the playlist was not found")
+        }
+    }
+    
+    func addPlaylist(title: String, songList: NSMutableArray) {
+        let uniqueTitle = generateUniqueTitle(from: title)
+        let playlist = Playlist(title: uniqueTitle, songList: songList)
         playlists.append(playlist)
         savePlaylistsToStorage()
     }
     
     func savePlaylistsToStorage() {
         for index in 0..<playlists.count {
-            /*do {
-                let encodedData: Data = try NSKeyedArchiver.archivedData(withRootObject: playlists[index].songList, requiringSecureCoding: false)
-            } catch let error {
-                print("error when adding playlsit: \(error)")
-            }*/
             userDefaults.set(playlists[index].songList, forKey: "playlist_songList_\(index)")
             userDefaults.set(playlists[index].title, forKey: "playlist_title_\(index)")
         }
         userDefaults.set(playlists.count, forKey: PLAYLISTS_KEY)
     }
     
-    func hasPlaylist(title: String) -> Bool {
+    func hasPlaylist(named title: String) -> Bool {
         for playlist in playlists {
             if playlist.title == title {
                 return true
@@ -76,15 +83,15 @@ class PlaylistsManager {
         }
         return false
     }
-    func getUniqueTitle(title: String) -> String{
+    func generateUniqueTitle(from title: String) -> String{
         var uniqueTitle = title
         if uniqueTitle == "" {
             uniqueTitle = "My Playlist"
         }
-        if hasPlaylist(title: uniqueTitle) {
+        if hasPlaylist(named: uniqueTitle) {
             // If the title is taken add a " 2" to the end
             var nextNum = 2  // If this is still taken incriment the number by 1 and try again
-            while hasPlaylist(title: title) {
+            while hasPlaylist(named: title) {
                 nextNum += 1
             }
             uniqueTitle = uniqueTitle + " \(nextNum)"

@@ -97,7 +97,7 @@ class QueueViewController: UIViewController {
     }()
     let artistLabel: UILabel = {
         let lbl = UILabel()
-        lbl.textColor = Constants.UI.darkGray
+        lbl.textColor = .darkGray
         lbl.font = UIFont.systemFont(ofSize: 18)
         lbl.textAlignment = .left
         return lbl
@@ -140,7 +140,7 @@ class QueueViewController: UIViewController {
 
     let progressBar: UISlider = {
         let pBar = UISlider()
-        pBar.tintColor = Constants.UI.darkPink
+        pBar.tintColor = .darkPink
         return pBar
     }()
     let repeatButton: UIButton = {

@@ -12,7 +12,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     
     let tabBarBackground: UIView = {
         let view = UIView()
-        view.backgroundColor = Constants.UI.blackGray
+        view.backgroundColor = .blackGray
         return view
     }()
     
@@ -23,13 +23,13 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
 
     var isProgressBarSliding = false
 
-    let interactor = Interactor()
     
     func showNowPlayingView() {
         print("Showing Now Playing View Controller")
         nowPlayingVC.modalPresentationStyle = .fullScreen
         nowPlayingVC.transitioningDelegate = self
-        nowPlayingVC.interactor = interactor
+        nowPlayingVC.modalPresentationStyle = .custom
+
         present(nowPlayingVC, animated: true, completion: nil)
     }
     override func viewDidLoad() {
@@ -38,8 +38,9 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         QueueManager.shared.delegate = self
 
         
-        tabBar.barTintColor = .clear
-        tabBar.tintColor = Constants.UI.darkPink
+        tabBar.isTranslucent = false
+        tabBar.barTintColor = .blackGray
+        tabBar.tintColor = .darkPink
 
         let playlist = HomeViewController()
         let search = SearchViewController()
@@ -281,22 +282,22 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
             queueVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
         }
         else if QueueManager.shared.repeatSelection == RepeatType.playlist {
-            nowPlayingVC.repeatButton.tintColor = Constants.UI.darkPink
+            nowPlayingVC.repeatButton.tintColor = .darkPink
             nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
-            queueVC.repeatButton.tintColor = Constants.UI.darkPink
+            queueVC.repeatButton.tintColor = .darkPink
             queueVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
         }
         else {
-            nowPlayingVC.repeatButton.tintColor = Constants.UI.darkPink
+            nowPlayingVC.repeatButton.tintColor = .darkPink
             nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
-            queueVC.repeatButton.tintColor = Constants.UI.darkPink
+            queueVC.repeatButton.tintColor = .darkPink
             queueVC.repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
         }
     }
     func updateShuffleButton() {
         if QueueManager.shared.shuffleStatus {
-            nowPlayingVC.shuffleButton.tintColor = Constants.UI.darkPink
-            queueVC.shuffleButton.tintColor = Constants.UI.darkPink
+            nowPlayingVC.shuffleButton.tintColor = .darkPink
+            queueVC.shuffleButton.tintColor = .darkPink
         }
         else {
             nowPlayingVC.shuffleButton.tintColor = .white
@@ -332,10 +333,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     }
 }
 extension TabBarViewController: UIViewControllerTransitioningDelegate {
-    func animationControllerForDismissedController(dismissed: UIViewController) -> UIViewControllerAnimatedTransitioning? {
-        return DismissAnimator()
-    }
-    func interactionControllerForDismissal(using animator: UIViewControllerAnimatedTransitioning) -> UIViewControllerInteractiveTransitioning? {
-        return interactor.hasStarted ? interactor : nil
+    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        CustomPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }

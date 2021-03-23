@@ -10,60 +10,91 @@ import Foundation
 
 class LoginViewController: UIViewController {
 
-    private let usernameEmailField: UITextField = {
+    private let logo: UIImageView = {
+        let img = UIImageView()
+        img.image = UIImage(named: "Login Logo")
+        return img
+    }()
+    private let appTitle: UILabel = {
+        let lbl = UILabel()
+        lbl.numberOfLines = 0
+        lbl.text = "Playlist Pro"
+        lbl.textAlignment = .center
+        lbl.textColor = .black
+        return lbl
+    }()
+    private let subTitle: UILabel = {
+        let lbl = UILabel()
+        lbl.numberOfLines = 0
+        lbl.text = "Login to your account"
+        lbl.textAlignment = .center
+        lbl.textColor = .blackGray
+        return lbl
+    }()
+    private let emailTitle: UILabel = {
+        let lbl = UILabel()
+        lbl.numberOfLines = 0
+        lbl.text = "Email"
+        lbl.textAlignment = .left
+        lbl.textColor = .darkGray
+        return lbl
+    }()
+    private let emailField: UITextField = {
         let field = UITextField()
-        field.placeholder = "Username or Email"
+        field.placeholder = "Email"
         field.returnKeyType = .next
         field.leftViewMode = .always
-        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
         field.autocapitalizationType = .none
         field.layer.masksToBounds = true
         field.layer.cornerRadius = Constants.UI.cornerRadius
         field.backgroundColor = .secondarySystemBackground
-        field.layer.borderWidth = 1.0
-        field.layer.borderColor = UIColor.secondaryLabel.cgColor
         return field
     }()
     
+    private let passwordTitle: UILabel = {
+        let lbl = UILabel()
+        lbl.numberOfLines = 0
+        lbl.text = "Password"
+        lbl.textAlignment = .left
+        lbl.textColor = .darkGray
+        return lbl
+    }()
     private let passwordField: UITextField = {
         let field = UITextField()
         field.isSecureTextEntry = true
         field.placeholder = "Password"
         field.returnKeyType = .continue
         field.leftViewMode = .always
-        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 10, height: 0))
+        field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
         field.autocapitalizationType = .none
         field.layer.masksToBounds = true
         field.layer.cornerRadius = Constants.UI.cornerRadius
         field.backgroundColor = .secondarySystemBackground
-        field.layer.borderWidth = 1.0
-        field.layer.borderColor = UIColor.secondaryLabel.cgColor
         return field
+    }()
+    private let forgotPassword: UIButton = {
+        let button = UIButton()
+        button.setTitleColor(.darkGray, for: .normal)
+        button.setTitle("Forgot Password?", for: .normal)
+        button.contentHorizontalAlignment = .left
+        button.contentVerticalAlignment = .center
+
+        return button
     }()
     private let loginButton: UIButton = {
         let button = UIButton()
-        button.setTitle("Log In", for: .normal)
+        button.setTitle("Login", for: .normal)
         button.layer.masksToBounds = true
         button.layer.cornerRadius = Constants.UI.cornerRadius
-        button.backgroundColor = .systemBlue
+        button.backgroundColor = .black
         button.setTitleColor(.white, for: .normal)
         return button
     }()
-    private let createAccountButton: UIButton = {
-        let button = UIButton()
-        button.setTitleColor(.label, for: .normal)
-        button.setTitle("New User? Create an Account", for: .normal)
-        return button
-    }()
-    private let headerView: UIView = {
-        let header = UIView()
-        header.clipsToBounds = true
-        header.backgroundColor = .systemGray
-        return header
-    }()
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        usernameEmailField.delegate = self
+        emailField.delegate = self
         passwordField.delegate = self
         
         addSubViews()
@@ -71,66 +102,101 @@ class LoginViewController: UIViewController {
         view.backgroundColor = .systemBackground
         
         loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
-        createAccountButton.addTarget(self, action: #selector(didTapCreateAccountButton), for: .touchUpInside)
+        forgotPassword.addTarget(self, action: #selector(didTapForgotPassword), for: .touchUpInside)
     }
+    let fontSize = CGFloat(16)
+    let logoSize = CGFloat(50)
+    let spacing = CGFloat(40)
+    let titleSize = CGFloat(36)
+    let subTitleSize = CGFloat(14)
+    let fieldSize = CGFloat(52)
+    let fieldTitleSize = CGFloat(14)
     override func viewDidLayoutSubviews() {
-        headerView.frame = CGRect(
-            x: 0,
-            y: 0.0,
-            width: view.width,
-            height: view.height/3.0)
-        usernameEmailField.frame = CGRect(
-            x: 25,
-            y: headerView.bottom + 40,
-            width: view.width - 50,
-            height: 52.0)
+        logo.frame = CGRect(
+            x: view.center.x-logoSize/2,
+            y: spacing*2,
+            width: logoSize,
+            height: logoSize
+        )
+        appTitle.frame = CGRect(
+            x: spacing,
+            y: logo.bottom + spacing/2,
+            width: view.width-spacing*2,
+            height: titleSize+3
+        )
+        appTitle.font = .systemFont(ofSize: titleSize, weight: .semibold)
+
+        subTitle.frame = CGRect(
+            x: spacing,
+            y: appTitle.bottom + spacing,
+            width: view.width-spacing*2,
+            height: subTitleSize+3
+        )
+        subTitle.font = .systemFont(ofSize: subTitleSize, weight: .regular)
+
+        let fieldWidth = view.width - spacing*2
+        emailTitle.font = .systemFont(ofSize: fieldTitleSize, weight: .regular)
+        emailTitle.frame = CGRect(
+            x: spacing+5,
+            y: subTitle.bottom + spacing,
+            width: fieldWidth,
+            height: fieldTitleSize+3)
+        emailField.frame = CGRect(
+            x: spacing,
+            y: emailTitle.bottom + spacing/8,
+            width: fieldWidth,
+            height: fieldSize)
+        passwordTitle.font = .systemFont(ofSize: fieldTitleSize, weight: .regular)
+        passwordTitle.frame = CGRect(
+            x: spacing+5,
+            y: emailField.bottom + spacing/2,
+            width: fieldWidth,
+            height: fieldTitleSize+3)
         passwordField.frame = CGRect(
-            x: 25,
-            y: usernameEmailField.bottom + 10,
-            width: view.width - 50,
-            height: 52.0)
+            x: spacing,
+            y: passwordTitle.bottom + spacing/8,
+            width: fieldWidth,
+            height: fieldSize)
+        forgotPassword.frame = CGRect(
+            x: spacing+5,
+            y: passwordField.bottom + spacing/3,
+            width: fieldWidth,
+            height: fieldTitleSize)
+        forgotPassword.titleLabel?.font = .systemFont(ofSize: fieldTitleSize, weight: .regular)
+
         loginButton.frame = CGRect(
-            x: 25,
-            y: passwordField.bottom + 10,
-            width: view.width - 50,
-            height: 52.0)
-        createAccountButton.frame = CGRect(
-            x: 25,
-            y: loginButton.bottom + 10,
-            width: view.width - 50,
-            height: 52.0)
+            x: spacing,
+            y: forgotPassword.bottom + spacing/2,
+            width: fieldWidth,
+            height: fieldSize)
+        loginButton.applyButtonGradient(colors: [UIColor.orange.cgColor, UIColor.darkPink.cgColor])
+
         
-        configureHeaderView()
     }
-    private func configureHeaderView() {
-        guard headerView.subviews.count == 1 else {
-            return
-        }
-        
-        guard let backgroundView = headerView.subviews.first else {
-            return
-        }
-        backgroundView.frame = headerView.bounds
-    }
+
     
     private func addSubViews() {
-        view.addSubview(usernameEmailField)
+        view.addSubview(logo)
+        view.addSubview(appTitle)
+        view.addSubview(subTitle)
+        view.addSubview(emailTitle)
+        view.addSubview(emailField)
+        view.addSubview(passwordTitle)
         view.addSubview(passwordField)
         view.addSubview(loginButton)
-        view.addSubview(headerView)
-        view.addSubview(createAccountButton)
+        view.addSubview(forgotPassword)
     }
     
     @objc private func didTapLoginButton() {
         print("Login Tapped")
         // remove keyboards
         passwordField.resignFirstResponder()
-        usernameEmailField.resignFirstResponder()
+        emailField.resignFirstResponder()
         
-        guard let usernameEmail = usernameEmailField.text, !usernameEmail.isEmpty else {
-            print("Username Error")
-            let alert = UIAlertController(title: "Login Error",
-                                          message: "Username is empty.",
+        guard let email = emailField.text, !email.isEmpty else {
+            print("Email Error")
+            let alert = UIAlertController(title: "Email Error",
+                                          message: "Email is empty.",
                                           preferredStyle: .alert)
             alert.addAction(UIAlertAction(title: "Dismiss",
                                           style: .cancel,
@@ -150,20 +216,7 @@ class LoginViewController: UIViewController {
             return
         }
         
-        var username: String?
-        var email: String?
-        
-        // login functionality
-        if usernameEmail.contains("@"), usernameEmail.contains(".") {
-            // email
-            email = usernameEmail
-        }
-        else {
-            // username
-            username = usernameEmail
-        }
-        
-        AuthManager.shared.loginUser(username: username, email: email, password: password) { success in
+        AuthManager.shared.loginUser(username: nil, email: email, password: password) { success in
             DispatchQueue.main.async {
                 if success {
                     // user logged in
@@ -185,16 +238,15 @@ class LoginViewController: UIViewController {
             }
         }
     }
-    @objc private func didTapCreateAccountButton() {
-        let vc = RegistrationViewController()
-        present(UINavigationController(rootViewController: vc), animated: true)
+    @objc private func didTapForgotPassword() {
+
     }
     
 }
 
 extension LoginViewController: UITextFieldDelegate {
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == usernameEmailField {
+        if textField == emailField {
             passwordField.becomeFirstResponder()
         }
         else if textField == passwordField {

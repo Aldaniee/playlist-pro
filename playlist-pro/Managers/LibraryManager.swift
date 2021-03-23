@@ -12,6 +12,7 @@ import FirebaseAuth
 class LibraryManager {
 
     static let shared = LibraryManager()
+    
     final let LIBRARY_KEY = "LibraryArray"
     final let LIBRARY_DISPLAY = "Music"
     
@@ -21,12 +22,12 @@ class LibraryManager {
 		case min
 		case max
 	}
-    // An array storing all songs
-	var songLibrary: Playlist!
     
-    // An array of playlists in the application
+    // A playlist storing all songs
+    var songLibrary = Playlist(title: "LibraryArray")
+    
     init() {
-        self.songLibrary = Playlist(title: LIBRARY_KEY, songList: NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray()))
+        refreshSongLibraryFromLocalStorage()
         updateLibraryToDatabase()
     }
     
@@ -49,19 +50,22 @@ class LibraryManager {
         userDefaults.set(newLibrary, forKey: LIBRARY_KEY)
         self.songLibrary.songList = NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
         deleteExcessSongs(songLibraryArray: songLibrary.songList)
-
     }
+    
     func downloadMissingSongs(newLibrary: NSMutableArray) {
         let oldLibrary = songLibrary.songList
         for song in newLibrary {
             if (!oldLibrary.contains(song)) {
                 // TODO: Download missing songs with song["link"]
-
             }
         }
     }
     func refreshSongLibraryFromLocalStorage() {
         songLibrary.songList = NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
+    }
+    
+    func saveSongLibraryToLocalStorage() {
+        userDefaults.set(songLibrary.songList, forKey: LIBRARY_KEY)
     }
 
     func deleteExcessSongs(songLibraryArray: NSMutableArray) {
@@ -73,7 +77,7 @@ class LibraryManager {
             return
         }
         DatabaseManager.shared.updateLibrary(library: songLibrary, user: Auth.auth().currentUser!) { error in
-            if(error ) {
+            if(error) {
                 print("ERROR: \(error)")
                 return
             }
@@ -127,7 +131,7 @@ class LibraryManager {
 			})
 			newExtension = songExtension
 		}
-		
+		// Download Thumbnail
 		if let imageUrl = thumbnailUrl {
 			dispatchGroup.enter()
 			LocalFilesManager.downloadFile(from: imageUrl, filename: sID, extension: "jpg", completion: { error in
@@ -138,6 +142,8 @@ class LibraryManager {
 			})
 		}
 		
+        // Download Complete
+        
 		dispatchGroup.notify(queue: DispatchQueue.main) {  // All async download in the group completed
 			currentViewController?.removeProgressView()
 			if errorStr == nil {
@@ -152,26 +158,20 @@ class LibraryManager {
                                 SongValues.duration: duration,
                                 SongValues.lyrics: "",
                                 SongValues.link: link,
-                                SongValues.fileExtension: newExtension] as [String : Any]
+                                SongValues.fileExtension: newExtension] as Song
 				let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
 				let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
+                
                 self.songLibrary.songList.add(enrichedDict)
-                self.updateLibraryToDatabase()
+                
                 if (playlistTitle != nil) {
-                    print("Adding song to playlist: \(playlistTitle!)")
-                    let playlistIndex = PlaylistsManager.shared.getPlaylistIndex(title: playlistTitle!)
-                    if playlistIndex == -1 {
-                        print("Playlist not found")
-                    }
-                    else {
-                        PlaylistsManager.shared.playlists[playlistIndex].songList.add(enrichedDict)
-                    }
+                    PlaylistsManager.shared.addSongToPlaylist(song: enrichedDict, playlistName: playlistTitle!)
                 }
-                self.userDefaults.set(self.songLibrary.songList, forKey: self.LIBRARY_KEY)
+
+                self.saveSongLibraryToLocalStorage()
                 self.updateLibraryToDatabase()
                 
-                self.songLibrary.songList = NSMutableArray(array: self.userDefaults.value(forKey: self.LIBRARY_KEY) as? NSArray ?? NSArray())
-				completion?()
+                completion?()
 			} else {	// In case of error in adding the song to the library
 				_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
 				let alert = UIAlertController(title: "Error", message: errorStr, preferredStyle: UIAlertController.Style.alert)
@@ -295,7 +295,7 @@ class LibraryManager {
 		var songDict = Song()
 		for i in 0 ..< songLibrary.songList.count {
 			songDict = songLibrary.songList.object(at: i) as! Song
-			if songDict["id"] as! String == songID {
+			if songDict[SongValues.id] as! String == songID {
 				return songDict
 			}
 		}
@@ -309,7 +309,7 @@ class LibraryManager {
 			songDict = songLibrary.songList.object(at: i) as! Song
             if songDict[SongValues.id] as! String == newSong[SongValues.id] as! String {
                 songLibrary.songList.replaceObject(at: i, with: newSong)
-                userDefaults.set(songLibrary.songList, forKey: LIBRARY_KEY)
+                saveSongLibraryToLocalStorage()
                 self.updateLibraryToDatabase()
 				break
 			}

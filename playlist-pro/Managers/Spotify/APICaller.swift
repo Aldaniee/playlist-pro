@@ -21,15 +21,15 @@ final class APICaller {
     }
 
     // MARK: - Playlists
-/*
-    public func getPlaylistDetails(for playlist: Playlist, completion: @escaping (Result<PlaylistDetailsResponse, Error>) -> Void) {
+
+    public func getPlaylistDetails(for spotifyplaylist: SpotifyPlaylist, completion: @escaping (Result<PlaylistDetailsResponse, Error>) -> Void) {
         createRequest(
-            with: URL(string: Constants.baseAPIURL + "/playlists/" + playlist.id),
+            with: URL(string: Constants.baseAPIURL + "/playlists/" + spotifyplaylist.id),
             type: .GET
         ) { request in
             let task = URLSession.shared.dataTask(with: request) { data, _, error in
                 guard let data = data, error == nil else {
-                    completion(.failure(APIError.faileedToGetData))
+                    completion(.failure(APIError.failedToGetData))
                     return
                 }
 
@@ -45,7 +45,7 @@ final class APICaller {
         }
     }
 
-    public func getCurrentUserPlaylists(completion: @escaping (Result<[Playlist], Error>) -> Void) {
+    public func getCurrentUserPlaylists(completion: @escaping (Result<[SpotifyPlaylist], Error>) -> Void) {
         createRequest(
             with: URL(string: Constants.baseAPIURL + "/me/playlists/?limit=50"),
             type: .GET
@@ -68,7 +68,7 @@ final class APICaller {
             task.resume()
         }
     }
-*/
+
     // MARK: - Profile
 
     public func getCurrentUserProfile(completion: @escaping (Result<UserProfile, Error>) -> Void) {

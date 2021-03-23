@@ -7,7 +7,6 @@
 
 import UIKit
 import Combine
-import XCDYouTubeKit
 
 class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate, SearchModelDelegate {
 
@@ -54,26 +53,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
                                  width: view.width,
                                  height: view.height)
     }
-
-    func downloadYouTubeVideo(video: Video) {
-        let videoID = video.videoId
-        let title = video.title
-        let artistArray = NSMutableArray(object: video.artist)
-        print("Loading url: https://www.youtube.com/embed/\(videoID)")
-        self.showSpinner(onView: self.view, withTitle: "Loading...")
-        XCDYouTubeClient.default().getVideoWithIdentifier(videoID) { (video, error) in
-            guard video != nil else {
-                print(error?.localizedDescription as Any)
-                self.removeSpinner()
-                let alert = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
-                self.present(alert, animated: true, completion: nil)
-                return
-            }
-            self.removeSpinner()
-            LibraryManager.shared.addSongToLibrary(songTitle: title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, playlistTitle: nil, completion: nil)
-        }
-    }
     
     // MARK: – Model Delegate Methods
     func videosFetched(_ videos: [Video]) {
@@ -110,6 +89,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
         isSearching = true
         searchBar.becomeFirstResponder()
     }
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         print("cancel pressed")
         searchBar.text = ""
@@ -156,7 +136,7 @@ extension SearchViewController: UITableViewDataSource {
         let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
         
         // Download the selected video
-        downloadYouTubeVideo(video: selectedVideo)
+        YoutubeSearchManager.shared.downloadYouTubeVideo(video: selectedVideo, vc: self, playlistTitle: nil)
     }
     
 }

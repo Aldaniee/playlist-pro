@@ -94,6 +94,9 @@ PODS:
   - nanopb/decode (2.30906.0)
   - nanopb/encode (2.30906.0)
   - PromisesObjC (1.2.11)
+  - SDWebImage (5.9.4):
+    - SDWebImage/Core (= 5.9.4)
+  - SDWebImage/Core (5.9.4)
   - XCDYouTubeKit (2.15.0)
 
 DEPENDENCIES:
@@ -104,6 +107,7 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - Firebase/Database
   - Firebase/Storage
+  - SDWebImage
   - XCDYouTubeKit (~> 2.15)
 
 SPEC REPOS:
@@ -125,6 +129,7 @@ SPEC REPOS:
     - leveldb-library
     - nanopb
     - PromisesObjC
+    - SDWebImage
     - XCDYouTubeKit
 
 SPEC CHECKSUMS:
@@ -145,8 +150,9 @@ SPEC CHECKSUMS:
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
+  SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
   XCDYouTubeKit: c6747c622dd0b52c9e668c028f68097eeffaea39
 
-PODFILE CHECKSUM: 04b2a93dbfe31d2a9d2b7ff124b65b9c1a016254
+PODFILE CHECKSUM: a870fcb408a139ed1e53a09e10f77d1f7ee1c7f0
 
 COCOAPODS: 1.10.0

@@ -15,13 +15,13 @@ class SongPlaylistOptionsCell: UITableViewCell {
     
     let symbolImageView: UIImageView = {
         let imgView = UIImageView()
-        imgView.tintColor = Constants.UI.lightGray
+        imgView.tintColor = .lightGray
         return imgView
     }()
     let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.textAlignment = .left
-        lbl.textColor = Constants.UI.lightGray
+        lbl.textColor = .lightGray
         return lbl
     }()
     
