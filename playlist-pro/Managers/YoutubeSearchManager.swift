@@ -84,7 +84,7 @@ class YoutubeSearchManager {
             if (!oldLibrary.contains(songID)) {
                 print("File not found for song: \(songName). Downloading audio.")
                 let title = song[SongValues.title] as! String
-                let artistArray = song[SongValues.artists] as! NSMutableArray
+                let artistArray = NSMutableArray(array: song[SongValues.artists] as! NSArray)
                 if songID.contains("yt_") {
                     songID = songID.substring(fromIndex: 3)
                     songID = songID.substring(toIndex: 11)

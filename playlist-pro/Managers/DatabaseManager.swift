@@ -83,7 +83,6 @@ public class DatabaseManager {
     ///     - user: User object for the current user
     ///     - Async callback for result if database entry succeeded
     func downloadSongDictLibrary(user: User, oldLibrary: NSMutableArray!, completion: @escaping (NSMutableArray) -> Void) {
-        var library = NSMutableArray()
         var userPath : String!
         if(user.isAnonymous) {
             userPath = "anonymous-users/\(user.uid)"
@@ -94,11 +93,17 @@ public class DatabaseManager {
         database.child(userPath).observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? NSDictionary {
 
-                library = dictionary["library"] as! NSMutableArray
+                let library = dictionary["library"] as? NSMutableArray
                 dump(snapshot)
-                print("LIBRARY")
-                print(library)
-                completion(library)
+                if library != nil {
+                    print("LIBRARY")
+                    print(library!)
+                    completion(library!)
+                }
+                else {
+                    print("No library in database, return empty library")
+                    completion(NSMutableArray())
+                }
             }
             else {
                 print("Snapshot Error")

@@ -120,109 +120,127 @@ class LibraryManager {
 		Thumbnail URL -> It will skip downloading a thumbnail image
 	*/
     func addSongToLibrary(songTitle: String?, artists: NSMutableArray, songUrl: URL, songExtension: String , thumbnailUrl: URL?, videoID: String?, playlistTitle: String?, completion: (() -> Void)? = nil) {
-
+        
+        var sID = videoID == nil ? "dl_" + generateIDFromTimeStamp() : "yt_" + videoID! + generateIDFromTimeStamp()
+        
         if self.hasSongInLibrary(videoID: videoID) {
             print("Song \(songTitle ?? "??") found in library")
-            return
+            sID = findSongIDfrom(videoID: videoID)!
         }
-        let sID = videoID == nil ? "dl_" + generateIDFromTimeStamp() : "yt_" + videoID! + generateIDFromTimeStamp()
-		var newExtension: String
-		var errorStr: String?
-		
-		//let currentViewController = UIApplication.getCurrentViewController()
-		//currentViewController?.showProgressView(onView: (currentViewController?.view)!, withTitle: "Downloading...")
+            //self.addSongDictToLibraryArray(sID: sID, videoID: videoID, songUrl: songUrl, newExtension: ".m4a", songTitle: songTitle, artists: artists, playlistTitle: playlistTitle) {
+            //    completion?()
+            //}
+        if !LocalFilesManager.checkFileExist(sID) {
+            var newExtension: String
+            var errorStr: String?
+            
+            //let currentViewController = UIApplication.getCurrentViewController()
+            //currentViewController?.showProgressView(onView: (currentViewController?.view)!, withTitle: "Downloading...")
 
-		let dispatchGroup = DispatchGroup()  // To keep track of the async download group
-		print("Starting the required downloads for song")
-		dispatchGroup.enter()
-		if songExtension == "mp4" {
-			LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
-				if error == nil  {
-					LocalFilesManager.extractAudioFromVideo(songID: sID, completion: { error in
-						_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video
+            let dispatchGroup = DispatchGroup()  // To keep track of the async download group
+            print("Starting the required downloads for song")
+            dispatchGroup.enter()
+            if songExtension == "mp4" {
+                LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
+                    if error == nil  {
+                        print("Converting Video to Audio")
+                        LocalFilesManager.extractAudioFromVideo(songID: sID, completion: { error in
+                            
+                            print("Deleting Video")
+                            _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video
 
-						dispatchGroup.leave()
-						if error != nil {  // Failed to extract audio from video
-							_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).m4a")  // Delete the extracted audio if available
-							errorStr = error!.localizedDescription
-						}
-					})
-				} else {
-					_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video if available
-					print("Error downloading video: " + error!.localizedDescription)
-					dispatchGroup.leave()
-					errorStr = error!.localizedDescription
-				}
-			})
-			newExtension = "m4a"
-		} else {
-			LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
-				dispatchGroup.leave()
-				if error != nil  {
-					_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).\(songExtension)")  // Delete the downloaded video if available
-					print("Error downloading song: " + error!.localizedDescription)
-					errorStr = error!.localizedDescription
-				}
-			})
-			newExtension = songExtension
-		}
-		// Download Thumbnail
-		if let imageUrl = thumbnailUrl {
-			dispatchGroup.enter()
-			LocalFilesManager.downloadFile(from: imageUrl, filename: sID, extension: "jpg", completion: { error in
-				dispatchGroup.leave()
-				if error != nil  {
-					print("Error downloading thumbnail: " + error!.localizedDescription)
-				}
-			})
-		}
-		
-        // Download Complete
-        
-		dispatchGroup.notify(queue: DispatchQueue.main) {  // All async download in the group completed
-			//currentViewController?.removeProgressView()
-            if errorStr == nil {
-                print("All async download in the group completed")
-                let duration = LocalFilesManager.extractDurationForSong(songID: sID, songExtension: newExtension)
-                let link = videoID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(videoID ?? "UNKNOWN_ERROR")"
-                let songDict = [SongValues.id: sID,
-                                SongValues.title: songTitle ?? sID,
-                                SongValues.artists: artists,
-                                SongValues.album: "",
-                                SongValues.releaseYear: "",
-                                SongValues.duration: duration,
-                                SongValues.lyrics: "",
-                                SongValues.link: link,
-                                SongValues.fileExtension: newExtension] as Song
-                let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
-                let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
-                
-                self.songLibrary.songList.add(enrichedDict)
-                
-                if (playlistTitle != nil) {
-                    PlaylistsManager.shared.addSongToPlaylist(song: enrichedDict, playlistName: playlistTitle!)
-                }
-
-                self.saveSongLibraryToLocalStorage()
-                self.updateLibraryToDatabase()
-                
-                completion?()
+                            dispatchGroup.leave()
+                            if error != nil {  // Failed to extract audio from video
+                                _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).m4a")  // Delete the extracted audio if available
+                                errorStr = error!.localizedDescription
+                            }
+                        })
+                    } else {
+                        _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video if available
+                        print("Error downloading video: " + error!.localizedDescription)
+                        dispatchGroup.leave()
+                        errorStr = error!.localizedDescription
+                    }
+                })
+                newExtension = "m4a"
             } else {
-                print("Error adding the song to the library")
-                _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
-                let alert = UIAlertController(title: "Error", message: errorStr, preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
-                //currentViewController?.present(alert, animated: true, completion: nil)
+                LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
+                    dispatchGroup.leave()
+                    if error != nil  {
+                        _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).\(songExtension)")  // Delete the downloaded video if available
+                        print("Error downloading song: " + error!.localizedDescription)
+                        errorStr = error!.localizedDescription
+                    }
+                })
+                newExtension = songExtension
+            }
+            // Download Thumbnail
+            if let imageUrl = thumbnailUrl {
+                dispatchGroup.enter()
+                LocalFilesManager.downloadFile(from: imageUrl, filename: sID, extension: "jpg", completion: { error in
+                    dispatchGroup.leave()
+                    if error != nil  {
+                        print("Error downloading thumbnail: " + error!.localizedDescription)
+                    }
+                })
+            }
+            
+            // Download Complete
+            
+            dispatchGroup.notify(queue: DispatchQueue.main) {  // All async download in the group completed
+                //currentViewController?.removeProgressView()
+                if errorStr == nil {
+                    if !self.hasSongInLibrary(videoID: videoID) {
+                        self.addSongDictToLibraryArray(sID: sID, videoID: videoID, songUrl: songUrl, newExtension: newExtension, songTitle: songTitle, artists: artists, playlistTitle: playlistTitle) {
+                            completion?()
+                        }
+                    }
+                } else {
+                    print("Error adding the song to the library")
+                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
+                    let alert = UIAlertController(title: "Error", message: errorStr, preferredStyle: UIAlertController.Style.alert)
+                    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
+                    //currentViewController?.present(alert, animated: true, completion: nil)
+                }
             }
 		}
     }
 	
+    private func addSongDictToLibraryArray(sID: String, videoID: String?, songUrl: URL, newExtension: String, songTitle: String?, artists: NSMutableArray, playlistTitle: String?, completion: (() -> Void)? = nil) {
+            print("All async download in the group completed")
+            let duration = LocalFilesManager.extractDurationForSong(songID: sID, songExtension: newExtension)
+            let link = videoID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(videoID ?? "UNKNOWN_ERROR")"
+            let songDict = [SongValues.id: sID,
+                            SongValues.title: songTitle ?? sID,
+                            SongValues.artists: artists,
+                            SongValues.album: "",
+                            SongValues.releaseYear: "",
+                            SongValues.duration: duration,
+                            SongValues.lyrics: "",
+                            SongValues.link: link,
+                            SongValues.fileExtension: newExtension] as Song
+            let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
+            let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
+            
+            self.songLibrary.songList.add(enrichedDict)
+            
+            if (playlistTitle != nil) {
+                PlaylistsManager.shared.addSongToPlaylist(song: enrichedDict, playlistName: playlistTitle!)
+            }
+
+            self.saveSongLibraryToLocalStorage()
+            self.updateLibraryToDatabase()
+            
+            completion?()
+    }
+    
     func hasSongInLibrary(videoID: String?) -> Bool{
         if videoID != nil {
             for element in songLibrary.songList {
                 let song = element as! Song
                 let songID = song[SongValues.id] as! String
                 if songID.contains(videoID!) {
+                    print("song \(song[SongValues.title] as! String) found in library")
                     print("videoID: \(videoID!) is contained in songID: \(songID)")
                     return true
                 }
@@ -230,6 +248,21 @@ class LibraryManager {
         }
         print("videoID: \(videoID!) was not found in the library")
         return false
+    }
+    
+    func findSongIDfrom(videoID: String?) -> String?{
+        if videoID != nil {
+            for element in songLibrary.songList {
+                let song = element as! Song
+                let songID = song[SongValues.id] as! String
+                if songID.contains(videoID!) {
+                    print("videoID: \(videoID!) is contained in songID: \(songID)")
+                    return songID
+                }
+            }
+        }
+        print("videoID: \(videoID!) was not found in the library")
+        return nil
     }
     
 	func enrichSongDict(_ songDict: Song, fromMetadataDict mdDict: Song) -> Song {
