@@ -101,7 +101,7 @@ extension UIViewController {
         
         let titleLbl = UILabel(frame: CGRect(x: 0, y: 0, width: pBar.frame.width, height: pBar.frame.minY - 10))
         titleLbl.text = title ?? ""
-        titleLbl.font = UIFont.init(name: "DINCondensed-Bold", size: 30)
+        titleLbl.font = .systemFont(ofSize: 30)
         titleLbl.textAlignment = .center
         titleLbl.center = pBar.center
         titleLbl.frame = CGRect(x: titleLbl.frame.minX, y: 5,

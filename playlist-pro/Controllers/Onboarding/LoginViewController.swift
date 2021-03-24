@@ -221,6 +221,9 @@ class LoginViewController: UIViewController {
                 if success {
                     // user logged in
                     print("Successfully Logged In")
+                    
+                    LibraryManager.shared.pullLocalLibraryFromDatabase()
+                    
                     // dismiss all view controllers down to the root
                     self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
                 }

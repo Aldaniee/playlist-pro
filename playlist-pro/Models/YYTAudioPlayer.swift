@@ -139,7 +139,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 		if let imgData = imageData {
 			image = UIImage(data: imgData)!
 		} else {
-			image = UIImage(named: "placeholder")!
+            image = UIImage(systemName: "questionmark")!
 		}
 		
 		nowPlayingInfo[MPMediaItemPropertyArtwork] = MPMediaItemArtwork(boundsSize: image.size) { size in

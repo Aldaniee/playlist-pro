@@ -135,8 +135,12 @@ extension SearchViewController: UITableViewDataSource {
         // Get a reference to the video that was tapped on
         let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
         
+        let videoID = selectedVideo.videoId
+        let title = selectedVideo.title
+        let artistArray = NSMutableArray(object: selectedVideo.artist)
+        
         // Download the selected video
-        YoutubeSearchManager.shared.downloadYouTubeVideo(video: selectedVideo, vc: self, playlistTitle: nil)
+        YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: nil)
     }
     
 }

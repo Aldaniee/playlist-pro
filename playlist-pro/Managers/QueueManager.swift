@@ -106,7 +106,7 @@ public class QueueManager: NSObject {
         }
     }
     func removeAllInstancesFromQueue(songID: String) {
-        if songID == nowPlaying[SongValues.id] as! String {
+        if songID == nowPlaying[SongValues.id] as? String {
             removeFromQueue(section: 0, index: 0)
         }
         for index in 0..<playlistQueue.count {

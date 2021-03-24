@@ -28,37 +28,70 @@ class LibraryManager {
     
     init() {
         refreshSongLibraryFromLocalStorage()
-        updateLibraryToDatabase()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
  
-    func importLibraryFromDatabase() {
+    
+    /// WARNING – this function is expensive and cannot be called just anyway
+    /// 1. Downloads library array from the database based on the current logged in user
+    /// 2. Downloads all missing song files from youtube on the background thread
+    /// 3. Deletes all downloaded songs that are NOT in the library array
+    /// This should ONLY be called when a new user is logged in who was not previously logged in
+    func pullLocalLibraryFromDatabase() {
         if(Auth.auth().currentUser == nil) {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
-        let newLibrary = DatabaseManager.shared.getLibrary(user: Auth.auth().currentUser!, oldLibrary: songLibrary.songList) { error in
-            if(error) {
-                print("ERROR: \(error)")
-                return
-            }
+        DatabaseManager.shared.downloadSongDictLibrary(user: Auth.auth().currentUser!, oldLibrary: songLibrary.songList) { newLibrary in
+            print("NEW LIBRARY")
+            print(newLibrary)
+            let oldLibrary = NSMutableArray(array: self.songLibrary.songList)
+            self.downloadMissingSongFilesFromYT(newLibrary: newLibrary)
+            self.deleteExcessSongs(oldLibrary: oldLibrary, newLibrary: self.songLibrary.songList)
         }
-        self.downloadMissingSongs(newLibrary: newLibrary)
-        userDefaults.set(newLibrary, forKey: LIBRARY_KEY)
-        self.songLibrary.songList = NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
-        deleteExcessSongs(songLibraryArray: songLibrary.songList)
     }
     
-    func downloadMissingSongs(newLibrary: NSMutableArray) {
-        let oldLibrary = songLibrary.songList
-        for song in newLibrary {
-            if (!oldLibrary.contains(song)) {
-                // TODO: Download missing songs with song["link"]
+    func downloadMissingSongFilesFromYT(newLibrary: NSMutableArray) {
+        print("Checking for missing songs to download")
+        let start = CFAbsoluteTimeGetCurrent()
+
+        YoutubeSearchManager.shared.downloadMissingLibraryFiles(oldLibrary: self.songLibrary.songList, newLibrary: newLibrary)
+
+        print("Download of all missing songs complete")
+        print("Took \(CFAbsoluteTimeGetCurrent() - start) seconds")
+        
+        self.userDefaults.set(newLibrary, forKey: self.LIBRARY_KEY)
+        self.songLibrary.songList = NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
+
+    }
+    func deleteExcessSongs(oldLibrary: NSMutableArray, newLibrary: NSMutableArray) {
+        print("Deleting all excess songs from file storage")
+        let start = CFAbsoluteTimeGetCurrent()
+        
+        for element in oldLibrary {
+            let song = element as! Song
+            let id = song[SongValues.id] as! String
+            let name = song[SongValues.title] as! String
+            if !newLibrary.contains(song) {
+                let didDelete = LocalFilesManager.deleteFile(withNameAndExtension: "\(id).jpg")
+                
+                if didDelete {
+                    print("Song named: \(name) removed from local files successfully")
+                }
+                else {
+                    print("Song named: \(name) could not be removed from local files")
+                }
+            } else {
+                print("Song named: \(name) wasn't removed from local files")
+
             }
         }
+        print("Delete of all excess songs from file storage complete")
+        print("Took \(CFAbsoluteTimeGetCurrent() - start) seconds")
+
     }
     func refreshSongLibraryFromLocalStorage() {
         songLibrary.songList = NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
@@ -68,9 +101,6 @@ class LibraryManager {
         userDefaults.set(songLibrary.songList, forKey: LIBRARY_KEY)
     }
 
-    func deleteExcessSongs(songLibraryArray: NSMutableArray) {
-        // TODO: Delete any songs not in library array
-    }
     func updateLibraryToDatabase() {
         if(Auth.auth().currentUser == nil) {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
@@ -89,14 +119,18 @@ class LibraryManager {
 		Song Title -> will be set to Song ID
 		Thumbnail URL -> It will skip downloading a thumbnail image
 	*/
-    func addSongToLibrary(songTitle: String?, artists: NSMutableArray, songUrl: URL, songExtension: String , thumbnailUrl: URL?, songID: String?, playlistTitle: String?, completion: (() -> Void)? = nil) {
+    func addSongToLibrary(songTitle: String?, artists: NSMutableArray, songUrl: URL, songExtension: String , thumbnailUrl: URL?, videoID: String?, playlistTitle: String?, completion: (() -> Void)? = nil) {
 
-        let sID = songID == nil ? "dl_" + generateIDFromTimeStamp() : "yt_" + songID! + generateIDFromTimeStamp()
+        if self.hasSongInLibrary(videoID: videoID) {
+            print("Song \(songTitle ?? "??") found in library")
+            return
+        }
+        let sID = videoID == nil ? "dl_" + generateIDFromTimeStamp() : "yt_" + videoID! + generateIDFromTimeStamp()
 		var newExtension: String
 		var errorStr: String?
 		
-		let currentViewController = UIApplication.getCurrentViewController()
-		currentViewController?.showProgressView(onView: (currentViewController?.view)!, withTitle: "Downloading...")
+		//let currentViewController = UIApplication.getCurrentViewController()
+		//currentViewController?.showProgressView(onView: (currentViewController?.view)!, withTitle: "Downloading...")
 
 		let dispatchGroup = DispatchGroup()  // To keep track of the async download group
 		print("Starting the required downloads for song")
@@ -106,6 +140,7 @@ class LibraryManager {
 				if error == nil  {
 					LocalFilesManager.extractAudioFromVideo(songID: sID, completion: { error in
 						_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video
+
 						dispatchGroup.leave()
 						if error != nil {  // Failed to extract audio from video
 							_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).m4a")  // Delete the extracted audio if available
@@ -145,11 +180,11 @@ class LibraryManager {
         // Download Complete
         
 		dispatchGroup.notify(queue: DispatchQueue.main) {  // All async download in the group completed
-			currentViewController?.removeProgressView()
-			if errorStr == nil {
-				print("All async download in the group completed")
-				let duration = LocalFilesManager.extractDurationForSong(songID: sID, songExtension: newExtension)
-				let link = songID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(songID ?? "UNKNOWN_ERROR")"
+			//currentViewController?.removeProgressView()
+            if errorStr == nil {
+                print("All async download in the group completed")
+                let duration = LocalFilesManager.extractDurationForSong(songID: sID, songExtension: newExtension)
+                let link = videoID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(videoID ?? "UNKNOWN_ERROR")"
                 let songDict = [SongValues.id: sID,
                                 SongValues.title: songTitle ?? sID,
                                 SongValues.artists: artists,
@@ -159,8 +194,8 @@ class LibraryManager {
                                 SongValues.lyrics: "",
                                 SongValues.link: link,
                                 SongValues.fileExtension: newExtension] as Song
-				let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
-				let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
+                let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
+                let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
                 
                 self.songLibrary.songList.add(enrichedDict)
                 
@@ -172,15 +207,31 @@ class LibraryManager {
                 self.updateLibraryToDatabase()
                 
                 completion?()
-			} else {	// In case of error in adding the song to the library
-				_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
-				let alert = UIAlertController(title: "Error", message: errorStr, preferredStyle: UIAlertController.Style.alert)
-				alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
-				currentViewController?.present(alert, animated: true, completion: nil)
-			}
+            } else {
+                print("Error adding the song to the library")
+                _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
+                let alert = UIAlertController(title: "Error", message: errorStr, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
+                //currentViewController?.present(alert, animated: true, completion: nil)
+            }
 		}
     }
 	
+    func hasSongInLibrary(videoID: String?) -> Bool{
+        if videoID != nil {
+            for element in songLibrary.songList {
+                let song = element as! Song
+                let songID = song[SongValues.id] as! String
+                if songID.contains(videoID!) {
+                    print("videoID: \(videoID!) is contained in songID: \(songID)")
+                    return true
+                }
+            }
+        }
+        print("videoID: \(videoID!) was not found in the library")
+        return false
+    }
+    
 	func enrichSongDict(_ songDict: Song, fromMetadataDict mdDict: Song) -> Song {
 		var enrichredDict = songDict
 		var key: String
@@ -302,19 +353,19 @@ class LibraryManager {
 		return Dictionary()
 	}
 
-    func updateSong(newSong: Song) {
-        refreshSongLibraryFromLocalStorage()
-		var songDict = Song()
-		for i in 0 ..< songLibrary.songList.count {
-			songDict = songLibrary.songList.object(at: i) as! Song
-            if songDict[SongValues.id] as! String == newSong[SongValues.id] as! String {
-                songLibrary.songList.replaceObject(at: i, with: newSong)
-                saveSongLibraryToLocalStorage()
-                self.updateLibraryToDatabase()
-				break
-			}
-		}
-    }
+//    func updateSong(newSong: Song) {
+//        refreshSongLibraryFromLocalStorage()
+//		var songDict = Song()
+//		for i in 0 ..< songLibrary.songList.count {
+//			songDict = songLibrary.songList.object(at: i) as! Song
+//            if songDict[SongValues.id] as! String == newSong[SongValues.id] as! String {
+//                songLibrary.songList.replaceObject(at: i, with: newSong)
+//                saveSongLibraryToLocalStorage()
+//                self.updateLibraryToDatabase()
+//				break
+//			}
+//		}
+//    }
     
 	private func generateIDFromTimeStamp() -> String {
 		let letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"

@@ -15,6 +15,12 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         view.backgroundColor = .blackGray
         return view
     }()
+    let downloadButton: UIButton = {
+        let btn = UIButton()
+        btn.backgroundColor = .black
+        btn.setTitle("Download", for: .normal)
+        return btn
+    }()
     
     var miniPlayerView = MiniPlayerView(frame: .zero)
     var nowPlayingVC = NowPlayingViewController()
@@ -23,7 +29,6 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
 
     var isProgressBarSliding = false
 
-    
     func showNowPlayingView() {
         print("Showing Now Playing View Controller")
         nowPlayingVC.modalPresentationStyle = .fullScreen
@@ -36,7 +41,6 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         super.viewDidLoad()
         QueueManager.shared.audioPlayer.delegate = self
         QueueManager.shared.delegate = self
-
         
         tabBar.isTranslucent = false
         tabBar.barTintColor = .blackGray
@@ -69,12 +73,15 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         setViewControllers([navPlaylist, navSearch, navLibrary], animated: false)
         view.addSubview(miniPlayerView)
         view.addSubview(tabBarBackground)
+        view.addSubview(downloadButton)
     }
     let miniPlayerHeight = CGFloat(60)
     override func viewDidLayoutSubviews() {
         updateDisplayedSong()
         updateRepeatButton()
         updateShuffleButton()
+        downloadButton.frame = CGRect(x: view.center.x-50, y: 50, width: 100, height: 50)
+        downloadButton.addTarget(self, action: #selector(downloadButtonAction), for: .touchUpInside)
         miniPlayerView.frame = CGRect(
             x: 0,
             y: tabBar.top-miniPlayerHeight,
@@ -121,6 +128,9 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         }
     }
     
+    @objc func downloadButtonAction() {
+        LibraryManager.shared.pullLocalLibraryFromDatabase()
+    }
     
     func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float) {
         if !isProgressBarSliding {

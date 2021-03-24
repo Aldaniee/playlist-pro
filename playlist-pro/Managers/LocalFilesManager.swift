@@ -43,7 +43,7 @@ class LocalFilesManager {
 		}
 
 		AF.download(link, to: destination).downloadProgress { progress in
-			UIApplication.getCurrentViewController()?.updateProgressView(to: progress.fractionCompleted)
+			//UIApplication.getCurrentViewController()?.updateProgressView(to: progress.fractionCompleted)
 		}.response { response in
 			if response.error == nil, let filePath = response.fileURL?.path {
 				print("Downloaded successfully to " + filePath)

@@ -145,14 +145,12 @@ class CreatePlaylistViewController: UIViewController {
                 let video = videos![0]
                 DispatchQueue.main.async {
                     PlaylistsManager.shared.addPlaylist(title: spotifyPlaylist.name, songList: NSMutableArray())
-                    YoutubeSearchManager.shared.downloadYouTubeVideo(video: video, vc: self, playlistTitle: spotifyPlaylist.name)
+                    let videoID = video.videoId
+                    let title = video.title
+                    let artistArray = NSMutableArray(object: video.artist)
+                    YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: spotifyPlaylist.name)
                 }
-            }                /*var i = 0
-                while i < videos!.count {
-                    YoutubeSearchManager.shared.downloadYouTubeVideo(video: videos![i], vc: self) {
-                        i += 1
-                    }
-                }*/
+            }                
         }
 
     }

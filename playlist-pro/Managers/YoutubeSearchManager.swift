@@ -43,7 +43,7 @@ class YoutubeSearchManager {
                 decoder.dateDecodingStrategy = .iso8601
                 let response = try decoder.decode(Response.self, from: data!)
                 completion(response)
-                dump(response)
+                //dump(response)
             }
             catch {
                 completion(nil)
@@ -57,23 +57,42 @@ class YoutubeSearchManager {
         let url = URL(string: Constants.YT.SEARCHLIST_URL_PT1 + searchableText + Constants.YT.SEARCHLIST_URL_PT2)!
         return url
     }
-    func downloadYouTubeVideo(video: Video, vc: UIViewController, playlistTitle: String?) {
-        let videoID = video.videoId
-        let title = video.title
-        let artistArray = NSMutableArray(object: video.artist)
+    func downloadYouTubeVideo(videoID: String, title: String, artistArray: NSMutableArray, playlistTitle: String?) {
+        //let vc = UIApplication.getCurrentViewController()
         print("Loading url: https://www.youtube.com/embed/\(videoID)")
-        vc.showSpinner(onView: vc.view, withTitle: "Loading...")
+        //vc?.showSpinner(onView: vc!.view, withTitle: "Loading...")
         XCDYouTubeClient.default().getVideoWithIdentifier(videoID) { (video, error) in
             guard video != nil else {
                 print(error?.localizedDescription as Any)
-                vc.removeSpinner()
-                let alert = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: UIAlertController.Style.alert)
-                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
-                vc.present(alert, animated: true, completion: nil)
+                //vc?.removeSpinner()
+                //let alert = UIAlertController(title: "Error", message: error?.localizedDescription, preferredStyle: UIAlertController.Style.alert)
+                //alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
+                //vc?.present(alert, animated: true, completion: nil)
                 return
             }
-            vc.removeSpinner()
-            LibraryManager.shared.addSongToLibrary(songTitle: title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], songID: videoID, playlistTitle: playlistTitle, completion: nil)
+            //vc?.removeSpinner()
+            LibraryManager.shared.addSongToLibrary(songTitle: title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], videoID: videoID, playlistTitle: playlistTitle, completion: nil)
         }
+    }
+    
+    /// Given the library of songDicts is correct, download all of the missing audio files from youtube
+    func downloadMissingLibraryFiles(oldLibrary: NSMutableArray, newLibrary: NSMutableArray) {
+        for element in newLibrary {
+            let song = element as! Song
+            let songName = song[SongValues.title] as! String
+            var songID = song[SongValues.id] as! String
+            if (!oldLibrary.contains(songID)) {
+                print("File not found for song: \(songName). Downloading audio.")
+                let title = song[SongValues.title] as! String
+                let artistArray = song[SongValues.artists] as! NSMutableArray
+                if songID.contains("yt_") {
+                    songID = songID.substring(fromIndex: 3)
+                    songID = songID.substring(toIndex: 11)
+                }
+                downloadYouTubeVideo(videoID: songID, title: title, artistArray: artistArray, playlistTitle: nil)
+            }
+            print("Song already found for: \(songName), skipping download")
+        }
+
     }
 }

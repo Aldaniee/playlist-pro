@@ -8,6 +8,7 @@
 import FirebaseAuth
 
 public class AuthManager {
+    
     static let shared = AuthManager()
     
     var isSignedIn = Auth.auth().currentUser != nil
@@ -63,10 +64,6 @@ public class AuthManager {
                 return
             }
         }
-        /// TODO: Implement username login
-        /*else if let username = username {
-            
-        }*/
     }
     /// Attempt to log out Firebase User
     public func logOut(completion: (Bool) -> Void) {
