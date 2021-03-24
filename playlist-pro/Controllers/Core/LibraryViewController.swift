@@ -11,6 +11,8 @@ import FirebaseAuth
 
 final class LibraryViewController: UIViewController {
 
+    private let songPlaylistOptionsViewController = SongPlaylistOptionsViewController()
+        
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         // Remove all subviews
@@ -49,7 +51,7 @@ final class LibraryViewController: UIViewController {
         header.backgroundColor = .systemGray
         return header
     }()
-    private let tableView: UITableView = {
+    let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
         return tableView
@@ -74,7 +76,7 @@ final class LibraryViewController: UIViewController {
     }()
     
     private func configureNavigationBar() {
-        navigationItem.title = Auth.auth().currentUser?.email
+        navigationItem.title = "Library"
         navigationItem.rightBarButtonItem = UIBarButtonItem(image: UIImage(systemName: "person.circle"),
                                                             style: .done,
                                                             target: self,
@@ -145,6 +147,8 @@ extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
         cell.songDict = LibraryManager.shared.songLibrary.songList.object(at: indexPath.row) as? Song
+        cell.delegate = self
+
         cell.refreshCell()
 
         return cell
@@ -156,5 +160,43 @@ extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
 
         print("Selected cell number \(indexPath.row) -> \(cell.songDict!["title"] ?? "")")
+        QueueManager.shared.setupQueue(with: LibraryManager.shared.songLibrary, startingAt: indexPath.row)
+
     }
+}
+extension LibraryViewController: SongCellDelegate {
+    func optionsButtonTapped(tag: Int) {
+        let playlist = LibraryManager.shared.songLibrary
+        let songDict = playlist.songList.object(at: tag) as! Song
+        let isLibrary = playlist.title == LibraryManager.shared.LIBRARY_KEY
+        songPlaylistOptionsViewController.setSong(songDict: songDict, isLibrary: isLibrary, index: tag)
+        present(songPlaylistOptionsViewController, animated: true, completion: nil)
+    }
+}
+extension LibraryViewController: SongPlaylistOptionsViewControllerDelegate {
+    
+    func removeFromPlaylist(index: Int) {
+        let playlist = LibraryManager.shared.songLibrary
+        if playlist.title != LibraryManager.shared.LIBRARY_KEY { // Should always be true
+            PlaylistsManager.shared.removeFromPlaylist(playlist: playlist, index: index)
+        }
+        else {
+            print("This should be inaccessible")
+        }
+    }
+    
+    func reloadTableView() {
+        tableView.reloadData()
+    }
+    func openAddToPlaylistViewController(songDict: Song) {
+        let vc = AddToPlaylistViewController()
+        vc.songDict = songDict
+        let secondsDelay = 0.7
+        DispatchQueue.main.asyncAfter(deadline: .now() + secondsDelay) {
+            self.present(vc, animated: true, completion: {
+                self.reloadTableView()
+            })
+        }
+    }
+
 }

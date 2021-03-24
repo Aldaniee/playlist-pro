@@ -15,6 +15,8 @@ class PlaylistsManager {
     
     let userDefaults = UserDefaults.standard
     
+    var homeVC = HomeViewController()
+    
     init() {
         fetchPlaylistsFromStorage()
     }
@@ -25,6 +27,7 @@ class PlaylistsManager {
             let title = userDefaults.value(forKey: "playlist_title_\(index)") as! String
             let songList = NSMutableArray(array: userDefaults.value(forKey: "playlist_songList_\(index)") as! NSArray? ?? NSArray())
             playlists.append(Playlist(title: title, songList: songList))
+            homeVC.reloadTableView()
         }
     }
     func removePlaylist(playlist: Playlist) {
@@ -32,6 +35,7 @@ class PlaylistsManager {
             for i in 0..<playlists.count {
                 if playlists[i].title == playlist.title {
                     playlists.remove(at: i)
+                    homeVC.reloadTableView()
                     savePlaylistsToStorage()
                     return
                 }
@@ -45,6 +49,7 @@ class PlaylistsManager {
         if hasPlaylist(named: playlist.title) {
             let indexOfPlaylist = getPlaylistIndex(title: playlist.title)
             playlists[indexOfPlaylist].songList.removeObject(at: index)
+            homeVC.reloadTableView()
             savePlaylistsToStorage()
         }
     }
@@ -53,6 +58,7 @@ class PlaylistsManager {
         if hasPlaylist(named: playlistName) {
             let index = getPlaylistIndex(title: playlistName)
             playlists[index].songList.add(song)
+            homeVC.reloadTableView()
             print("Added song \(song[SongValues.title] as! String) to playlist \(playlistName)")
         }
         else {
@@ -64,6 +70,7 @@ class PlaylistsManager {
         let uniqueTitle = generateUniqueTitle(from: title)
         let playlist = Playlist(title: uniqueTitle, songList: songList)
         playlists.append(playlist)
+        homeVC.reloadTableView()
         savePlaylistsToStorage()
     }
     

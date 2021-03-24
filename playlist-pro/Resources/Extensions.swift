@@ -585,15 +585,15 @@ extension NSMutableArray {
 
 extension UIImage {
     
-    func cropToSquare(size: Double) -> UIImage {
+    func cropToSquare(sideLength: Double) -> UIImage {
         
         let cgimage = self.cgImage!
         let contextImage = UIImage(cgImage: cgimage)
         let contextSize = contextImage.size
         var posX: CGFloat = 0.0
         var posY: CGFloat = 0.0
-        var cgwidth = CGFloat(size)
-        var cgheight = CGFloat(size)
+        var cgwidth = CGFloat(sideLength)
+        var cgheight = CGFloat(sideLength)
 
         posX = ((contextSize.width - contextSize.height) / 2)
         posY = 0

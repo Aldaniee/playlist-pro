@@ -37,6 +37,10 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
 
         present(nowPlayingVC, animated: true, completion: nil)
     }
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        self.updateDisplayedSong()
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         QueueManager.shared.audioPlayer.delegate = self
@@ -46,9 +50,9 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         tabBar.barTintColor = .blackGray
         tabBar.tintColor = .darkPink
 
-        let playlist = HomeViewController()
-        let search = SearchViewController()
-        let library = LibraryViewController()
+        let playlist = PlaylistsManager.shared.homeVC
+        let search = YoutubeSearchManager.shared.searchVC
+        let library = LibraryManager.shared.libraryVC
         
         playlist.title = "Home"
         search.title = "Search"
@@ -73,7 +77,8 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         setViewControllers([navPlaylist, navSearch, navLibrary], animated: false)
         view.addSubview(miniPlayerView)
         view.addSubview(tabBarBackground)
-        view.addSubview(downloadButton)
+        // Added for testing of user login swap
+        //view.addSubview(downloadButton)
     }
     let miniPlayerHeight = CGFloat(60)
     override func viewDidLayoutSubviews() {
@@ -188,8 +193,8 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         
         let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
         if let imgData = imageData {
-            miniPlayerView.albumCover.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(size: Double(miniPlayerView.height))
-            nowPlayingVC.albumCoverImageView.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(size: Double(miniPlayerView.height))
+            miniPlayerView.albumCover.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
+            nowPlayingVC.albumCoverImageView.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
 
         } else {
             miniPlayerView.albumCover.image = UIImage(named: "placeholder")
@@ -316,30 +321,6 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     }
     func refreshQueueVC() {
         queueVC.tableView.reloadData()
-    }
-    private func cropToBounds(image: UIImage, height: Double) -> UIImage {
-        
-        let cgimage = image.cgImage!
-        let contextImage = UIImage(cgImage: cgimage)
-        let contextSize = contextImage.size
-        var posX: CGFloat = 0.0
-        var posY: CGFloat = 0.0
-        var cgwidth = CGFloat(height)
-        var cgheight = CGFloat(height)
-
-        posX = ((contextSize.width - contextSize.height) / 2)
-        posY = 0
-        cgwidth = contextSize.height
-        cgheight = contextSize.height
-
-        let rect: CGRect = CGRect(x: posX, y: posY, width: cgwidth, height: cgheight)
-
-        // Create bitmap image from context using the rect
-        let imageRef: CGImage = cgimage.cropping(to: rect)!
-
-        // Create a new image based on the imageRef and rotate back to the original orientation
-        return UIImage(cgImage: imageRef, scale: image.scale, orientation: image.imageOrientation)
-        
     }
 }
 extension TabBarViewController: UIViewControllerTransitioningDelegate {

@@ -31,7 +31,7 @@ class HomeViewController: UIViewController {
         super.viewDidAppear(animated)
         handleNotAuthenticated()
         PlaylistsManager.shared.fetchPlaylistsFromStorage()
-        tableView.reloadData()
+        self.reloadTableView()
     }
     // Called only when view instatiated
 	override func viewDidLoad() {

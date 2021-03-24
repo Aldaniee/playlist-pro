@@ -96,8 +96,6 @@ public class DatabaseManager {
                 let library = dictionary["library"] as? NSMutableArray
                 dump(snapshot)
                 if library != nil {
-                    print("LIBRARY")
-                    print(library!)
                     completion(library!)
                 }
                 else {

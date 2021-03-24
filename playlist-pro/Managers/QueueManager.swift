@@ -17,7 +17,7 @@ protocol QueueManagerDelegate: class {
 public class QueueManager: NSObject {
     
     
-    static let shared = QueueManager()
+    static var shared = QueueManager()
     weak var delegate: QueueManagerDelegate?
 
     final let PREV_CUTOFF_FOR_SONG_RESTART = 2.0 // seconds before previous restarts the song
@@ -39,6 +39,13 @@ public class QueueManager: NSObject {
         
         playlistQueue = NSMutableArray()
         addedQueue = NSMutableArray()
+    }
+    
+    func reset() {
+        audioPlayer = YYTAudioPlayer()
+        playlistQueue = NSMutableArray()
+        addedQueue = NSMutableArray()
+        nowPlaying = Song()
     }
     
     /// Returns the queue in full which is a combination of the up next song,

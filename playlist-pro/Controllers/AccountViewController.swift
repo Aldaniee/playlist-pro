@@ -29,7 +29,7 @@ final class AccountViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         configureModels()
-        title = "Account"
+        title = Auth.auth().currentUser?.email
         view.backgroundColor = .systemBackground
         tableView.delegate = self
         tableView.dataSource = self
@@ -62,10 +62,17 @@ final class AccountViewController: UIViewController {
             AuthManager.shared.logOut(completion: { success in
                 DispatchQueue.main.async {
                     if success {
+                        
+                        // Clean up View Controllers
+                        YoutubeSearchManager.shared.searchVC = SearchViewController()
+                        PlaylistsManager.shared.homeVC = HomeViewController()
+                        LibraryManager.shared.libraryVC = LibraryViewController()
+                        QueueManager.shared.reset()
+
+                        
                         // Show log in
                         let loginVC = AuthSplashScreenViewController()
                         loginVC.modalPresentationStyle = .fullScreen
-                        QueueManager.shared.suspend()
                         self.present(loginVC, animated: false) {
                             self.navigationController?.popToRootViewController(animated: false)
                             self.tabBarController?.selectedIndex = 0

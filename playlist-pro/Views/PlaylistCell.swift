@@ -117,7 +117,7 @@ class PlaylistCell : UITableViewCell {
             self.secondaryLabel.text = (songDict!["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
             let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songDict!["id"] as? String ?? "").jpg"))
             if let imgData = imageData {
-                self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(size: Double(PlaylistCell.rowHeight - spacing))
+                self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: Double(PlaylistCell.rowHeight - spacing))
             } else {
                 self.coverImageView.image = UIImage(named: "placeholder")
             }
@@ -136,7 +136,7 @@ class PlaylistCell : UITableViewCell {
                 let firstSong = playlist!.songList.object(at: 0) as! Song
                 let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong["id"] as? String ?? "").jpg"))
                 if let imgData = imageData {
-                    self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(size: 15.0)
+                    self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: 15.0)
                 } else {
                     self.coverImageView.image = UIImage(systemName: "list.bullet")
                 }

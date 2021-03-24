@@ -12,6 +12,8 @@ import XCDYouTubeKit
 class YoutubeSearchManager {
     static let shared = YoutubeSearchManager()
     
+    var searchVC = SearchViewController()
+    
     func search(searchText text: String, completion: @escaping ([Video]?)-> ()) {
                 
         // Create a URL object
@@ -74,25 +76,5 @@ class YoutubeSearchManager {
             LibraryManager.shared.addSongToLibrary(songTitle: title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], videoID: videoID, playlistTitle: playlistTitle, completion: nil)
         }
     }
-    
-    /// Given the library of songDicts is correct, download all of the missing audio files from youtube
-    func downloadMissingLibraryFiles(oldLibrary: NSMutableArray, newLibrary: NSMutableArray) {
-        for element in newLibrary {
-            let song = element as! Song
-            let songName = song[SongValues.title] as! String
-            var songID = song[SongValues.id] as! String
-            if (!oldLibrary.contains(songID)) {
-                print("File not found for song: \(songName). Downloading audio.")
-                let title = song[SongValues.title] as! String
-                let artistArray = NSMutableArray(array: song[SongValues.artists] as! NSArray)
-                if songID.contains("yt_") {
-                    songID = songID.substring(fromIndex: 3)
-                    songID = songID.substring(toIndex: 11)
-                }
-                downloadYouTubeVideo(videoID: songID, title: title, artistArray: artistArray, playlistTitle: nil)
-            }
-            print("Song already found for: \(songName), skipping download")
-        }
 
-    }
 }

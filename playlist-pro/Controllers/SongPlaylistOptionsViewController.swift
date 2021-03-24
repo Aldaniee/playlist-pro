@@ -14,8 +14,6 @@ struct SongPlaylistOptionsCellModel {
 }
 
 protocol SongPlaylistOptionsViewControllerDelegate {
-    func reloadTableView()
-    func removeFromPlaylist(index: Int)
     func openAddToPlaylistViewController(songDict: Song)
 }
 
@@ -142,7 +140,7 @@ class SongPlaylistOptionsViewController: UIViewController {
         self.artistLabel.text = (songDict["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
         let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songDict["id"] as? String ?? "").jpg"))
         if let imgData = imageData {
-            self.albumCoverImageView.image = UIImage(data: imgData)!.cropToSquare(size: Double(albumSize))
+            self.albumCoverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: Double(albumSize))
         } else {
             self.albumCoverImageView.image = placeholder
         }
@@ -158,7 +156,6 @@ class SongPlaylistOptionsViewController: UIViewController {
     @objc func didTapAddToPlaylist() {
         print("add to playlist pressed")
         delegate.openAddToPlaylistViewController(songDict: songDict!)
-        delegate.reloadTableView()
         dismiss(animated: true, completion: nil)
     }
     
@@ -170,27 +167,23 @@ class SongPlaylistOptionsViewController: UIViewController {
         else {
             QueueManager.shared.addToQueue(playlist: playlist!)
         }
-        delegate.reloadTableView()
         dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapRemoveFromPlaylist(songPos: Int) {
         print("Removing Song: \(songDict![SongValues.title] ?? "") Index: \(songPos) from Playlist: \(playlist?.title ?? "")")
-        delegate.removeFromPlaylist(index: songPos)
-        delegate.reloadTableView()
+        PlaylistsManager.shared.removeFromPlaylist(playlist: playlist, index: songPos)
         dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
-        LibraryManager.shared.deleteSongFromLibrary(songID: songDict![SongValues.id] as! String)
-        delegate.reloadTableView()
+        LibraryManager.shared.deleteSongDictFromLibrary(songID: songDict![SongValues.id] as! String)
         dismiss(animated: true, completion: nil)
     }
     @objc func didTapRemovePlaylist() {
         print("remove playlist pressed")
         PlaylistsManager.shared.removePlaylist(playlist: playlist!)
-        delegate.reloadTableView()
         dismiss(animated: true, completion: nil)
     }
 

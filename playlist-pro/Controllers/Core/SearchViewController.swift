@@ -10,7 +10,7 @@ import Combine
 
 class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDelegate, SearchModelDelegate {
 
-    private let searchBar = UISearchBar()
+    let searchBar = UISearchBar()
     
     private var isSearching = false
     
