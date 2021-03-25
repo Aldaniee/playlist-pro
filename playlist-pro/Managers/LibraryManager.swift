@@ -16,8 +16,6 @@ class LibraryManager {
     final let LIBRARY_KEY = "LibraryArray"
     final let LIBRARY_DISPLAY = "Music"
     
-    let userDefaults = UserDefaults.standard
-
 	enum ValueType {
 		case min
 		case max
@@ -50,30 +48,30 @@ class LibraryManager {
         DatabaseManager.shared.downloadSongDictLibrary(user: Auth.auth().currentUser!, oldLibrary: songLibrary.songList) { newLibrary in
 
             let oldLibrary = NSMutableArray(array: self.songLibrary.songList)
-            self.songLibrary.songList = NSMutableArray()
+            self.songLibrary.songList = [Song]()
 
             print("Checking for missing songs to download")
             
             var start = CFAbsoluteTimeGetCurrent()
-            self.downloadMissingLibraryFiles(oldLibrary: oldLibrary, newLibrary: newLibrary)
+            self.downloadMissingLibraryFiles(oldLibrary: oldLibrary, newLibrary: NSMutableArray(array: newLibrary))
             print("Download of all missing songs complete")
             print("Took \(CFAbsoluteTimeGetCurrent() - start) seconds")
             
             start = CFAbsoluteTimeGetCurrent()
             print("Deleting all excess songs from file storage")
-            self.deleteExcessSongs(oldLibrary: oldLibrary, newLibrary: newLibrary)
+            self.deleteExcessSongs(oldLibrary: oldLibrary, newLibrary: NSMutableArray(array: newLibrary))
             print("Delete of all excess songs from file storage complete")
             print("Took \(CFAbsoluteTimeGetCurrent() - start) seconds")
             
-            self.userDefaults.set(newLibrary, forKey: self.LIBRARY_KEY)
+            LocalFilesManager.storeSongArray(self.songLibrary.songList, forKey: self.LIBRARY_KEY)
             self.libraryVC.tableView.reloadData()
         }
     }
     func deleteExcessSongs(oldLibrary: NSMutableArray, newLibrary: NSMutableArray) {
         for element in oldLibrary {
             let song = element as! Song
-            let id = song[SongValues.id] as! String
-            let name = song[SongValues.title] as! String
+            let id = song.id
+            let name = song.title
             if newLibrary.contains(song) == false {
                 let didDelete = LocalFilesManager.deleteFile(withNameAndExtension: "\(id).m4a")
                 _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(id).jpg")
@@ -92,12 +90,8 @@ class LibraryManager {
 
     }
     func refreshSongLibraryFromLocalStorage() {
-        songLibrary.songList = NSMutableArray(array: userDefaults.value(forKey: LIBRARY_KEY) as? NSArray ?? NSArray())
+        songLibrary.songList = LocalFilesManager.retreiveSongArray(forKey: LIBRARY_KEY)
         libraryVC.tableView.reloadData()
-    }
-    
-    func saveSongLibraryToLocalStorage() {
-        userDefaults.set(songLibrary.songList, forKey: LIBRARY_KEY)
     }
 
     func updateLibraryToDatabase() {
@@ -210,9 +204,9 @@ class LibraryManager {
     }
 	
     private func addSongDictToLibraryArray(sID: String, videoID: String?, songUrl: URL, newExtension: String, songTitle: String?, artists: NSMutableArray, playlistTitle: String?, completion: (() -> Void)? = nil) {
-            let duration = LocalFilesManager.extractDurationForSong(songID: sID, songExtension: newExtension)
-            let link = videoID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(videoID ?? "UNKNOWN_ERROR")"
-            let songDict = [SongValues.id: sID,
+        let duration = LocalFilesManager.extractDurationForSong(songID: sID, songExtension: newExtension)
+        let link = videoID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(videoID ?? "UNKNOWN_ERROR")"
+        let song = [SongValues.id: sID,
                             SongValues.title: songTitle ?? sID,
                             SongValues.artists: artists,
                             SongValues.album: "",
@@ -220,24 +214,24 @@ class LibraryManager {
                             SongValues.duration: duration,
                             SongValues.lyrics: "",
                             SongValues.link: link,
-                            SongValues.fileExtension: newExtension] as Song
-            let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
-            let enrichedDict = self.enrichSongDict(songDict, fromMetadataDict: metadataDict)
-            
-            self.addSongDictToLibraryArray(song: enrichedDict)
-            
-            if (playlistTitle != nil) {
-                PlaylistsManager.shared.addSongToPlaylist(song: enrichedDict, playlistName: playlistTitle!)
-            }
+                            SongValues.fileExtension: newExtension] as SongDict
+        let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
+        let enrichedDict = self.enrichSongDict(song, fromMetadataDict: metadataDict)
+        
+        self.addSongDictToLibraryArray(song: enrichedDict)
+        
+        if (playlistTitle != nil) {
+            PlaylistsManager.shared.addSongToPlaylist(song: enrichedDict, playlistName: playlistTitle!)
+        }
 
-            self.saveSongLibraryToLocalStorage()
-            self.updateLibraryToDatabase()
-            
-            completion?()
+        LocalFilesManager.storeSongArray(songLibrary.songList, forKey: LIBRARY_KEY)
+        self.updateLibraryToDatabase()
+        
+        completion?()
     }
     
     func addSongDictToLibraryArray(song: Song) {
-        self.songLibrary.songList.add(song)
+        self.songLibrary.songList.append(song)
         libraryVC.tableView.reloadData()
     }
     
@@ -245,12 +239,12 @@ class LibraryManager {
     func downloadMissingLibraryFiles(oldLibrary: NSMutableArray, newLibrary: NSMutableArray) {
         for element in newLibrary {
             let song = element as! Song
-            let songName = song[SongValues.title] as! String
-            var songID = song[SongValues.id] as! String
+            let songName = song.title
+            var songID = song.id
             if (!oldLibrary.contains(song)) {
                 print("File not found for song: \(songName). Downloading audio.")
-                let title = song[SongValues.title] as! String
-                let artistArray = NSMutableArray(array: song[SongValues.artists] as! NSArray)
+                let title = song.title
+                let artistArray = NSMutableArray(array: song.artists)
                 if songID.contains("yt_") {
                     songID = songID.substring(fromIndex: 3)
                     songID = songID.substring(toIndex: 11)
@@ -266,11 +260,10 @@ class LibraryManager {
     /// Check if a song is in the library that matches parameter videoID
     func hasSongInLibrary(videoID: String?) -> Bool{
         if videoID != nil {
-            for element in songLibrary.songList {
-                let song = element as! Song
-                let songID = song[SongValues.id] as! String
+            for song in songLibrary.songList {
+                let songID = song.id
                 if songID.contains(videoID!) {
-                    print("song \(song[SongValues.title] as! String) found in library")
+                    print("song \(song.title) found in library")
                     print("videoID: \(videoID!) is contained in songID: \(songID)")
                     return true
                 }
@@ -282,9 +275,8 @@ class LibraryManager {
     
     func findSongIDfrom(videoID: String?) -> String?{
         if videoID != nil {
-            for element in songLibrary.songList {
-                let song = element as! Song
-                let songID = song[SongValues.id] as! String
+            for song in songLibrary.songList {
+                let songID = song.id
                 if songID.contains(videoID!) {
                     print("videoID: \(videoID!) is contained in songID: \(songID)")
                     return songID
@@ -295,14 +287,17 @@ class LibraryManager {
         return nil
     }
     
-	func enrichSongDict(_ songDict: Song, fromMetadataDict mdDict: Song) -> Song {
-		var enrichredDict = songDict
+	func enrichSongDict(_ songDict: SongDict, fromMetadataDict mdDict: SongDict) -> Song {
+        
+        
+        
 		var key: String
         let songID = songDict[SongValues.id] as! String
-        let songTitle = songDict[SongValues.title] as! String
-        let artists = songDict[SongValues.artists] as! NSMutableArray
-        let songAlbum = songDict[SongValues.album] as! String
-        let songYear = songDict[SongValues.releaseYear] as! String
+        var songTitle = songDict[SongValues.title] as! String
+        var songArtists = songDict[SongValues.artists] as! NSMutableArray
+        var songAlbum = songDict[SongValues.album] as! String
+        var songReleaseYear = songDict[SongValues.releaseYear] as! String
+        let tags = NSMutableArray()
 		for (k, val) in mdDict {
 			if (val as? String ?? "") == "" && (val as? Data ?? Data()).isEmpty {
 				continue
@@ -310,19 +305,19 @@ class LibraryManager {
 			key = getKey(forMetadataKey: k)
 
             if key == SongValues.title && (songTitle == songID || songTitle == "") {  // if metadata has value and song title is set to default value or empty String
-                enrichredDict[SongValues.title] = val as! String
+                songTitle = val as! String
 				
-            } else if key == SongValues.artists && artists == NSMutableArray() {
-                (enrichredDict[SongValues.artists] as! NSMutableArray).add(val as! String)
-				
-            } else if key == SongValues.album && songYear == "" {  // if metadata has value and song album is set to default value
-                enrichredDict[SongValues.album] = val as! String
+            } else if key == SongValues.artists && songArtists == NSMutableArray() {
+                songArtists = NSMutableArray()
+                songArtists.add(val as! String)
+            } else if key == SongValues.album && songReleaseYear == "" {  // if metadata has value and song album is set to default value
+                songAlbum = val as! String
 
-			} else if key == "year" && songAlbum == "" {  // if metadata has value and song album is set to default value
-                enrichredDict[SongValues.releaseYear] = val as! String
+			} else if key == SongValues.releaseYear && songAlbum == "" {  // if metadata has value and song album is set to default value
+                songReleaseYear = val as! String
 
 			} else if key == "type" {
-                (enrichredDict[SongValues.tags] as! NSMutableArray).add(val as! String)
+                tags.add(val as! String)
 				
 			} else if key == "artwork" && !LocalFilesManager.checkFileExist(songID + ".jpg") {
 				if let jpgImageData = UIImage(data: val as! Data)?.jpegData(compressionQuality: 1) {  // make sure image is jpg
@@ -333,7 +328,8 @@ class LibraryManager {
 				print("songDict not enriched for key: " + key + " -> " + String(describing: val))
 			}
 		}
-		return enrichredDict
+        let song = Song(id: songID, link: songDict[SongValues.link] as! String, fileExtension: songDict[SongValues.fileExtension] as! String, title: songTitle, artists: songArtists.asStringArray(), album: songAlbum, releaseYear: songReleaseYear, duration: songDict[SongValues.duration] as! String, lyrics: songDict[SongValues.lyrics] as? String, tags: tags.asStringArray())
+        return song
 	}
 	
 	private func getKey(forMetadataKey mdKey: String) -> String {
@@ -376,11 +372,11 @@ class LibraryManager {
 	func deleteSongDictFromLibrary(songID: String) {
         QueueManager.shared.removeAllInstancesFromQueue(songID: songID)
         PlaylistsManager.shared.removeFromAllPlaylists(songID: songID)
-		var songDict = Song()
+        var songDict : Song
 		for i in 0 ..< songLibrary.songList.count {
-            songDict = songLibrary.songList.object(at: i) as! Song
-			if songDict[SongValues.id] as! String == songID {
-				let songExt = (songDict[SongValues.id] as? String) ?? "m4a"  //support legacy code
+            songDict = songLibrary.songList[i]
+			if songDict.id == songID {
+                let songExt = songDict.fileExtension
 				if LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).\(songExt)") {
 					_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).jpg")
                     deleteSongDictFromLibrary(song: songDict)
@@ -393,32 +389,34 @@ class LibraryManager {
 	}
     
     func deleteSongDictFromLibrary(song: Song) {
-        songLibrary.songList.remove(song)
+        let temp = NSMutableArray(array: songLibrary.songList)
+        temp.remove(song)
+        songLibrary.songList = temp as! [Song]
         libraryVC.tableView.reloadData()
     }
 
 	func checkSongExistInLibrary(songLink: String) -> Bool {
         refreshSongLibraryFromLocalStorage()
-		var songDict = Song()
+        var songDict : Song
 		for i in 0 ..< songLibrary.songList.count {
-            songDict = songLibrary.songList.object(at: i) as! Song
-            if songDict[SongValues.link] as! String == songLink {
+            songDict = songLibrary.songList[i]
+            if songDict.link == songLink {
 				return true
 			}
 		}
 		return false
 	}
 
-	func getSong(forID songID: String) -> Song {
+	func getSong(forID songID: String) -> Song? {
         refreshSongLibraryFromLocalStorage()
-		var songDict = Song()
+        var songDict : Song
 		for i in 0 ..< songLibrary.songList.count {
-			songDict = songLibrary.songList.object(at: i) as! Song
-			if songDict[SongValues.id] as! String == songID {
+			songDict = songLibrary.songList[i]
+			if songDict.id == songID {
 				return songDict
 			}
 		}
-		return Dictionary()
+		return nil
 	}
 
 //    func updateSong(newSong: Song) {
@@ -426,7 +424,7 @@ class LibraryManager {
 //		var songDict = Song()
 //		for i in 0 ..< songLibrary.songList.count {
 //			songDict = songLibrary.songList.object(at: i) as! Song
-//            if songDict[SongValues.id] as! String == newSong[SongValues.id] as! String {
+//            if songDict.id == newSong.id {
 //                songLibrary.songList.replaceObject(at: i, with: newSong)
 //                saveSongLibraryToLocalStorage()
 //                self.updateLibraryToDatabase()

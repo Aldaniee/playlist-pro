@@ -25,7 +25,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     var miniPlayerView = MiniPlayerView(frame: .zero)
     var nowPlayingVC = NowPlayingViewController()
     var queueVC = QueueViewController()
-    var displayedSong: Song = [:]
+    var displayedSong: Song?
 
     var isProgressBarSliding = false
 
@@ -78,7 +78,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         view.addSubview(miniPlayerView)
         view.addSubview(tabBarBackground)
         // Added for testing of user login swap
-        //view.addSubview(downloadButton)
+        view.addSubview(downloadButton)
     }
     let miniPlayerHeight = CGFloat(60)
     override func viewDidLayoutSubviews() {
@@ -172,39 +172,37 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     
 
     func updateDisplayedSong() {
-        if QueueManager.shared.nowPlaying.isEmpty == false {
+        if QueueManager.shared.nowPlaying != nil{
             QueueManager.shared.unsuspend()
             displayedSong = QueueManager.shared.nowPlaying
             miniPlayerView.isHidden = false
+            let songID = displayedSong!.id
+            miniPlayerView.songID = songID
+            let title = displayedSong!.title
+            let artist = (displayedSong!.artists as NSArray? ?? NSArray())!.componentsJoined(by: ", ")
+            miniPlayerView.titleLabel.text = title
+            miniPlayerView.artistLabel.text = artist
+            nowPlayingVC.songTitleLabel.text = title
+            nowPlayingVC.artistLabel.text = artist
+            
+            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
+            if let imgData = imageData {
+                miniPlayerView.albumCover.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
+                nowPlayingVC.albumCoverImageView.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
+
+            } else {
+                miniPlayerView.albumCover.image = UIImage(systemName: "questionmark")
+                nowPlayingVC.albumCoverImageView.image = UIImage(systemName: "questionmark")
+            }
         } else {
             QueueManager.shared.suspend()
-            displayedSong = Song()
+            displayedSong = nil
             miniPlayerView.isHidden = true
         }
-
-        let songID = displayedSong[SongValues.id] as? String ?? ""
-        miniPlayerView.songID = songID
-        let title = displayedSong[SongValues.title] as? String ?? ""
-        let artist = (displayedSong[SongValues.artists] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
-        miniPlayerView.titleLabel.text = title
-        miniPlayerView.artistLabel.text = artist
-        nowPlayingVC.songTitleLabel.text = title
-        nowPlayingVC.artistLabel.text = artist
         
-        let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
-        if let imgData = imageData {
-            miniPlayerView.albumCover.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
-            nowPlayingVC.albumCoverImageView.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
-
-        } else {
-            miniPlayerView.albumCover.image = UIImage(named: "placeholder")
-            nowPlayingVC.albumCoverImageView.image = UIImage(named: "placeholder")
-
-            
-        }
         miniPlayerView.progressBar.value = 0.0
         nowPlayingVC.progressBar.value = 0.0
-        nowPlayingVC.timeLeftLabel.text = displayedSong[SongValues.duration] as? String ?? "0:00"
+        nowPlayingVC.timeLeftLabel.text = displayedSong?.duration ?? "0:00"
         queueVC.tableView.reloadData()
     }
 
@@ -231,7 +229,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     
     @objc func playbackRateButtonAction(sender: UIButton!) {
         print("Playback rate Button tapped")
-        if displayedSong["id"] as! String == "" {
+        if displayedSong?.id == "" {
             return
         }
         if sender.titleLabel?.text == "x1" {
@@ -271,7 +269,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
                 // handle drag ended
                     QueueManager.shared.setPlayerCurrentTime(withPercentage: slider.value)
                     isProgressBarSliding = false
-                    if displayedSong["id"] as! String == "" {
+                    if displayedSong?.id == nil {
                         slider.value = 0.0
                         return
                     }

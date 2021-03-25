@@ -60,7 +60,7 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
-        cell.songDict = playlist.songList.object(at: indexPath.row) as? Song
+        cell.song = playlist.songList[indexPath.row]
         cell.refreshCell()
         cell.delegate = self
         cell.optionsButton.tag = indexPath.row
@@ -71,16 +71,16 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
-        print("Selected cell number \(indexPath.row) -> \(cell.songDict!["title"] ?? "")")
+        print("Selected cell number \(indexPath.row) -> \(cell.song!.title)")
         QueueManager.shared.setupQueue(with: playlist, startingAt: indexPath.row)
     }
 }
 
 extension PlaylistContentsViewController: SongCellDelegate {
     func optionsButtonTapped(tag: Int) {
-        let songDict = playlist.songList.object(at: tag) as! Song
+        let song = playlist.songList[tag]
         let isLibrary = playlist.title == LibraryManager.shared.LIBRARY_KEY
-        songPlaylistOptionsViewController.setSong(songDict: songDict, isLibrary: isLibrary, index: tag)
+        songPlaylistOptionsViewController.setSong(song: song, isLibrary: isLibrary, index: tag)
         present(songPlaylistOptionsViewController, animated: true, completion: nil)
     }
 }
@@ -99,9 +99,9 @@ extension PlaylistContentsViewController: SongPlaylistOptionsViewControllerDeleg
     func reloadTableView() {
         tableView.reloadData()
     }
-    func openAddToPlaylistViewController(songDict: Song) {
+    func openAddToPlaylistViewController(song: Song) {
         let vc = AddToPlaylistViewController()
-        vc.songDict = songDict
+        vc.song = song
         let secondsDelay = 0.7
         DispatchQueue.main.asyncAfter(deadline: .now() + secondsDelay) {
             self.present(vc, animated: true, completion: {

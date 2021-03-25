@@ -570,6 +570,9 @@ extension NSArray {
         }
         return false
     }
+    func asStringArray() -> [String] {
+        return self.compactMap({ $0 as? String })
+    }
 
 }
 
@@ -582,7 +585,14 @@ extension NSMutableArray {
         })
     }
 }
-
+extension Encodable {
+    var toDict: Dictionary<String,Any>? {
+        guard let data =  try? JSONEncoder().encode(self) else {
+            return nil
+        }
+        return try? JSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: Any]
+    }
+}
 extension UIImage {
     
     func cropToSquare(sideLength: Double) -> UIImage {

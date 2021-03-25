@@ -21,7 +21,7 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 
 	private(set) var audioPlayer: AVAudioPlayer!
 	private var songsQueue: NSMutableArray!
-	private(set) var songDict: Song!
+	private(set) var song: Song!
 	private var updater = CADisplayLink()
 	private(set) var isSuspended: Bool = false
 	var isSongRepeat: Bool = false
@@ -49,10 +49,10 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 		return setupPlayer(withSong: songsQueue.object(at: 0) as! Song)
 	}
 	
-	func setupPlayer(withSong songDict: Song) -> Bool {
-		self.songDict = songDict
-        let songID = songDict[SongValues.id] as! String
-        let songExt = songDict[SongValues.fileExtension] as? String ?? "m4a"  //support legacy code
+	func setupPlayer(withSong song: Song) -> Bool {
+		self.song = song
+        let songID = song.id
+        let songExt = song.fileExtension
 		let url = LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).\(songExt)")
 		do {
 			if audioPlayer != nil {
@@ -131,9 +131,9 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 	func setupNowPlaying() {
 		// Define Now Playing Info
 		var nowPlayingInfo = [String : Any]()
-        nowPlayingInfo[MPMediaItemPropertyTitle] = songDict[SongValues.title] as? String
+        nowPlayingInfo[MPMediaItemPropertyTitle] = song.title
 
-        let songID = songDict[SongValues.id] as? String ?? ""
+        let songID = song.id
 		let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
 		let image: UIImage
 		if let imgData = imageData {

@@ -21,6 +21,7 @@ target 'playlist-pro' do
   pod 'Firebase/Analytics'
   pod 'Firebase/Crashlytics'
   pod 'Firebase/Storage'
+  pod 'CodableFirebase'
   pod 'Alamofire', '~> 5.2'
   pod "XCDYouTubeKit", "~> 2.15"
   

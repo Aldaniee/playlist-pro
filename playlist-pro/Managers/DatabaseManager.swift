@@ -7,6 +7,7 @@
 
 import FirebaseDatabase
 import FirebaseAuth
+import CodableFirebase
 public class DatabaseManager {
     static let shared = DatabaseManager()
     
@@ -46,13 +47,17 @@ public class DatabaseManager {
     ///     - user: User object for the current user
     ///     - Async callback for result if database entry succeeded
     func updateLibrary(library: Playlist, user: User, completion: @escaping (Bool) -> Void) {
-        
+        let encodedSongArray = self.encodeSongArray(library.songList)
+        print(encodedSongArray)
+
         if(user.isAnonymous) {
-            database.child("anonymous-users/\(user.uid)/library").setValue(library.songList) { error, _ in
+            database.child("anonymous-users/\(user.uid)/library").setValue(encodedSongArray ) { error, _ in
                 if error == nil {
                     // succeeded
+                    print("Successfully updated library to database")
                 }
                 else {
+                    print("Error While updating library to database")
                     print(error!)
                     // failed
                 }
@@ -64,11 +69,13 @@ public class DatabaseManager {
                 print("error missing email")
             }
             else {
-                database.child("\(user.email!.safeDatabaseKey())/library").setValue(library.songList) { error, _ in
+                database.child("\(user.email!.safeDatabaseKey())/library").setValue(encodedSongArray) { error, _ in
                     if error == nil {
                         // succeeded
+                        print("Successfully updated library to database")
                     }
                     else {
+                        print("Error While updating library to database")
                         print(error!)
                         // failed
                     }
@@ -82,7 +89,7 @@ public class DatabaseManager {
     /// - Parameters
     ///     - user: User object for the current user
     ///     - Async callback for result if database entry succeeded
-    func downloadSongDictLibrary(user: User, oldLibrary: NSMutableArray!, completion: @escaping (NSMutableArray) -> Void) {
+    func downloadSongDictLibrary(user: User, oldLibrary: [Song], completion: @escaping ([Song]) -> Void) {
         var userPath : String!
         if(user.isAnonymous) {
             userPath = "anonymous-users/\(user.uid)"
@@ -93,22 +100,46 @@ public class DatabaseManager {
         database.child(userPath).observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? NSDictionary {
 
-                let library = dictionary["library"] as? NSMutableArray
+                let encodedSongArray = dictionary["library"] as? NSArray
                 dump(snapshot)
-                if library != nil {
-                    completion(library!)
+                if encodedSongArray != nil {
+                    completion(self.decodeSongArray(encodedSongArray!))
                 }
                 else {
                     print("No library in database, return empty library")
-                    completion(NSMutableArray())
+                    completion([Song]())
                 }
             }
             else {
                 print("Snapshot Error")
             }
-        }) { (error) in
-                print(error.localizedDescription)
-                return
-        }
+        });
     }
+    private func encodeSongArray(_ songArray: [Song]) -> NSArray {
+        let encodedSongArray = NSMutableArray()
+        for song in songArray {
+            if let encodedSong = try? FirestoreEncoder().encode(song) {
+                encodedSongArray.add(encodedSong)
+            }
+            else {
+                print("Encoding Error")
+                return NSArray()
+            }
+        }
+        return NSArray(array: encodedSongArray)
+    }
+    private func decodeSongArray(_ encodedSongArray: NSArray) -> [Song]{
+        var songArray = [Song]()
+        for encodedSong in encodedSongArray {
+            if let decodedSong = try? FirestoreDecoder().decode(Song.self, from: encodedSong as! [String : Any]) {
+                songArray.append(decodedSong)
+            }
+            else {
+                print("Decoding Error")
+                return [Song]()
+            }
+        }
+        return songArray
+    }
+
 }

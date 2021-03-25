@@ -183,11 +183,11 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
         switch (indexPath.section) {
             case 0:
-                cell.songDict = QueueManager.shared.nowPlaying
+                cell.song = QueueManager.shared.nowPlaying
             case 1:
-                cell.songDict = QueueManager.shared.addedQueue[indexPath.row] as? Song
+                cell.song = QueueManager.shared.addedQueue[indexPath.row] as? Song
             default:
-                cell.songDict = QueueManager.shared.playlistQueue[indexPath.row] as? Song
+                cell.song = QueueManager.shared.playlistQueue[indexPath.row] as? Song
          }
         cell.refreshCell()
         cell.setDarkStyle()
@@ -199,7 +199,7 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
-        print("Selected cell number \(indexPath.row) -> \(cell.songDict![SongValues.title] ?? "")")
+        print("Selected cell number \(indexPath.row) -> \(cell.song!.title)")
         QueueManager.shared.didSelectSong(index: getIndex(indexPath: indexPath))
         tableView.reloadData()
     }

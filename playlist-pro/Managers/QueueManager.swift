@@ -27,7 +27,7 @@ public class QueueManager: NSObject {
     var shuffleStatus = false
 
     var currentPlaylist : Playlist?
-    var nowPlaying = Song()
+    var nowPlaying : Song?
     var nowPlayingSource = "playlist"
     var playlistQueue : NSMutableArray!
     var addedQueue : NSMutableArray!
@@ -45,14 +45,16 @@ public class QueueManager: NSObject {
         audioPlayer = YYTAudioPlayer()
         playlistQueue = NSMutableArray()
         addedQueue = NSMutableArray()
-        nowPlaying = Song()
+        nowPlaying = nil
     }
     
     /// Returns the queue in full which is a combination of the up next song,
     /// addedQueue, and playlistQueue. This is used as the array of songs playback
     func combinedQueue() -> NSMutableArray {
         let combined = NSMutableArray(array: addedQueue.addingObjects(from: playlistQueue as [AnyObject]))
-        combined.insert(nowPlaying, at: 0)
+        if nowPlaying != nil {
+            combined.insert(nowPlaying!, at: 0)
+        }
 
         return combined
     }
@@ -72,7 +74,7 @@ public class QueueManager: NSObject {
             print("Audio Player Force Unsuspended")
         }
         didSelectSong(index: startingAt)
-        if nowPlaying.isEmpty {
+        if nowPlaying == nil {
             moveQueueForward()
         }
         setupAudioPlayer()
@@ -94,12 +96,12 @@ public class QueueManager: NSObject {
         switch (section) {
             case 0:
                 if addedQueue.count == 0 {
-                    nowPlaying = playlistQueue.object(at: 0) as! Song
+                    nowPlaying = playlistQueue.object(at: 0) as? Song
                     nowPlayingSource = "playlist"
                     playlistQueue.removeObject(at: 0)
                 }
                 else {
-                    nowPlaying = addedQueue.object(at: 0) as! Song
+                    nowPlaying = addedQueue.object(at: 0) as? Song
                     nowPlayingSource = "added"
                     addedQueue.removeObject(at: 0)
                 }
@@ -113,18 +115,18 @@ public class QueueManager: NSObject {
         }
     }
     func removeAllInstancesFromQueue(songID: String) {
-        if songID == nowPlaying[SongValues.id] as? String {
+        if songID == nowPlaying?.id {
             removeFromQueue(section: 0, index: 0)
         }
         for index in 0..<playlistQueue.count {
             let songDict = playlistQueue[index] as! Song
-            if songID == songDict[SongValues.id] as! String {
+            if songID == songDict.id {
                 removeFromQueue(section: 1, index: index)
             }
         }
         for index in 0..<addedQueue.count {
             let songDict = addedQueue[index] as! Song
-            if songID == songDict[SongValues.id] as! String {
+            if songID == songDict.id {
                 removeFromQueue(section: 2, index: index)
             }
         }
@@ -136,32 +138,33 @@ public class QueueManager: NSObject {
             playlistQueue = NSMutableArray(array: (playlistQueue as! Array<Dictionary<String,Any>>).shuffled())
         }
         else {
-            let playingSongPlaylistIndex = currentPlaylist!.songList.index(of: nowPlaying)
+            var playingSongPlaylistIndex = 0
+            if nowPlaying != nil {
+                playingSongPlaylistIndex = NSArray(array: currentPlaylist!.songList).index(of: nowPlaying!)
+            }
             playlistQueue = NSMutableArray(array: currentPlaylist!.songList)
             moveQueueForward(to: playingSongPlaylistIndex)
         }
     }
 	func moveQueueForward() {
         if addedQueue.count == 0 {
-            if repeatSelection == RepeatType.playlist && nowPlayingSource == "playlist" {
-                if nowPlaying.isEmpty == false {
-                    playlistQueue.add(nowPlaying)
-                }
+            if repeatSelection == RepeatType.playlist && nowPlayingSource == "playlist" && nowPlaying != nil{
+                playlistQueue.add(nowPlaying!)
             }
-            nowPlaying = playlistQueue.object(at: 0) as! Song
+            nowPlaying = playlistQueue.object(at: 0) as? Song
             nowPlayingSource = "playlist"
             playlistQueue.removeObject(at: 0)
         }
         else {
-            nowPlaying = addedQueue.object(at: 0) as! Song
+            nowPlaying = addedQueue.object(at: 0) as? Song
             nowPlayingSource = "added"
             addedQueue.removeObject(at: 0)
         }
 	}
 	
 	func moveQueueBackward() {
-        playlistQueue.add(nowPlaying)
-        nowPlaying = playlistQueue.object(at: playlistQueue.endIndex()) as! Song
+        playlistQueue.add(nowPlaying!)
+        nowPlaying = playlistQueue.object(at: playlistQueue.endIndex()) as? Song
         nowPlayingSource = "playlist"
 
         playlistQueue.removeObject(at: playlistQueue.endIndex())
@@ -176,7 +179,7 @@ public class QueueManager: NSObject {
 	func didSelectSong(index: Int) {
         if !audioPlayer.isSuspended {
             moveQueueForward(to: index)
-            print(nowPlaying)
+            print("Selected: \(nowPlaying!)")
             updateSongPlaying()
         }
         else {

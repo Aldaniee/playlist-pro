@@ -75,7 +75,6 @@ class HomeViewController: UIViewController {
             present(loginVC, animated: false)
         }
     }
-    func openAddToPlaylistViewController(songDict: Dictionary<String,Any>) {}
 }
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -130,6 +129,8 @@ extension HomeViewController: PlaylistCellDelegate {
 }
 
 extension HomeViewController: CreatePlaylistDelegate, SongPlaylistOptionsViewControllerDelegate {
+    func openAddToPlaylistViewController(song: Song) {}
+
     func removeFromPlaylist(index: Int) {}
     
     func reloadTableView() {

@@ -9,9 +9,10 @@
 import UIKit
 import AVFoundation
 import Alamofire
-
+import CodableFirebase
 class LocalFilesManager {
 	
+    
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -75,8 +76,8 @@ class LocalFilesManager {
 		return TimeInterval(CMTimeGetSeconds(asset.duration)).stringFromTimeInterval()
 	}
 
-	static func extractSongMetadata(songID: String, songExtension: String) -> Song {
-		var dict = Song()
+	static func extractSongMetadata(songID: String, songExtension: String) -> SongDict {
+		var dict = SongDict()
 		let asset = AVAsset(url: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).\(songExtension)"))
 		for item in asset.metadata {
 //			print(String(describing: item.commonKey?.rawValue) + "\t" + String(describing: item.key) + " -> " + String(describing: item.value))
@@ -139,5 +140,48 @@ class LocalFilesManager {
 			print("Cleaning Tmp Directory Failed: " + error.localizedDescription)
 		}
 	}
+    
+    static func encodeSongArray(_ songArray: [Song]) -> NSArray {
+        let encodedSongArray = NSMutableArray()
+        for song in songArray {
+            let encoder = JSONEncoder()
+            if let encodedSong = try? encoder.encode(song) {
+                encodedSongArray.add(encodedSong)
+            }
+            else {
+                print("Encoding Error")
+                return NSArray()
+            }
+        }
+        return NSArray(array: encodedSongArray)
+    }
+    static func decodeSongArray(_ encodedSongArray: NSArray) -> [Song]{
+        var songArray = [Song]()
+        for encodedSong in encodedSongArray {
+            let decoder = JSONDecoder()
+            if let decodedSong = try? decoder.decode(Song.self, from: encodedSong as! Data) {
+                songArray.append(decodedSong)
+            }
+            else {
+                print("Decoding Error")
+                return [Song]()
+            }
+        }
+        return songArray
+    }
+    
+    static func storeSongArray(_ songArray: [Song], forKey key: String) {
+        let encodedSongArray = self.encodeSongArray(songArray)
+        UserDefaults.standard.set(encodedSongArray, forKey: key)
+    }
+    
+    static func retreiveSongArray(forKey key: String) -> [Song] {
+        
+        guard let encodedSongArray = UserDefaults.standard.value(forKey: key) as? NSArray else {
+            return [Song]()
+        }
+        let decodedSongArray = self.decodeSongArray(encodedSongArray)
+        return decodedSongArray
+    }
 
 }

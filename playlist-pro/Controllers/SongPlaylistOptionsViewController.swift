@@ -14,7 +14,7 @@ struct SongPlaylistOptionsCellModel {
 }
 
 protocol SongPlaylistOptionsViewControllerDelegate {
-    func openAddToPlaylistViewController(songDict: Song)
+    func openAddToPlaylistViewController(song: Song)
 }
 
 class SongPlaylistOptionsViewController: UIViewController {
@@ -23,7 +23,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     var delegate : SongPlaylistOptionsViewControllerDelegate!
     
-    private var songDict : Song!
+    private var song : Song!
     
     private var songPlaylistPos : Int!
     
@@ -105,7 +105,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     }
     
     private func configureModels() {
-        if songDict != nil {
+        if song != nil {
             data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.plus")!, title: "Add to playlist") { _ in
                 self.didTapAddToPlaylist()
             })
@@ -131,14 +131,14 @@ class SongPlaylistOptionsViewController: UIViewController {
         }
     }
     
-    func setSong(songDict: Song, isLibrary: Bool, index: Int) {
+    func setSong(song: Song, isLibrary: Bool, index: Int) {
         self.isInLibrary = isLibrary
         self.songPlaylistPos = index
-        self.songDict = songDict
+        self.song = song
         let albumSize = CGFloat(view.width - albumSpacing)
-        self.titleLabel.text = songDict["title"] as? String
-        self.artistLabel.text = (songDict["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
-        let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songDict["id"] as? String ?? "").jpg"))
+        self.titleLabel.text = song.title
+        self.artistLabel.text = NSArray(array: song.artists).componentsJoined(by: ", ")
+        let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(song.id).jpg"))
         if let imgData = imageData {
             self.albumCoverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: Double(albumSize))
         } else {
@@ -155,14 +155,14 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     @objc func didTapAddToPlaylist() {
         print("add to playlist pressed")
-        delegate.openAddToPlaylistViewController(songDict: songDict!)
+        delegate.openAddToPlaylistViewController(song: song!)
         dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapAddToQueue() {
         print("add to queue pressed")
-        if songDict != nil {
-            QueueManager.shared.addToQueue(songDict: songDict)
+        if song != nil {
+            QueueManager.shared.addToQueue(songDict: song)
         }
         else {
             QueueManager.shared.addToQueue(playlist: playlist!)
@@ -171,14 +171,14 @@ class SongPlaylistOptionsViewController: UIViewController {
     }
     
     @objc func didTapRemoveFromPlaylist(songPos: Int) {
-        print("Removing Song: \(songDict![SongValues.title] ?? "") Index: \(songPos) from Playlist: \(playlist?.title ?? "")")
+        print("Removing Song: \(song!.title) Index: \(songPos) from Playlist: \(playlist?.title ?? "")")
         PlaylistsManager.shared.removeFromPlaylist(playlist: playlist, index: songPos)
         dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
-        LibraryManager.shared.deleteSongDictFromLibrary(songID: songDict![SongValues.id] as! String)
+        LibraryManager.shared.deleteSongDictFromLibrary(songID: song.id)
         dismiss(animated: true, completion: nil)
     }
     @objc func didTapRemovePlaylist() {

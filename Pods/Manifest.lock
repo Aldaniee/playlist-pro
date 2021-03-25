@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (5.2.2)
+  - CodableFirebase (0.2.1)
   - Firebase/Analytics (7.3.0):
     - Firebase/Core
   - Firebase/Auth (7.3.0):
@@ -101,6 +102,7 @@ PODS:
 
 DEPENDENCIES:
   - Alamofire (~> 5.2)
+  - CodableFirebase
   - Firebase/Analytics
   - Firebase/Auth
   - Firebase/Core
@@ -113,6 +115,7 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Alamofire
+    - CodableFirebase
     - Firebase
     - FirebaseAnalytics
     - FirebaseAuth
@@ -134,6 +137,7 @@ SPEC REPOS:
 
 SPEC CHECKSUMS:
   Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
+  CodableFirebase: 0bf201991eeec35eb9fcd987d271ea463cf34a80
   Firebase: 26223c695fe322633274198cb19dca8cb7e54416
   FirebaseAnalytics: 2580c2d62535ae7b644143d48941fcc239ea897a
   FirebaseAuth: c224a0cf1afa0949bd5c7bfcf154b4f5ce8ddef2
@@ -153,6 +157,6 @@ SPEC CHECKSUMS:
   SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
   XCDYouTubeKit: c6747c622dd0b52c9e668c028f68097eeffaea39
 
-PODFILE CHECKSUM: a870fcb408a139ed1e53a09e10f77d1f7ee1c7f0
+PODFILE CHECKSUM: aa6820a6a933b108efd9f2aa384a927983796d78
 
 COCOAPODS: 1.10.0

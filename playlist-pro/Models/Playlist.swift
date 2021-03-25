@@ -16,7 +16,7 @@ struct Playlist {
      * title: Unique title of the playlist
      */
     var title : String
-    var songList = NSMutableArray()
+    var songList = [Song]()
     var description : String?
     var image : UIImage?
 }

@@ -25,7 +25,7 @@ class PlaylistsManager {
         let numPlaylists = userDefaults.value(forKey: PLAYLISTS_KEY) as! Int? ?? 0
         for index in 0..<numPlaylists {
             let title = userDefaults.value(forKey: "playlist_title_\(index)") as! String
-            let songList = NSMutableArray(array: userDefaults.value(forKey: "playlist_songList_\(index)") as! NSArray? ?? NSArray())
+            let songList = userDefaults.value(forKey: "playlist_songList_\(index)") as! [Song]
             playlists.append(Playlist(title: title, songList: songList))
             homeVC.reloadTableView()
         }
@@ -48,7 +48,7 @@ class PlaylistsManager {
     func removeFromPlaylist(playlist: Playlist, index: Int) {
         if hasPlaylist(named: playlist.title) {
             let indexOfPlaylist = getPlaylistIndex(title: playlist.title)
-            playlists[indexOfPlaylist].songList.removeObject(at: index)
+            playlists[indexOfPlaylist].songList.remove(at: index)
             homeVC.reloadTableView()
             savePlaylistsToStorage()
         }
@@ -57,18 +57,18 @@ class PlaylistsManager {
     func addSongToPlaylist(song: Song, playlistName: String) {
         if hasPlaylist(named: playlistName) {
             let index = getPlaylistIndex(title: playlistName)
-            playlists[index].songList.add(song)
+            playlists[index].songList.append(song)
             homeVC.reloadTableView()
-            print("Added song \(song[SongValues.title] as! String) to playlist \(playlistName)")
+            print("Added song \(song.title) to playlist \(playlistName)")
         }
         else {
-            print("Tried adding song \(song[SongValues.title] as! String) to playlist \(playlistName) but the playlist was not found")
+            print("Tried adding song \(song.title) to playlist \(playlistName) but the playlist was not found")
         }
     }
     
-    func addPlaylist(title: String, songList: NSMutableArray) {
+    func addPlaylist(title: String, songList: [Song]?) {
         let uniqueTitle = generateUniqueTitle(from: title)
-        let playlist = Playlist(title: uniqueTitle, songList: songList)
+        let playlist = Playlist(title: uniqueTitle, songList: songList ?? [Song]())
         playlists.append(playlist)
         homeVC.reloadTableView()
         savePlaylistsToStorage()
@@ -122,9 +122,8 @@ class PlaylistsManager {
     }
     
     func hasSong(playlist: Playlist, songID: String) -> Bool {
-        for songDict in playlist.songList {
-            let song = (songDict as! Song)
-            if (song[SongValues.id] as! String == songID) {
+        for song in playlist.songList {
+            if (song.id == songID) {
                 return true
             }
         }
@@ -133,8 +132,8 @@ class PlaylistsManager {
 
     func removeAllInstancesOf(songID: String, playlist: Playlist) {
         for index in 0..<playlist.songList.count {
-            let song = (playlist.songList[index] as! Song)
-            if (song[SongValues.id] as! String == songID) {
+            let song = playlist.songList[index]
+            if (song.id == songID) {
                 removeFromPlaylist(playlist: playlist, index: index)
             }
         }

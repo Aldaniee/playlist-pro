@@ -144,7 +144,7 @@ class CreatePlaylistViewController: UIViewController {
             if videos != nil {
                 let video = videos![0]
                 DispatchQueue.main.async {
-                    PlaylistsManager.shared.addPlaylist(title: spotifyPlaylist.name, songList: NSMutableArray())
+                    PlaylistsManager.shared.addPlaylist(title: spotifyPlaylist.name, songList: nil)
                     let videoID = video.videoId
                     let title = video.title
                     let artistArray = NSMutableArray(object: video.artist)

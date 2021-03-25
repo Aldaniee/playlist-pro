@@ -9,7 +9,7 @@ import UIKit
 
 class AddToPlaylistViewController: UIViewController, PlaylistCellDelegate {
 
-    var songDict = Song()
+    var song : Song?
 
     let tableView: UITableView = {
         let tableView = UITableView()
@@ -66,9 +66,9 @@ extension AddToPlaylistViewController: UITableViewDataSource, UITableViewDelegat
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! PlaylistCell
-        let playlist = cell.playlist!
+        var playlist = cell.playlist!
         print("Selected cell number \(indexPath.row) -> \(cell.playlist!.title)")
-        playlist.songList.add(songDict)
+        playlist.songList.append(song!)
         PlaylistsManager.shared.savePlaylistsToStorage()
         dismiss(animated: true, completion: nil)
     }

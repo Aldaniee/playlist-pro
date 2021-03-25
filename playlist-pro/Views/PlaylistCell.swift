@@ -113,9 +113,9 @@ class PlaylistCell : UITableViewCell {
     }
 	func refreshCell() {
         if (songDict != nil) {
-            self.titleLabel.text = songDict!["title"] as? String
-            self.secondaryLabel.text = (songDict!["artists"] as? NSArray ?? NSArray())!.componentsJoined(by: ", ")
-            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songDict!["id"] as? String ?? "").jpg"))
+            self.titleLabel.text = songDict?.title
+            self.secondaryLabel.text = NSArray(array: songDict!.artists).componentsJoined(by: ", ")
+            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songDict!.id).jpg"))
             if let imgData = imageData {
                 self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: Double(PlaylistCell.rowHeight - spacing))
             } else {
@@ -133,8 +133,8 @@ class PlaylistCell : UITableViewCell {
             }
             
             if playlist!.songList.count > 0 {
-                let firstSong = playlist!.songList.object(at: 0) as! Song
-                let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong["id"] as? String ?? "").jpg"))
+                let firstSong = playlist!.songList[0]
+                let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
                 if let imgData = imageData {
                     self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: 15.0)
                 } else {
