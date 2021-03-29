@@ -63,6 +63,13 @@ class YoutubeSearchManager {
         //let vc = UIApplication.getCurrentViewController()
         print("Loading url: https://www.youtube.com/embed/\(videoID)")
         //vc?.showSpinner(onView: vc!.view, withTitle: "Loading...")
+        /**
+         *  Returned when no suitable video stream is available. This can occur due to various reason such as:
+         *  * The video is not playable because of legal reasons or when the video is private.
+         *  * The given video identifier string is invalid.
+         *  * The video was removed as a violation of YouTube's policy or when the video did not exist.
+         */
+        //XCDYouTubeErrorNoStreamAvailable      = -2,
         XCDYouTubeClient.default().getVideoWithIdentifier(videoID) { (video, error) in
             guard video != nil else {
                 print(error?.localizedDescription as Any)

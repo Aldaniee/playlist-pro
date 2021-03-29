@@ -19,6 +19,7 @@ public struct Constants {
     
         static let SEARCHLIST_URL_PT1 = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=\(Constants.YT.MAX_RESULTS)&order=relevance&q="
         static let SEARCHLIST_URL_PT2 = "&type=video&key=\(Constants.YT.API_KEY)"
+        static let DOWNLOAD_REPETITIONS = 5
     }
     struct SPOTIFY {
         static let CLIENT_ID = "***REMOVED***"

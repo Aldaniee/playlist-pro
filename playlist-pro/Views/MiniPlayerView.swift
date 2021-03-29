@@ -44,7 +44,7 @@ class MiniPlayerView: UIView {
             x: albumCover.right + spacing,
             y: height/2-titleSize,
             width: pausePlayButton.left - albumCover.width - spacing,
-            height: titleSize
+            height: titleSize+3
         )
         titleLabel.font = UIFont.systemFont(ofSize: titleSize)
 
@@ -52,7 +52,7 @@ class MiniPlayerView: UIView {
             x: albumCover.right + spacing,
             y: titleLabel.bottom + spacing/2,
             width: pausePlayButton.left - albumCover.width,
-            height: artistSize
+            height: artistSize+3
         )
         artistLabel.font = UIFont.systemFont(ofSize: artistSize)
 

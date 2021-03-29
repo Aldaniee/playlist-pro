@@ -24,13 +24,13 @@ public class DatabaseManager {
     /// Insert user data to database
     /// - Parameters
     ///     – email: String representing email
-    ///     – displayName: String representing display name
     ///     – completion: Async callback for result if database entry succeeded
-    public func insertNewUser(with email: String, displayName: String, completion: @escaping (Bool) -> Void) {
+    public func insertNewUser(with email: String,completion: @escaping (Bool) -> Void) {
         // Email is the database key
         // But @ and . are not allowed characters in a key
         // Call safeDatabaseKey implemented in Extensions.swift to convert
-        database.child(email.safeDatabaseKey()).setValue(["displayName": displayName]) { error, _ in
+        let index = email.lastIndex(of: "@")!
+        database.child(email.safeDatabaseKey()).setValue(["displayName": email.prefix(upTo: index)]) { error, _ in
             if error == nil {
                 // succeeded
             }

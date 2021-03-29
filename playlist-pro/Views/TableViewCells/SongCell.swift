@@ -72,6 +72,7 @@ class SongCell : UITableViewCell {
     let optionsButtonHeight = CGFloat(30)
     
     override func layoutSubviews() {
+        super.layoutSubviews()
         let albumCoverImageSize = SongCell.rowHeight - spacing
         coverImageView.frame = CGRect(
             x: spacing/2,
@@ -89,7 +90,7 @@ class SongCell : UITableViewCell {
             x: coverImageView.right + spacing,
             y: spacing,
             width: optionsButton.left - spacing - coverImageView.right,
-            height: titleLabelSize
+            height: titleLabelSize+3
         )
         titleLabel.font = UIFont.boldSystemFont(ofSize: titleLabelSize)
 
@@ -97,7 +98,7 @@ class SongCell : UITableViewCell {
             x: coverImageView.right + spacing,
             y: titleLabel.bottom + 5,
             width: optionsButton.left - spacing - coverImageView.right,
-            height: artistLabelLabelSize
+            height: artistLabelLabelSize+3
         )
         secondaryLabel.font = UIFont.systemFont(ofSize: artistLabelLabelSize)
 

@@ -14,7 +14,7 @@ public class AuthManager {
     var isSignedIn = Auth.auth().currentUser != nil
     
     // MARK: - Public
-    public func registerNewUser(displayName: String, email: String, password: String, completion: @escaping (Bool) -> Void) {
+    public func registerNewUser(email: String, password: String, completion: @escaping (Bool) -> Void) {
         // Check if email is avialable
         DatabaseManager.shared.canCreateNewUser(with: email) { canCreate in
             if canCreate {
@@ -29,7 +29,7 @@ public class AuthManager {
                     return
                 }
                 // Insert Account to database
-                DatabaseManager.shared.insertNewUser(with: email, displayName: displayName) { inserted in
+                DatabaseManager.shared.insertNewUser(with: email) { inserted in
                     if inserted {
                         // Success
                         print("Inserted into database")

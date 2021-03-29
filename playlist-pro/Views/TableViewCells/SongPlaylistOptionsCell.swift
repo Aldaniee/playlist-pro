@@ -49,7 +49,7 @@ class SongPlaylistOptionsCell: UITableViewCell {
             x: titleLabelX,
             y: contentView.height/2 - titleLabelSize/2,
             width: contentView.width - titleLabelX,
-            height: titleLabelSize
+            height: titleLabelSize+3
         )
     }
     required init?(coder: NSCoder) {

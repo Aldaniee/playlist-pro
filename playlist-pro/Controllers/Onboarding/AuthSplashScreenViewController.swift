@@ -178,6 +178,9 @@ class AuthSplashScreenViewController: UIViewController {
                 print("Signed in with Anonymous auth")
                 // dismiss all view controllers down to the root
                 self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+                let tabBarVC = TabBarViewController()
+                tabBarVC.modalPresentationStyle = .fullScreen
+                self.present(tabBarVC, animated: true)
             }
         }
     }

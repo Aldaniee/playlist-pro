@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
         
         if AuthManager.shared.isSignedIn {
+            SpotifyAuthManager.shared.refreshIfNeeded(completion: nil)
             window.rootViewController = TabBarViewController()
         }
         else {
@@ -42,6 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         To allow the sound continue playing in background mode
         AVAudioSession:    An intermediary object that communicates to the system how you intend to use audio in your app.
         */
+        
         let session = AVAudioSession.sharedInstance()
         do{
             try session.setActive(true)

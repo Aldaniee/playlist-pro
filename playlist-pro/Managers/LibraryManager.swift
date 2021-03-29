@@ -200,7 +200,7 @@ class LibraryManager {
                     //currentViewController?.present(alert, animated: true, completion: nil)
                 }
             }
-		}
+        }
     }
 	
     private func addSongDictToLibraryArray(sID: String, videoID: String?, songUrl: URL, newExtension: String, songTitle: String?, artists: NSMutableArray, playlistTitle: String?, completion: (() -> Void)? = nil) {

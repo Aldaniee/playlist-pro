@@ -43,6 +43,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
     }
     override func viewDidLoad() {
         super.viewDidLoad()
+        LibraryManager.shared.pullLocalLibraryFromDatabase()
         QueueManager.shared.audioPlayer.delegate = self
         QueueManager.shared.delegate = self
         
@@ -78,7 +79,7 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         view.addSubview(miniPlayerView)
         view.addSubview(tabBarBackground)
         // Added for testing of user login swap
-        view.addSubview(downloadButton)
+        //view.addSubview(downloadButton)
     }
     let miniPlayerHeight = CGFloat(60)
     override func viewDidLayoutSubviews() {

@@ -8,49 +8,70 @@
 import UIKit
 import FirebaseAuth
 
-struct AccountCellModel {
-    let title: String
-    let handler: (() -> Void)
-}
-
 /// View Controller to show user settings
 final class AccountViewController: UIViewController {
     
     private var data = [[AccountCellModel]]()
-    static let identifier = "AccountCell"
     
     private let tableView: UITableView = {
         let tableView = UITableView(frame: .zero,
                                     style: .grouped)
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: identifier)
+        tableView.register(AccountSettingsCell.self, forCellReuseIdentifier: AccountSettingsCell.identifier)
         return tableView
     }()
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        tableView.reloadData()
+
+    }
+
     override func viewDidLoad() {
         super.viewDidLoad()
-        configureModels()
-        title = Auth.auth().currentUser?.email
         view.backgroundColor = .systemBackground
         tableView.delegate = self
         tableView.dataSource = self
-
+        guard let user = Auth.auth().currentUser else {
+            print("We should never get here!!!")
+            print("No user logged in, presenting authentication splash screen")
+            let vc = AuthSplashScreenViewController()
+            vc.modalPresentationStyle = .fullScreen
+            present(vc, animated: false)
+            return
+        }
+        if user.isAnonymous {
+            // Show options for user to make an account
+            title = "Guest User"
+            
+            let section = [
+                AccountCellModel(title: "Create Account", subtitle: "Transfers your music") { [weak self] in
+                    self?.didTapCreateAccountButton()
+                },
+                AccountCellModel(title: "Log Out", subtitle: "Loses your music") { [weak self] in
+                    self?.didTapLogoutButton()
+                }
+            ]
+            data.append(section)
+        }
+        else {
+            let section = [
+                AccountCellModel(title: "Log Out", subtitle: "") { [weak self] in
+                    self?.didTapLogoutButton()
+                }
+            ]
+            data.append(section)
+            title = Auth.auth().currentUser?.email
+        }
         view.addSubview(tableView)
-        print(view.subviews)
-
-        tableView.reloadData()
         // Do any additional setup after loading the view.
     }
     override func viewDidLayoutSubviews() {
-        tableView.frame = CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height)
+        tableView.frame = view.frame
     }
-    
-    private func configureModels() {
-        let section = [
-            AccountCellModel(title: "Log Out") { [weak self] in
-                self?.didTapLogoutButton()
-            }
-        ]
-        data.append(section)
+
+    private func didTapCreateAccountButton() {
+        let registrationVC = RegistrationViewController()
+        present(registrationVC, animated: true)
     }
 
     private func didTapLogoutButton() {
@@ -85,12 +106,6 @@ final class AccountViewController: UIViewController {
                 }
             })
         }))
-        
-        //iPad Layout
-        actionSheet.popoverPresentationController?.sourceView = tableView
-        actionSheet.popoverPresentationController?.sourceRect = tableView.bounds
-
-        
         present(actionSheet, animated: true)
     }
 }
@@ -103,15 +118,19 @@ extension AccountViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data[section].count
     }
-    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return AccountSettingsCell.rowHeight
+    }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: AccountViewController.identifier, for: indexPath)
-        cell.textLabel!.text = data[indexPath.section][indexPath.row].title
+        let cell = tableView.dequeueReusableCell(withIdentifier: AccountSettingsCell.identifier, for: indexPath) as! AccountSettingsCell
+        cell.accountCellModel = data[indexPath.section][indexPath.row]
+        cell.refreshCell()
+
         return cell
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        data[indexPath.section][indexPath.row].handler()
+        let cell = tableView.cellForRow(at: indexPath) as! AccountSettingsCell
+        cell.accountCellModel?.handler()
     }
     
     
