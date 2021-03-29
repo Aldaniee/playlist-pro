@@ -62,7 +62,7 @@ class AccountSettingsCell : UITableViewCell {
         titleLabel.font = UIFont.boldSystemFont(ofSize: titleLabelSize)
 
         secondaryLabel.frame = CGRect(
-            x: contentView.left + spacing,
+            x: titleLabel.left + spacing/2,
             y: titleLabel.bottom + 5,
             width: contentView.width - spacing,
             height: secondaryLabelSize+3

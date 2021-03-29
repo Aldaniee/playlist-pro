@@ -44,10 +44,10 @@ final class AccountViewController: UIViewController {
             title = "Guest User"
             
             let section = [
-                AccountCellModel(title: "Create Account", subtitle: "Transfers your music") { [weak self] in
+                AccountCellModel(title: "Create Account", subtitle: "This transfers your music to a new account") { [weak self] in
                     self?.didTapCreateAccountButton()
                 },
-                AccountCellModel(title: "Log Out", subtitle: "Loses your music") { [weak self] in
+                AccountCellModel(title: "Log Out", subtitle: "Loses any music you have saved") { [weak self] in
                     self?.didTapLogoutButton()
                 }
             ]
@@ -75,9 +75,15 @@ final class AccountViewController: UIViewController {
     }
 
     private func didTapLogoutButton() {
+        let user = Auth.auth().currentUser
+        var message = "Are you sure you want to log out?"
+        if user!.isAnonymous {
+            message = "Are you sure you want to log out of your guest account? You will lose your music!"
+        }
         let actionSheet = UIAlertController(title: "Log Out",
-                                            message: "Are you sure you want to log out?",
+                                            message: message,
                                             preferredStyle: .actionSheet)
+        
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { _ in
             AuthManager.shared.logOut(completion: { success in
