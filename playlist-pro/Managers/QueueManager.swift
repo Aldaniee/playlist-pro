@@ -67,16 +67,14 @@ public class QueueManager: NSObject {
     }
     
     func setupQueue(with playlist: Playlist, startingAt: Int) {
+        nowPlaying = nil
         self.currentPlaylist = playlist
         self.playlistQueue = NSMutableArray(array: playlist.songList)
         if audioPlayer.isSuspended {
             audioPlayer.unsuspend()
             print("Audio Player Force Unsuspended")
         }
-        didSelectSong(index: startingAt)
-        if nowPlaying == nil {
-            moveQueueForward()
-        }
+        selectedSongWithinQueue(index: startingAt)
         setupAudioPlayer()
         play()
     }
@@ -148,7 +146,7 @@ public class QueueManager: NSObject {
     }
 	func moveQueueForward() {
         if addedQueue.count == 0 {
-            if repeatSelection == RepeatType.playlist && nowPlayingSource == "playlist" && nowPlaying != nil{
+            if repeatSelection == RepeatType.playlist && nowPlayingSource == "playlist" && nowPlaying != nil {
                 playlistQueue.add(nowPlaying!)
             }
             nowPlaying = playlistQueue.object(at: 0) as? Song
@@ -163,10 +161,9 @@ public class QueueManager: NSObject {
 	}
 	
 	func moveQueueBackward() {
-        playlistQueue.add(nowPlaying!)
+        playlistQueue.insert(nowPlaying!, at: 0)
         nowPlaying = playlistQueue.object(at: playlistQueue.endIndex()) as? Song
         nowPlayingSource = "playlist"
-
         playlistQueue.removeObject(at: playlistQueue.endIndex())
 	}
     
@@ -176,7 +173,7 @@ public class QueueManager: NSObject {
         }
     }
 	
-	func didSelectSong(index: Int) {
+	func selectedSongWithinQueue(index: Int) {
         if !audioPlayer.isSuspended {
             moveQueueForward(to: index)
             print("Selected: \(nowPlaying!)")

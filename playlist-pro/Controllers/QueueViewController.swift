@@ -204,7 +204,7 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
         print("Selected cell number \(indexPath.row) -> \(cell.song!.title)")
-        QueueManager.shared.didSelectSong(index: getIndex(indexPath: indexPath))
+        QueueManager.shared.selectedSongWithinQueue(index: getIndex(indexPath: indexPath))
         tableView.reloadData()
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
