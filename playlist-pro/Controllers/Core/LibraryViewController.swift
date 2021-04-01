@@ -53,9 +53,9 @@ extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SongCell.identifier, for: indexPath) as! SongCell
         cell.song = LibraryManager.shared.songLibrary.songList[indexPath.row]
-        cell.delegate = self
-
         cell.refreshCell()
+        cell.delegate = self
+        cell.optionsButton.tag = indexPath.row
 
         return cell
     }

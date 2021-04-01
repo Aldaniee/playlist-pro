@@ -94,9 +94,15 @@ public class QueueManager: NSObject {
         switch (section) {
             case 0:
                 if addedQueue.count == 0 {
-                    nowPlaying = playlistQueue.object(at: 0) as? Song
-                    nowPlayingSource = "playlist"
-                    playlistQueue.removeObject(at: 0)
+                    if playlistQueue.count == 0 {
+                        audioPlayer.suspend()
+                        nowPlaying = nil
+                    }
+                    else {
+                        nowPlaying = playlistQueue.object(at: 0) as? Song
+                        nowPlayingSource = "playlist"
+                        playlistQueue.removeObject(at: 0)
+                    }
                 }
                 else {
                     nowPlaying = addedQueue.object(at: 0) as? Song
@@ -149,6 +155,7 @@ public class QueueManager: NSObject {
             if repeatSelection == RepeatType.playlist && nowPlayingSource == "playlist" && nowPlaying != nil {
                 playlistQueue.add(nowPlaying!)
             }
+            print("made it here")
             nowPlaying = playlistQueue.object(at: 0) as? Song
             nowPlayingSource = "playlist"
             playlistQueue.removeObject(at: 0)
@@ -186,7 +193,7 @@ public class QueueManager: NSObject {
     
     func nextButtonAction() {
         if !audioPlayer.isSuspended {
-            if repeatSelection == RepeatType.song || playlistQueue.count == 1{
+            if repeatSelection == RepeatType.song || combinedQueue().count == 1 {
                 audioPlayer.audioPlayer.currentTime = 0.0
             }
             else {
@@ -198,7 +205,7 @@ public class QueueManager: NSObject {
     
     func prevButtonAction() {
         if !audioPlayer.isSuspended  {
-            if audioPlayer.audioPlayer?.currentTime ?? 0 < PREV_CUTOFF_FOR_SONG_RESTART && repeatSelection != RepeatType.song {
+            if audioPlayer.audioPlayer?.currentTime ?? 0 < PREV_CUTOFF_FOR_SONG_RESTART && repeatSelection != RepeatType.song && combinedQueue().count > 1 {
                 moveQueueBackward()
                 updateSongPlaying()
             } else {

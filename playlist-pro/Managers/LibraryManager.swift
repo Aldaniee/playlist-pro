@@ -236,8 +236,8 @@ class LibraryManager {
                 //print("Song found in library: \(name), skipping download")
             }
         }
-
     }
+    
     func deleteExcessSongs(oldLibrary: [Song], newLibrary: [Song]) {
         for oldSong in oldLibrary {
             var songFound = false
@@ -270,6 +270,7 @@ class LibraryManager {
         }
 
     }
+    
     func downloadVideoFromSearchList(videos: [Video], playlistName: String?) {
         DispatchQueue.main.async {
 
@@ -319,9 +320,6 @@ class LibraryManager {
     }
     
 	func enrichSongDict(_ songDict: SongDict, fromMetadataDict mdDict: SongDict) -> Song {
-        
-        
-        
 		var key: String
         let songID = songDict[SongValues.id] as! String
         var songTitle = songDict[SongValues.title] as! String
@@ -403,26 +401,24 @@ class LibraryManager {
 	func deleteSongDictFromLibrary(songID: String) {
         QueueManager.shared.removeAllInstancesFromQueue(songID: songID)
         PlaylistsManager.shared.removeFromAllPlaylists(songID: songID)
-        var songDict : Song
+        var song : Song
 		for i in 0 ..< songLibrary.songList.count {
-            songDict = songLibrary.songList[i]
-			if songDict.id == songID {
-                let songExt = songDict.fileExtension
+            song = songLibrary.songList[i]
+			if song.id == songID {
+                let songExt = song.fileExtension
 				if LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).\(songExt)") {
 					_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).jpg")
-                    deleteSongDictFromLibrary(song: songDict)
+                    deleteSongFromLibrary(index: i)
 				}
 				break
 			}
 		}
-        UserDefaults.standard.set(songLibrary.songList, forKey: LIBRARY_KEY)
+        LocalFilesManager.storeSongArray(songLibrary.songList, forKey: LIBRARY_KEY)
         self.updateLibraryToDatabase()
 	}
     
-    func deleteSongDictFromLibrary(song: Song) {
-        let temp = NSMutableArray(array: songLibrary.songList)
-        temp.remove(song)
-        songLibrary.songList = temp as! [Song]
+    func deleteSongFromLibrary(index: Int) {
+        songLibrary.songList.remove(at: index)
         libraryVC.tableView.reloadData()
     }
 
@@ -469,7 +465,7 @@ class LibraryManager {
 		var timestamp: Int = Int(Date().timeIntervalSince1970 * 1000)
 		var str = ""
 		while timestamp != 0 {
-			str += letters[timestamp%10]
+			str += letters[timestamp % 10]
 			timestamp /= 10
 		}
 		return str
