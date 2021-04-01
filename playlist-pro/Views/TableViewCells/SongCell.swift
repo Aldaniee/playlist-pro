@@ -19,7 +19,7 @@ class SongCell : UITableViewCell {
     static let identifier = "SongCell"
 
     // Height of a cell within the table view
-    static let rowHeight = CGFloat(80)
+    static let rowHeight = CGFloat(60)
     
     // Song to be displayed
     var song : Song?
@@ -73,8 +73,8 @@ class SongCell : UITableViewCell {
     }
     
     let spacing = CGFloat(20)
-    let titleLabelSize = CGFloat(16)
-    let artistLabelLabelSize = CGFloat(12)
+    let titleLabelSize = CGFloat(12)
+    let artistLabelLabelSize = CGFloat(9)
     let optionsButtonHeight = CGFloat(30)
     
     override func layoutSubviews() {
@@ -94,17 +94,18 @@ class SongCell : UITableViewCell {
             width: optionsButtonWidth,
             height: optionsButtonHeight
         )
+        let labelsCenter = coverImageView.center.y
         titleLabel.frame = CGRect(
-            x: coverImageView.right + spacing,
-            y: spacing,
+            x: coverImageView.right + spacing/2,
+            y: labelsCenter - titleLabelSize - 1,
             width: optionsButton.left - spacing - coverImageView.right,
             height: titleLabelSize+3
         )
         titleLabel.font = UIFont.boldSystemFont(ofSize: titleLabelSize)
 
         secondaryLabel.frame = CGRect(
-            x: coverImageView.right + spacing,
-            y: titleLabel.bottom + 5,
+            x: coverImageView.right + spacing/2,
+            y: titleLabel.bottom + 2,
             width: optionsButton.left - spacing - coverImageView.right,
             height: artistLabelLabelSize+3
         )

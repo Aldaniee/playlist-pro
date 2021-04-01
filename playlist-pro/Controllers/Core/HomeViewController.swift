@@ -11,6 +11,8 @@ import FirebaseAuth
 
 class HomeViewController: UIViewController {
     
+    private let playlistDetailViewController = PlaylistContentsViewController()
+    
     private let createPlaylistViewController = CreatePlaylistViewController()
 
     private let songPlaylistOptionsViewController = SongPlaylistOptionsViewController()
@@ -115,7 +117,6 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.cellForRow(at: indexPath) as! PlaylistCell
 
         print("Selected cell number \(indexPath.row) -> \(cell.playlist?.title ?? "no playlist found")")
-        let playlistDetailViewController = PlaylistContentsViewController()
         if indexPath.row == 0 {
             playlistDetailViewController.playlist = LibraryManager.shared.songLibrary
         }
@@ -124,6 +125,9 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         }
         playlistDetailViewController.modalPresentationStyle = .fullScreen
         navigationController?.pushViewController(playlistDetailViewController, animated: true)
+    }
+    func reloadPlaylistDetailsVCTableView() {
+        playlistDetailViewController.reloadTableView()
     }
     
 }

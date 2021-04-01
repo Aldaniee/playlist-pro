@@ -178,7 +178,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
-        LibraryManager.shared.deleteSongDictFromLibrary(songID: song.id)
+        LibraryManager.shared.deleteSongFromLibrary(songID: song.id)
         dismiss(animated: true, completion: nil)
     }
     @objc func didTapRemovePlaylist() {

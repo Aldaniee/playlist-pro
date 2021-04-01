@@ -406,7 +406,7 @@ class LibraryManager {
 		}
 	}
     
-	func deleteSongDictFromLibrary(songID: String) {
+	func deleteSongFromLibrary(songID: String) {
         QueueManager.shared.removeAllInstancesFromQueue(songID: songID)
         PlaylistsManager.shared.removeFromAllPlaylists(songID: songID)
         var song : Song
@@ -416,26 +416,22 @@ class LibraryManager {
                 let songExt = song.fileExtension
 				if LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).\(songExt)") {
 					_ = LocalFilesManager.deleteFile(withNameAndExtension: "\(songID).jpg")
-                    deleteSongFromLibrary(index: i)
+                    songLibrary.songList.remove(at: i)
 				}
 				break
 			}
 		}
         LocalFilesManager.storeSongArray(songLibrary.songList, forKey: LIBRARY_KEY)
         self.updateLibraryToDatabase()
-	}
-    
-    func deleteSongFromLibrary(index: Int) {
-        songLibrary.songList.remove(at: index)
+        PlaylistsManager.shared.homeVC.reloadPlaylistDetailsVCTableView()
         libraryVC.tableView.reloadData()
-    }
+	}
 
 	func checkSongExistInLibrary(songLink: String) -> Bool {
         refreshSongLibraryFromLocalStorage()
-        var songDict : Song
 		for i in 0 ..< songLibrary.songList.count {
-            songDict = songLibrary.songList[i]
-            if songDict.link == songLink {
+            let song = songLibrary.songList[i]
+            if song.link == songLink {
 				return true
 			}
 		}

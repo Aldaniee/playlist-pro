@@ -183,7 +183,7 @@ public class QueueManager: NSObject {
 	func selectedSongWithinQueue(index: Int) {
         if !audioPlayer.isSuspended {
             moveQueueForward(to: index)
-            print("Selected: \(nowPlaying?.title)")
+            print("Selected: \(nowPlaying?.title ?? "")")
             updateSongPlaying()
         }
         else {
