@@ -27,6 +27,13 @@ class SongCell : UITableViewCell {
     // Playlist to be displayed
     var playlist : Playlist?
     
+    // Background view for selection color
+    let pressedBackgroundView : UIView = {
+        let view = UIView()
+        view.backgroundColor = .lightGray
+        return view
+    }()
+    
     // Display image for playlist or album cover for song
     let coverImageView: UIImageView = {
         let imgView = UIImageView()
@@ -53,11 +60,10 @@ class SongCell : UITableViewCell {
         btn.titleLabel!.numberOfLines = 0
         return btn
     }()
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .clear
-        
+        self.selectedBackgroundView = pressedBackgroundView
         self.contentView.addSubview(coverImageView)
         self.contentView.addSubview(titleLabel)
         self.contentView.addSubview(secondaryLabel)
@@ -73,6 +79,8 @@ class SongCell : UITableViewCell {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        contentView.backgroundColor = .clear
+
         let albumCoverImageSize = SongCell.rowHeight - spacing
         coverImageView.frame = CGRect(
             x: spacing/2,
@@ -110,6 +118,10 @@ class SongCell : UITableViewCell {
     func setDarkStyle() {
         titleLabel.textColor = .white
         secondaryLabel.textColor = .lightGray
+        contentView.backgroundColor = .clear
+        pressedBackgroundView.backgroundColor = .black
+        self.selectedBackgroundView = pressedBackgroundView
+
         optionsButton.setTitleColor(.white, for: .normal)
     }
     func refreshCell() {

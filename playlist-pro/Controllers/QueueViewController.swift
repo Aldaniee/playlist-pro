@@ -35,6 +35,7 @@ class QueueViewController: UIViewController {
     
     
     override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
         tableView.frame = CGRect(
             x: 0, y: 0, width: view.width, height: view.height - tableViewDist
         )
@@ -75,6 +76,7 @@ class QueueViewController: UIViewController {
         
     }
     override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         tableView.reloadData()
     }
     let tableView: UITableView = {
@@ -189,6 +191,8 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
             default:
                 cell.song = QueueManager.shared.playlistQueue[indexPath.row] as? Song
          }
+        cell.backgroundColor = .clear
+        cell.selectedBackgroundView?.backgroundColor = .black
         cell.refreshCell()
         cell.setDarkStyle()
         return cell

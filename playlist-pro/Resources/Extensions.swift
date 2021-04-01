@@ -19,7 +19,7 @@ extension String {
 // MARK: UIApplication
 extension UIApplication {
     
-    class func getCurrentViewController(base: UIViewController? = UIApplication.shared.keyWindow?.rootViewController) -> UIViewController? {
+    /*class func getCurrentViewController(base: UIViewController? = UIApplication.shared.rootViewController) -> UIViewController? {
         
         if let nav = base as? UINavigationController {
             return getCurrentViewController(base: nav.visibleViewController)
@@ -31,7 +31,7 @@ extension UIApplication {
             return getCurrentViewController(base: presented)
         }
         return base
-    }
+    }*/
     
     var version: String? {
         return Bundle.main.object(forInfoDictionaryKey: "CFBundleShortVersionString") as? String
@@ -420,7 +420,15 @@ extension AVAsset {
     
 }
 
-
+extension Array {
+    func deepCopy() -> Array<Element> {
+        return self.map{
+            let copiable = $0 as! NSCopying
+            return copiable.copy() as! Element
+        }
+    }
+}
+    
 // MARK: UITextField
 extension UITextField {
 

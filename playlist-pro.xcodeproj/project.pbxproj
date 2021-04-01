@@ -253,7 +253,6 @@
 			children = (
 				EA82A552261247470045D2D6 /* TableViewCells */,
 				EA64603F25FBDC3C00B73769 /* PlaylistHeaderCollectionReusableView.swift */,
-				EADD213B26052523002AA641 /* SpotifyPlaylistCell.swift */,
 				EA0558BB25B1191700B1FF85 /* MiniPlayerView.swift */,
 				EA05589B25B118DF00B1FF85 /* YYTRangeSliderTrackLayer.swift */,
 				EA05589C25B118DF00B1FF85 /* YYTRangeSlider.swift */,
@@ -282,6 +281,7 @@
 				EA0558A425B118EA00B1FF85 /* PlaylistCell.swift */,
 				EADD207E2602D81E002AA641 /* SongCell.swift */,
 				EA82A54D261240520045D2D6 /* AccountSettingsCell.swift */,
+				EADD213B26052523002AA641 /* SpotifyPlaylistCell.swift */,
 				EA64605425FEC41E00B73769 /* SongPlaylistOptionsCell.swift */,
 			);
 			path = TableViewCells;

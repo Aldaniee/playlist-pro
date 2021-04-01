@@ -89,7 +89,6 @@ extension SpotifyImportViewController: UITableViewDataSource, UITableViewDelegat
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Selected cell number \(indexPath.row) -> \(playlists[indexPath.row].name)")
         
-        tableView.deselectRow(at: indexPath, animated: true)
         HapticsManager.shared.vibrateForSelection()
 
         let playlist = playlists[indexPath.row]

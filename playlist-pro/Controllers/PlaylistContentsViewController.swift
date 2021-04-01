@@ -73,6 +73,7 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
         print("Selected cell number \(indexPath.row) -> \(cell.song!.title)")
         QueueManager.shared.setupQueue(with: playlist, startingAt: indexPath.row)
+        tableView.reloadData()
     }
 }
 

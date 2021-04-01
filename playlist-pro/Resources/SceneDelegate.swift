@@ -17,10 +17,13 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let window = UIWindow(windowScene: windowScene)
+        
         if #available(iOS 13.0, *) {
             window.overrideUserInterfaceStyle = .light
         }
+        
         if AuthManager.shared.isSignedIn {
+            SpotifyAuthManager.shared.refreshIfNeeded(completion: nil)
             window.rootViewController = TabBarViewController()
         }
         else {

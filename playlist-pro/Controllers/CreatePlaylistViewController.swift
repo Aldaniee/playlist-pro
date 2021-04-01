@@ -142,14 +142,8 @@ class CreatePlaylistViewController: UIViewController {
         }
         YoutubeSearchManager.shared.search(searchText: searchText) { videos in
             if videos != nil {
-                let video = videos![0]
-                DispatchQueue.main.async {
-                    PlaylistsManager.shared.addPlaylist(title: spotifyPlaylist.name, songList: nil)
-                    let videoID = video.videoId
-                    let title = video.title
-                    let artistArray = NSMutableArray(object: video.artist)
-                    YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: spotifyPlaylist.name)
-                }
+                LibraryManager.shared.downloadVideoFromSearchList(videos: videos!, playlistName: spotifyPlaylist.name)
+                
             }                
         }
 
@@ -167,7 +161,17 @@ class CreatePlaylistViewController: UIViewController {
     
     @objc func onImportButtonPressed() {
         print("Import Button Pressed")
-        present(spotifyImportVC, animated: true, completion: nil)
+        if SpotifyAuthManager.shared.isSignedIn {
+            present(spotifyImportVC, animated: true, completion: nil)
+        }
+        else {
+            let vc = SpotifyAuthViewController()
+            vc.completionHandler = { [weak self] success in
+                self?.onImportButtonPressed()
+            }
+            navigationItem.largeTitleDisplayMode = .never
+            present(vc, animated: true, completion: nil)
+        }
     }
 
 }

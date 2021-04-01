@@ -75,6 +75,18 @@ class HomeViewController: UIViewController {
             present(loginVC, animated: false)
         }
     }
+    func openPlaylist(title: String) {
+        var returnIndex : Int? = nil
+        let playlistArray = PlaylistsManager.shared.playlists
+        for index in 0..<playlistArray.count {
+            if playlistArray[index].title == title {
+                returnIndex = index
+            }
+        }
+        if returnIndex != nil {
+            tableView.selectRow(at: IndexPath(row: returnIndex!, section: 0), animated: true, scrollPosition: .top)
+        }
+    }
 }
 extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

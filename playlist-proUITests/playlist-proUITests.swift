@@ -7,7 +7,7 @@
 
 import XCTest
 
-class youtube_onedaybuildUITests: XCTestCase {
+class playlist_proUITests: XCTestCase {
 
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.

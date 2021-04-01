@@ -17,7 +17,11 @@ class YoutubeSearchManager {
     func search(searchText text: String, completion: @escaping ([Video]?)-> ()) {
                 
         // Create a URL object
-        let url = getSearchURL(withText: text)
+        let urlText = getSearchURL(withText: text)
+        guard let url = URL(string: urlText) else {
+            print("ERROR: URL text incompatible: \(urlText)")
+            return
+        }
         
         // Start the task
         sendRequest(url: url) { response in
@@ -54,12 +58,11 @@ class YoutubeSearchManager {
         }.resume()
     }
     
-    func getSearchURL(withText text : String) -> URL {
+    private func getSearchURL(withText text : String) -> String {
         let searchableText = text.replacingOccurrences(of: " ", with: "+", options: .literal, range: nil)
-        let url = URL(string: Constants.YT.SEARCHLIST_URL_PT1 + searchableText + Constants.YT.SEARCHLIST_URL_PT2)!
-        return url
+        return Constants.YT.SEARCHLIST_URL_PT1 + searchableText + Constants.YT.SEARCHLIST_URL_PT2
     }
-    func downloadYouTubeVideo(videoID: String, title: String, artistArray: NSMutableArray, playlistTitle: String?) {
+    func downloadYouTubeVideo(videoID: String, title: String, artistArray: NSMutableArray, playlistTitle: String?, completion: ((Bool) -> Void)? = nil) {
         //let vc = UIApplication.getCurrentViewController()
         print("Loading url: https://www.youtube.com/embed/\(videoID)")
         //vc?.showSpinner(onView: vc!.view, withTitle: "Loading...")
@@ -80,7 +83,9 @@ class YoutubeSearchManager {
                 return
             }
             //vc?.removeSpinner()
-            LibraryManager.shared.addSongToLibrary(songTitle: title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], videoID: videoID, playlistTitle: playlistTitle, completion: nil)
+            LibraryManager.shared.addSongToLibrary(songTitle: title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count/2], videoID: videoID, playlistTitle: playlistTitle) { success in
+                completion?(success)
+            }
         }
     }
 

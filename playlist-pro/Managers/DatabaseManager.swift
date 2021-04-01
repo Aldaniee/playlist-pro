@@ -101,7 +101,7 @@ public class DatabaseManager {
             if let dictionary = snapshot.value as? NSDictionary {
 
                 let encodedSongArray = dictionary["library"] as? NSArray
-                dump(snapshot)
+                //dump(snapshot)
                 if encodedSongArray != nil {
                     completion(self.decodeSongArray(encodedSongArray!))
                 }

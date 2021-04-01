@@ -67,7 +67,7 @@ extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
 
         print("Selected cell number \(indexPath.row) -> \(cell.song?.title ?? "")")
         QueueManager.shared.setupQueue(with: LibraryManager.shared.songLibrary, startingAt: indexPath.row)
-
+        tableView.reloadData()
     }
 }
 extension LibraryViewController: SongCellDelegate {

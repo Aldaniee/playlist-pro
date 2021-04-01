@@ -53,7 +53,6 @@ class SpotifyPlaylistCell : UITableViewCell {
     let titleLabelSize = CGFloat(16)
     
     override func layoutSubviews() {
-        super.layoutSubviews()
         let albumCoverImageSize = PlaylistCell.rowHeight - spacing
         coverImageView.frame = CGRect(
             x: spacing/2,

@@ -9,6 +9,7 @@ import UIKit
 
 class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueManagerDelegate {
     
+    let testingMode = false
     
     let tabBarBackground: UIView = {
         let view = UIView()
@@ -21,6 +22,12 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         btn.setTitle("Download", for: .normal)
         return btn
     }()
+    let spotifyLoggedInView: UILabel = {
+        let view = UILabel()
+        view.backgroundColor = .spotifyGreen
+        view.text = ""
+        return view
+    }()
     
     var miniPlayerView = MiniPlayerView(frame: .zero)
     var nowPlayingVC = NowPlayingViewController()
@@ -29,21 +36,18 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
 
     var isProgressBarSliding = false
 
-    func showNowPlayingView() {
-        print("Showing Now Playing View Controller")
-        nowPlayingVC.modalPresentationStyle = .fullScreen
-        nowPlayingVC.transitioningDelegate = self
-        nowPlayingVC.modalPresentationStyle = .custom
-
-        present(nowPlayingVC, animated: true, completion: nil)
+    convenience init() {
+        self.init(nibName: nil, bundle:nil)
+        LibraryManager.shared.pullLocalLibraryFromDatabase()
     }
+
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.updateDisplayedSong()
+        spotifyLoggedInView.text = SpotifyAuthManager.shared.isSignedIn ? " Logged In" : " Logged Out"
     }
     override func viewDidLoad() {
         super.viewDidLoad()
-        LibraryManager.shared.pullLocalLibraryFromDatabase()
         QueueManager.shared.audioPlayer.delegate = self
         QueueManager.shared.delegate = self
         
@@ -79,7 +83,10 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         view.addSubview(miniPlayerView)
         view.addSubview(tabBarBackground)
         // Added for testing of user login swap
-        //view.addSubview(downloadButton)
+        if testingMode {
+            view.addSubview(downloadButton)
+            view.addSubview(spotifyLoggedInView)
+        }
     }
     let miniPlayerHeight = CGFloat(60)
     override func viewDidLayoutSubviews() {
@@ -87,6 +94,8 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         updateRepeatButton()
         updateShuffleButton()
         downloadButton.frame = CGRect(x: view.center.x-50, y: 50, width: 100, height: 50)
+        spotifyLoggedInView.frame = CGRect(x:50, y: 50, width: 100, height: 50)
+
         downloadButton.addTarget(self, action: #selector(downloadButtonAction), for: .touchUpInside)
         miniPlayerView.frame = CGRect(
             x: 0,
@@ -116,7 +125,14 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         queueVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
 
     }
+    func showNowPlayingView() {
+        print("Showing Now Playing View Controller")
+        nowPlayingVC.modalPresentationStyle = .fullScreen
+        nowPlayingVC.transitioningDelegate = self
+        nowPlayingVC.modalPresentationStyle = .custom
 
+        present(nowPlayingVC, animated: true, completion: nil)
+    }
     @objc func miniplayerButtonPressed(sender: UIButton!) {
         print("MiniPlayerView tapped, showing NowPlayingViewController")
         showNowPlayingView()

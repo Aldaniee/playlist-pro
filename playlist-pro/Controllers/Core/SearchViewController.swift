@@ -46,6 +46,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
 
     }
 
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        searchBar.becomeFirstResponder()
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = CGRect(x: 0,
@@ -140,7 +145,15 @@ extension SearchViewController: UITableViewDataSource {
         let artistArray = NSMutableArray(object: selectedVideo.artist)
         
         // Download the selected video
-        YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: nil)
+        YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: nil) { completion in
+            if completion {
+                print("downloadYoutubeVideo completed with success")
+                self.tabBarController?.selectedIndex = 2
+            }
+            else {
+                print("downloadYoutubeVideo completed with failure")
+            }
+        }
     }
     
 }
