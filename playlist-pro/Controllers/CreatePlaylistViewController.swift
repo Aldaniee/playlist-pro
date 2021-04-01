@@ -61,7 +61,7 @@ class CreatePlaylistViewController: UIViewController {
         button.backgroundColor = .spotifyGreen
         button.setTitle("Import From Spotify", for: .normal)
         button.titleLabel?.font = .systemFont(ofSize: 16, weight: .bold)
-        button.setTitleColor(.black, for: .normal)
+        button.setTitleColor(.white, for: .normal)
         button.addTarget(self, action: #selector(onImportButtonPressed), for: .touchUpInside)
         button.layer.cornerRadius = Constants.UI.cornerRadius
         return button
@@ -125,6 +125,7 @@ class CreatePlaylistViewController: UIViewController {
                     case .success(let model):
                         self?.tracks = model.tracks.items.compactMap({ $0.track })
                         self?.buildPlaylistFromTracks(spotifyPlaylist: playlist)
+                        self?.dismiss(animated: true, completion: nil)
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
@@ -146,8 +147,7 @@ class CreatePlaylistViewController: UIViewController {
         YoutubeSearchManager.shared.search(searchText: searchText) { videos in
             if videos != nil {
                 LibraryManager.shared.downloadVideoFromSearchList(videos: videos!, playlistName: spotifyPlaylist.name)
-                
-            }                
+            }
         }
 
     }

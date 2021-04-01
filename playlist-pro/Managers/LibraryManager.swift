@@ -274,17 +274,25 @@ class LibraryManager {
     func downloadVideoFromSearchList(videos: [Video], playlistName: String?) {
         DispatchQueue.main.async {
 
-            let video = videos[0]
-            let videoID = video.videoId
-            let title = video.title
-            let artistArray = NSMutableArray(object: video.artist)
-            YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: playlistName) { success in
-                if success {
-                    return
+            do {
+                let video = videos[0]
+                let videoID = video.videoId
+                let title = try video.title.strippingHTML() ?? video.title
+                let artistName = try video.artist.strippingHTML() ?? video.artist
+                let artistArray = NSMutableArray(object: artistName)
+                YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: playlistName) { success in
+                    if success {
+                        LibraryManager.shared.libraryVC.reloadTableView()
+                        PlaylistsManager.shared.homeVC.reloadTableView()
+                        return
+                    }
+                    else {
+                        self.downloadVideoFromSearchList(videos: Array<Video>() + videos[1...], playlistName: playlistName)
+                    }
                 }
-                else {
-                    self.downloadVideoFromSearchList(videos: Array<Video>() + videos[1...], playlistName: playlistName)
-                }
+            }
+            catch {
+                print("ERROR: strippingHTML error")
             }
         }
     }
