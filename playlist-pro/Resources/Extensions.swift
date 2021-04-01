@@ -13,6 +13,32 @@ extension String {
     func safeDatabaseKey() -> String {
         return replacingOccurrences(of: ".", with: "-").replacingOccurrences(of: "@", with: "-").lowercased()
     }
+    func strippingHTML() throws -> String?  {
+            if isEmpty {
+                return nil
+            }
+            
+            if let data = data(using: .utf8) {
+                let attributedString = try NSAttributedString(data: data,
+                                                              options: [.documentType : NSAttributedString.DocumentType.html,
+                                                                        .characterEncoding: String.Encoding.utf8.rawValue],
+                                                              documentAttributes: nil)
+                var string = attributedString.string
+               
+                // These steps are optional, and it depends on how you want handle whitespace and newlines
+                string = string.replacingOccurrences(of: "\u{FFFC}",
+                                                     with: "",
+                                                     options: .regularExpression,
+                                                     range: nil)
+                string = string.replacingOccurrences(of: "(\n){3,}",
+                                                     with: "\n\n",
+                                                     options: .regularExpression,
+                                                     range: nil)
+                return string.trimmingCharacters(in: .whitespacesAndNewlines)
+            }
+            
+            return nil
+        }
 }
 
 

@@ -66,11 +66,16 @@ class SearchVideoCell: UITableViewCell {
             print("no video found")
             return
         }
-        
+
+        do {
+            self.titleLabel.text = try self.video!.title.strippingHTML()
+            self.artistLabel.text = try self.video!.artist.strippingHTML()
+        }
+        catch {
+            print("ERROR: strippingHTML error")
+        }
         // Set the title label
-        self.titleLabel.text = self.video!.title
-        self.artistLabel.text = self.video!.artist
-                
+
         // Check cache before downloadiong data
         if let cachedData = CacheManager.getVideoCache(self.video!.thumbnail) {
             // if we are in here we know we found the data in cache

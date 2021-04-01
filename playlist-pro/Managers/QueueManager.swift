@@ -121,6 +121,7 @@ public class QueueManager: NSObject {
     func removeAllInstancesFromQueue(songID: String) {
         if songID == nowPlaying?.id {
             removeFromQueue(section: 0, index: 0)
+            nextButtonAction()
         }
         for index in 0..<playlistQueue.count {
             let songDict = playlistQueue[index] as! Song
@@ -155,7 +156,6 @@ public class QueueManager: NSObject {
             if repeatSelection == RepeatType.playlist && nowPlayingSource == "playlist" && nowPlaying != nil {
                 playlistQueue.add(nowPlaying!)
             }
-            print("made it here")
             nowPlaying = playlistQueue.object(at: 0) as? Song
             nowPlayingSource = "playlist"
             playlistQueue.removeObject(at: 0)
@@ -183,7 +183,7 @@ public class QueueManager: NSObject {
 	func selectedSongWithinQueue(index: Int) {
         if !audioPlayer.isSuspended {
             moveQueueForward(to: index)
-            print("Selected: \(nowPlaying!)")
+            print("Selected: \(nowPlaying?.title)")
             updateSongPlaying()
         }
         else {

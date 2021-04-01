@@ -97,7 +97,5 @@ extension SpotifyImportViewController: UITableViewDataSource, UITableViewDelegat
             dismiss(animated: true, completion: nil)
             return
         }
-        // HANDLE IMPORTING PLAYLIST
-        
     }
 }

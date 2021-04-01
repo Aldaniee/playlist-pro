@@ -135,10 +135,13 @@ class CreatePlaylistViewController: UIViewController {
     
     private func buildPlaylistFromTracks(spotifyPlaylist: SpotifyPlaylist) {
         let track = tracks[0]
-        print("name:\(track.name)")
-        var searchText = track.name
-        for artist in track.artists {
-            searchText = searchText+"\(artist.name)"
+        let artists = track.artists
+        var searchText = "\(artists[0].name) - \(track.name)"
+        if artists.count > 1 {
+            searchText = searchText + " ft. "
+            for i in 1..<track.artists.count {
+                searchText = searchText + " \(artists[i].name)"
+            }
         }
         YoutubeSearchManager.shared.search(searchText: searchText) { videos in
             if videos != nil {
