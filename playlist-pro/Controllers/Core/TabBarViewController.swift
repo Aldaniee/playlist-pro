@@ -7,35 +7,38 @@
 
 import UIKit
 
-class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueManagerDelegate {
+class TabBarViewController: UITabBarController {
     
-    let testingMode = false
-    
-    let tabBarBackground: UIView = {
-        let view = UIView()
-        view.backgroundColor = .blackGray
-        return view
-    }()
-    let downloadButton: UIButton = {
+    // Testing
+    private let testingMode = false
+    private let downloadButton: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .black
         btn.setTitle("Download", for: .normal)
         return btn
     }()
-    let spotifyLoggedInView: UILabel = {
+    private let spotifyLoggedInView: UILabel = {
         let view = UILabel()
         view.backgroundColor = .spotifyGreen
         view.text = ""
         return view
     }()
     
-    var miniPlayerView = MiniPlayerView(frame: .zero)
-    var nowPlayingVC = NowPlayingViewController()
-    var queueVC = QueueViewController()
-    var displayedSong: Song?
+    // Definitions
+    private let tabBarBackground: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blackGray
+        return view
+    }()
+    
+    private var miniPlayerView = MiniPlayerView(frame: .zero)
+    private var nowPlayingVC = NowPlayingViewController()
+    private var queueVC = QueueViewController()
+    private var displayedSong: Song?
 
-    var isProgressBarSliding = false
+    private var isProgressBarSliding = false
 
+    // MARK: - View controller lifecycle methods
     convenience init() {
         self.init(nibName: nil, bundle:nil)
         LibraryManager.shared.pullLocalLibraryFromDatabase()
@@ -80,8 +83,8 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         navLibrary.tabBarItem = UITabBarItem(title: "Library", image: UIImage(systemName: "list.bullet"), tag: 1)
         
         setViewControllers([navPlaylist, navSearch, navLibrary], animated: false)
-        view.addSubview(miniPlayerView)
         view.addSubview(tabBarBackground)
+        view.addSubview(miniPlayerView)
         // Added for testing of user login swap
         if testingMode {
             view.addSubview(downloadButton)
@@ -97,12 +100,23 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         spotifyLoggedInView.frame = CGRect(x:50, y: 50, width: 100, height: 50)
 
         downloadButton.addTarget(self, action: #selector(downloadButtonAction), for: .touchUpInside)
-        miniPlayerView.frame = CGRect(
-            x: 0,
-            y: tabBar.top-miniPlayerHeight,
-            width: view.width,
-            height: miniPlayerHeight
-        )
+        if miniPlayerView.isHidden {
+            miniPlayerView.frame = CGRect(
+                x: 0,
+                y: tabBar.top,
+                width: view.width,
+                height: 0
+            )
+        }
+        else {
+            miniPlayerView.frame = CGRect(
+                x: 0,
+                y: tabBar.top - miniPlayerHeight,
+                width: view.width,
+                height: miniPlayerHeight
+            )
+        }
+
         tabBarBackground.frame = CGRect(
             x: 0, y: tabBar.bottom, width: view.width, height: tabBar.height
         )
@@ -125,55 +139,9 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         queueVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
 
     }
-    func showNowPlayingView() {
-        print("Showing Now Playing View Controller")
-        nowPlayingVC.modalPresentationStyle = .fullScreen
-        nowPlayingVC.transitioningDelegate = self
-        nowPlayingVC.modalPresentationStyle = .custom
-
-        present(nowPlayingVC, animated: true, completion: nil)
-    }
-    @objc func miniplayerButtonPressed(sender: UIButton!) {
-        print("MiniPlayerView tapped, showing NowPlayingViewController")
-        showNowPlayingView()
-    }
     
-    @objc func pausePlayButtonAction(sender: UIButton?) {
-        if QueueManager.shared.isPlaying() {
-            print("Paused")
-            QueueManager.shared.pause()
-            changePlayPauseIcon(isPlaying: false)
-        } else{
-            print("Playing")
-            QueueManager.shared.play()
-            changePlayPauseIcon(isPlaying: true)
-        }
-    }
-    
-    @objc func downloadButtonAction() {
-        LibraryManager.shared.pullLocalLibraryFromDatabase()
-    }
-    
-    func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float) {
-        if !isProgressBarSliding {
-            if duration == 0 {
-                miniPlayerView.progressBar.value = 0.0
-                nowPlayingVC.progressBar.value = 0.0
-                nowPlayingVC.currentTimeLabel.text = "00:00"
-                nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: duration)?.stringFromTimeInterval()
-
-                return
-            }
-            miniPlayerView.progressBar.value = currentTime/duration
-            nowPlayingVC.progressBar.value = currentTime/duration
-            nowPlayingVC.currentTimeLabel.text = TimeInterval(exactly: currentTime)?.stringFromTimeInterval()
-            nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: duration-currentTime)?.stringFromTimeInterval()
-        }
-    }
-    func audioPlayerPlayingStatusChanged(isPlaying: Bool) {
-        changePlayPauseIcon(isPlaying: isPlaying)
-    }
-    func changePlayPauseIcon(isPlaying: Bool) {
+    // MARK: - Internal Logic Methods
+    private func changePlayPauseIcon(isPlaying: Bool) {
         let font = UIFont.systemFont(ofSize: 999)
         let configuration = UIImage.SymbolConfiguration(font: font)
         if isPlaying {
@@ -186,41 +154,62 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
             queueVC.pausePlayButton.setImage(UIImage(systemName: "play.circle.fill", withConfiguration: configuration), for: UIControl.State.normal)
         }
     }
-    
-
-    func updateDisplayedSong() {
-        if QueueManager.shared.nowPlaying != nil{
-            QueueManager.shared.unsuspend()
-            displayedSong = QueueManager.shared.nowPlaying
-            miniPlayerView.isHidden = false
-            let songID = displayedSong!.id
-            miniPlayerView.songID = songID
-            let title = displayedSong!.title
-            let artist = (displayedSong!.artists as NSArray? ?? NSArray())!.componentsJoined(by: ", ")
-            miniPlayerView.titleLabel.text = title
-            miniPlayerView.artistLabel.text = artist
-            nowPlayingVC.songTitleLabel.text = title
-            nowPlayingVC.artistLabel.text = artist
-            
-            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
-            if let imgData = imageData {
-                miniPlayerView.albumCover.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
-                nowPlayingVC.albumCoverImageView.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
-
-            } else {
-                miniPlayerView.albumCover.image = UIImage(systemName: "questionmark")
-                nowPlayingVC.albumCoverImageView.image = UIImage(systemName: "questionmark")
-            }
-        } else {
-            QueueManager.shared.suspend()
-            displayedSong = nil
-            miniPlayerView.isHidden = true
+    private func updateRepeatButton() {
+        if QueueManager.shared.repeatSelection == RepeatType.none {
+            nowPlayingVC.repeatButton.tintColor = .white
+            nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
+            queueVC.repeatButton.tintColor = .white
+            queueVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
         }
+        else if QueueManager.shared.repeatSelection == RepeatType.playlist {
+            nowPlayingVC.repeatButton.tintColor = .darkPink
+            nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
+            queueVC.repeatButton.tintColor = .darkPink
+            queueVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
+        }
+        else {
+            nowPlayingVC.repeatButton.tintColor = .darkPink
+            nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
+            queueVC.repeatButton.tintColor = .darkPink
+            queueVC.repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
+        }
+    }
+    private func updateShuffleButton() {
+        if QueueManager.shared.shuffleStatus {
+            nowPlayingVC.shuffleButton.tintColor = .darkPink
+            queueVC.shuffleButton.tintColor = .darkPink
+        }
+        else {
+            nowPlayingVC.shuffleButton.tintColor = .white
+            queueVC.shuffleButton.tintColor = .white
+        }
+    }
+    
+    // MARK: - Button interaction methods
+    @objc func downloadButtonAction() {
+        LibraryManager.shared.pullLocalLibraryFromDatabase()
+    }
+    
+    @objc func miniplayerButtonPressed(sender: UIButton!) {
+        print("MiniPlayerView tapped, showing NowPlayingViewController")
         
-        miniPlayerView.progressBar.value = 0.0
-        nowPlayingVC.progressBar.value = 0.0
-        nowPlayingVC.timeLeftLabel.text = displayedSong?.duration ?? "0:00"
-        queueVC.tableView.reloadData()
+        nowPlayingVC.modalPresentationStyle = .fullScreen
+        nowPlayingVC.transitioningDelegate = self
+        nowPlayingVC.modalPresentationStyle = .custom
+
+        present(nowPlayingVC, animated: true, completion: nil)
+    }
+    
+    @objc func pausePlayButtonAction(sender: UIButton?) {
+        if QueueManager.shared.isPlaying() {
+            print("Paused")
+            QueueManager.shared.pause()
+            changePlayPauseIcon(isPlaying: false)
+        } else{
+            print("Playing")
+            QueueManager.shared.play()
+            changePlayPauseIcon(isPlaying: true)
+        }
     }
 
     @objc func closeButtonAction(sender: UIButton?) {
@@ -274,7 +263,6 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
         updateRepeatButton()
     }
 
-
     @objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
@@ -303,43 +291,89 @@ class TabBarViewController: UITabBarController, YYTAudioPlayerDelegate, QueueMan
             }
         }
     }
-    
-    func updateRepeatButton() {
-        if QueueManager.shared.repeatSelection == RepeatType.none {
-            nowPlayingVC.repeatButton.tintColor = .white
-            nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
-            queueVC.repeatButton.tintColor = .white
-            queueVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
-        }
-        else if QueueManager.shared.repeatSelection == RepeatType.playlist {
-            nowPlayingVC.repeatButton.tintColor = .darkPink
-            nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
-            queueVC.repeatButton.tintColor = .darkPink
-            queueVC.repeatButton.setImage(UIImage(systemName: "repeat"), for: .normal)
-        }
-        else {
-            nowPlayingVC.repeatButton.tintColor = .darkPink
-            nowPlayingVC.repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
-            queueVC.repeatButton.tintColor = .darkPink
-            queueVC.repeatButton.setImage(UIImage(systemName: "repeat.1"), for: .normal)
-        }
-    }
-    func updateShuffleButton() {
-        if QueueManager.shared.shuffleStatus {
-            nowPlayingVC.shuffleButton.tintColor = .darkPink
-            queueVC.shuffleButton.tintColor = .darkPink
-        }
-        else {
-            nowPlayingVC.shuffleButton.tintColor = .white
-            queueVC.shuffleButton.tintColor = .white
-        }
-    }
-    func refreshQueueVC() {
-        queueVC.tableView.reloadData()
+}
+
+// MARK: - Delegate Extensions
+extension TabBarViewController: UIViewControllerTransitioningDelegate {
+    internal func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
+        CustomPresentationController(presentedViewController: presented, presenting: presenting)
     }
 }
-extension TabBarViewController: UIViewControllerTransitioningDelegate {
-    func presentationController(forPresented presented: UIViewController, presenting: UIViewController?, source: UIViewController) -> UIPresentationController? {
-        CustomPresentationController(presentedViewController: presented, presenting: presenting)
+// MARK: - Custom Delegate Extensions
+extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
+    internal func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float) {
+        if !isProgressBarSliding {
+            if duration == 0 {
+                miniPlayerView.progressBar.value = 0.0
+                nowPlayingVC.progressBar.value = 0.0
+                nowPlayingVC.currentTimeLabel.text = "00:00"
+                nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: duration)?.stringFromTimeInterval()
+
+                return
+            }
+            miniPlayerView.progressBar.value = currentTime/duration
+            nowPlayingVC.progressBar.value = currentTime/duration
+            nowPlayingVC.currentTimeLabel.text = TimeInterval(exactly: currentTime)?.stringFromTimeInterval()
+            nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: duration-currentTime)?.stringFromTimeInterval()
+        }
+    }
+    internal func updateDisplayedSong() {
+        if QueueManager.shared.nowPlaying != nil {
+            QueueManager.shared.unsuspend()
+            displayedSong = QueueManager.shared.nowPlaying
+            if miniPlayerView.isHidden == true {
+                miniPlayerView.isHidden = false
+                UIView.animate(withDuration: 0.5) {
+                    self.view.bringSubviewToFront(self.tabBar)
+                    self.miniPlayerView.frame = CGRect(
+                        x: 0,
+                        y: self.tabBar.top - self.miniPlayerHeight,
+                        width: self.view.width,
+                        height: self.miniPlayerHeight
+                    )
+                }
+            }
+            let songID = displayedSong!.id
+            miniPlayerView.songID = songID
+            let title = displayedSong!.title
+            let artist = (displayedSong!.artists as NSArray? ?? NSArray())!.componentsJoined(by: ", ")
+            miniPlayerView.titleLabel.text = title
+            miniPlayerView.artistLabel.text = artist
+            nowPlayingVC.songTitleLabel.text = title
+            nowPlayingVC.artistLabel.text = artist
+            
+            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
+            if let imgData = imageData {
+                miniPlayerView.albumCover.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
+                nowPlayingVC.albumCoverImageView.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
+
+            } else {
+                miniPlayerView.albumCover.image = UIImage(systemName: "questionmark")
+                nowPlayingVC.albumCoverImageView.image = UIImage(systemName: "questionmark")
+            }
+        } else {
+            QueueManager.shared.suspend()
+            displayedSong = nil
+            if miniPlayerView.isHidden == false {
+                miniPlayerView.isHidden = true
+                self.miniPlayerView.frame = CGRect(
+                    x: 0,
+                    y: self.tabBar.top,
+                    width: self.view.width,
+                    height: 0
+                )
+            }
+        }
+        
+        miniPlayerView.progressBar.value = 0.0
+        nowPlayingVC.progressBar.value = 0.0
+        nowPlayingVC.timeLeftLabel.text = displayedSong?.duration ?? "0:00"
+        queueVC.tableView.reloadData()
+    }
+    internal func audioPlayerPlayingStatusChanged(isPlaying: Bool) {
+        changePlayPauseIcon(isPlaying: isPlaying)
+    }
+    internal func refreshQueueVC() {
+        queueVC.tableView.reloadData()
     }
 }
