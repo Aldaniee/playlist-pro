@@ -47,7 +47,9 @@ class TabBarViewController: UITabBarController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         self.updateDisplayedSong()
-        spotifyLoggedInView.text = SpotifyAuthManager.shared.isSignedIn ? " Logged In" : " Logged Out"
+        if testingMode {
+            spotifyLoggedInView.text = SpotifyAuthManager.shared.isSignedIn ? " Logged In" : " Logged Out"
+        }
     }
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,6 +87,7 @@ class TabBarViewController: UITabBarController {
         setViewControllers([navPlaylist, navSearch, navLibrary], animated: false)
         view.addSubview(tabBarBackground)
         view.addSubview(miniPlayerView)
+        
         // Added for testing of user login swap
         if testingMode {
             view.addSubview(downloadButton)
@@ -96,10 +99,6 @@ class TabBarViewController: UITabBarController {
         updateDisplayedSong()
         updateRepeatButton()
         updateShuffleButton()
-        downloadButton.frame = CGRect(x: view.center.x-50, y: 50, width: 100, height: 50)
-        spotifyLoggedInView.frame = CGRect(x:50, y: 50, width: 100, height: 50)
-
-        downloadButton.addTarget(self, action: #selector(downloadButtonAction), for: .touchUpInside)
         if miniPlayerView.isHidden {
             miniPlayerView.frame = CGRect(
                 x: 0,
@@ -137,7 +136,11 @@ class TabBarViewController: UITabBarController {
         queueVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
         queueVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
         queueVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
-
+        if testingMode {
+            downloadButton.frame = CGRect(x: view.center.x-50, y: 50, width: 100, height: 50)
+            spotifyLoggedInView.frame = CGRect(x:50, y: 50, width: 100, height: 50)
+            downloadButton.addTarget(self, action: #selector(downloadButtonAction), for: .touchUpInside)
+        }
     }
     
     // MARK: - Internal Logic Methods
