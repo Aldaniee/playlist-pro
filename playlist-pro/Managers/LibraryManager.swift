@@ -13,8 +13,8 @@ class LibraryManager {
 
     static let shared = LibraryManager()
     
-    final let LIBRARY_KEY = "LibraryArray"
-    final let LIBRARY_DISPLAY = "Music"
+    static let LIBRARY_KEY = "LibraryArray"
+    static let LIBRARY_DISPLAY = "Music"
     
 	enum ValueType {
 		case min
@@ -22,7 +22,7 @@ class LibraryManager {
 	}
     
     // A playlist storing all songs
-    var songLibrary = Playlist(title: "LibraryArray")
+    var songLibrary = Playlist(title: LIBRARY_KEY)
     
     var libraryVC = LibraryViewController()
     
@@ -63,13 +63,13 @@ class LibraryManager {
             print("Delete of all excess songs from file storage complete")
             print("Took \(CFAbsoluteTimeGetCurrent() - start) seconds\n")
                         
-            LocalFilesManager.storeSongArray(self.songLibrary.songList, forKey: self.LIBRARY_KEY)
+            LocalFilesManager.storePlaylist(self.songLibrary, forIndex: nil)
             self.libraryVC.tableView.reloadData()
         }
     }
 
     func refreshSongLibraryFromLocalStorage() {
-        songLibrary.songList = LocalFilesManager.retreiveSongArray(forKey: LIBRARY_KEY)
+        songLibrary = LocalFilesManager.retreivePlaylist(forIndex: nil)
         libraryVC.tableView.reloadData()
     }
 
@@ -203,7 +203,7 @@ class LibraryManager {
             PlaylistsManager.shared.addSongToPlaylist(song: enrichedDict, playlistName: playlistTitle!)
         }
 
-        LocalFilesManager.storeSongArray(songLibrary.songList, forKey: LIBRARY_KEY)
+        LocalFilesManager.storePlaylist(songLibrary, forIndex: nil)
         self.updateLibraryToDatabase()
     }
     
@@ -421,7 +421,7 @@ class LibraryManager {
 				break
 			}
 		}
-        LocalFilesManager.storeSongArray(songLibrary.songList, forKey: LIBRARY_KEY)
+        LocalFilesManager.storePlaylist(songLibrary, forIndex: nil)
         self.updateLibraryToDatabase()
         PlaylistsManager.shared.homeVC.reloadPlaylistDetailsVCTableView()
         libraryVC.tableView.reloadData()

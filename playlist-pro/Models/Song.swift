@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Song: Codable {
+struct Song : Codable{
     let id: String
     let link: String
     let fileExtension: String
@@ -35,6 +35,7 @@ struct Song: Codable {
         self.tags = tags
     }
 }
+
 typealias SongDict = Dictionary<String, Any>
 
 public struct SongValues {

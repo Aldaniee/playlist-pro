@@ -23,9 +23,8 @@ class PlaylistsManager {
         let numPlaylists = LocalFilesManager.retreiveNumPlaylists()
         
         for index in 0..<numPlaylists {
-            let title = LocalFilesManager.retreivePlaylistTitle(forIndex: index)
-            let songList = LocalFilesManager.retreiveSongArray(forKey: "playlist_songList_\(index)") 
-            playlists.append(Playlist(title: title, songList: songList))
+            let playlist = LocalFilesManager.retreivePlaylist(forIndex: index)
+            playlists.append(playlist)
             homeVC.reloadTableView()
         }
     }
@@ -75,8 +74,7 @@ class PlaylistsManager {
     
     func savePlaylistsToStorage() {
         for index in 0..<playlists.count {
-            LocalFilesManager.storeSongArray(playlists[index].songList, forKey: "playlist_songList_\(index)")
-            LocalFilesManager.storePlaylistTitle(playlists[index].title, forIndex: index)
+            LocalFilesManager.storePlaylist(playlists[index], forIndex: index)
         }
         LocalFilesManager.storeNumPlaylists(numPlaylists: playlists.count)
     }

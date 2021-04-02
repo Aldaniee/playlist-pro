@@ -173,31 +173,45 @@ class LocalFilesManager {
     static func storeNumPlaylists(numPlaylists: Int){
         UserDefaults.standard.set(numPlaylists, forKey: PlaylistsManager.PLAYLISTS_KEY)
     }
-    
     static func retreiveNumPlaylists() -> Int {
         return UserDefaults.standard.value(forKey: PlaylistsManager.PLAYLISTS_KEY) as! Int? ?? 0
     }
-    
-    static func storePlaylistTitle(_ title: String, forIndex index: Int) {
-        UserDefaults.standard.set(title, forKey: "playlist_title_\(index)")
-    }
-    
-    static func storeSongArray(_ songArray: [Song], forKey key: String) {
-        let encodedSongArray = self.encodeSongArray(songArray)
-        UserDefaults.standard.set(encodedSongArray, forKey: key)
-    }
-    
-    static func retreiveSongArray(forKey key: String) -> [Song] {
-        
-        guard let encodedSongArray = UserDefaults.standard.value(forKey: key) as? NSArray else {
-            return [Song]()
-        }
-        let decodedSongArray = self.decodeSongArray(encodedSongArray)
-        return decodedSongArray
-    }
-    
-    static func retreivePlaylistTitle(forIndex index: Int) -> String {
-        return UserDefaults.standard.value(forKey: "playlist_title_\(index)") as? String ?? ""
-    }
 
+    static func retreivePlaylist(forIndex index: Int?) -> Playlist {
+        let key = index == nil ? "library" : "playlist_\(index!)"
+        guard let encoded = UserDefaults.standard.object(forKey: key) as? Data else { return Playlist(title: key) }
+        return try! PropertyListDecoder().decode(Playlist.self, from: encoded)
+    }
+    static func storePlaylist(_ playlist: Playlist, forIndex index: Int?) {
+        // Store playlist object
+        let key = index == nil ? "library" : "playlist_\(index!)"
+        try? UserDefaults.standard.set(PropertyListEncoder().encode(playlist), forKey: key)
+
+        /*
+        // Store Image
+        let image = playlist.image
+        // Convert to Data
+        if let data = image?.pngData() {
+            // Create URL
+            let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            
+            var imageKey = "library_image"
+            if(index != nil) {
+                imageKey = "playlist_image_\(index!)"
+            }
+            let url = documents.appendingPathComponent("\(imageKey).png")
+            do {
+                // Write to Disk
+                try data.write(to: url)
+                let storagePlaylist = StoragePlaylist(
+                    title: playlist.title,
+                    encodedSongArray: encodedSongArray,
+                    description: playlist.description,
+                    imageURL: url
+                )
+            } catch {
+                print("Unable to Write Data to Disk (\(error))")
+            }
+        }*/
+    }
 }
