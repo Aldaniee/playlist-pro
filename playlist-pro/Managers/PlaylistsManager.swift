@@ -9,12 +9,10 @@ import Foundation
 
 class PlaylistsManager {
     static let shared = PlaylistsManager()
-    final let PLAYLISTS_KEY = "PlaylistsArray"
+    static let PLAYLISTS_KEY = "PlaylistsArray"
 
     var playlists = [Playlist]()
-    
-    let userDefaults = UserDefaults.standard
-    
+        
     var homeVC = HomeViewController()
     
     init() {
@@ -22,10 +20,11 @@ class PlaylistsManager {
     }
     func fetchPlaylistsFromStorage() {
         playlists = [Playlist]()
-        let numPlaylists = userDefaults.value(forKey: PLAYLISTS_KEY) as! Int? ?? 0
+        let numPlaylists = LocalFilesManager.retreiveNumPlaylists()
+        
         for index in 0..<numPlaylists {
-            let title = userDefaults.value(forKey: "playlist_title_\(index)") as! String
-            let songList = userDefaults.value(forKey: "playlist_songList_\(index)") as! [Song]
+            let title = LocalFilesManager.retreivePlaylistTitle(forIndex: index)
+            let songList = LocalFilesManager.retreiveSongArray(forKey: "playlist_songList_\(index)") 
             playlists.append(Playlist(title: title, songList: songList))
             homeVC.reloadTableView()
         }
@@ -54,6 +53,14 @@ class PlaylistsManager {
         }
     }
     
+    func addPlaylist(title: String, songList: [Song]?) {
+        let uniqueTitle = generateUniqueTitle(from: title)
+        let playlist = Playlist(title: uniqueTitle, songList: songList ?? [Song]())
+        playlists.append(playlist)
+        homeVC.reloadTableView()
+        savePlaylistsToStorage()
+    }
+    
     func addSongToPlaylist(song: Song, playlistName: String) {
         if hasPlaylist(named: playlistName) {
             let index = getPlaylistIndex(title: playlistName)
@@ -66,20 +73,12 @@ class PlaylistsManager {
         }
     }
     
-    func addPlaylist(title: String, songList: [Song]?) {
-        let uniqueTitle = generateUniqueTitle(from: title)
-        let playlist = Playlist(title: uniqueTitle, songList: songList ?? [Song]())
-        playlists.append(playlist)
-        homeVC.reloadTableView()
-        savePlaylistsToStorage()
-    }
-    
     func savePlaylistsToStorage() {
         for index in 0..<playlists.count {
-            userDefaults.set(playlists[index].songList, forKey: "playlist_songList_\(index)")
-            userDefaults.set(playlists[index].title, forKey: "playlist_title_\(index)")
+            LocalFilesManager.storeSongArray(playlists[index].songList, forKey: "playlist_songList_\(index)")
+            LocalFilesManager.storePlaylistTitle(playlists[index].title, forIndex: index)
         }
-        userDefaults.set(playlists.count, forKey: PLAYLISTS_KEY)
+        LocalFilesManager.storeNumPlaylists(numPlaylists: playlists.count)
     }
     
     func hasPlaylist(named title: String) -> Bool {
@@ -90,7 +89,7 @@ class PlaylistsManager {
         }
         return false
     }
-    func generateUniqueTitle(from title: String) -> String{
+    private func generateUniqueTitle(from title: String) -> String{
         var uniqueTitle = title
         if uniqueTitle == "" {
             uniqueTitle = "My Playlist"

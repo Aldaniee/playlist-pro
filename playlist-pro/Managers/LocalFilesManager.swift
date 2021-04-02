@@ -170,6 +170,18 @@ class LocalFilesManager {
         return songArray
     }
     
+    static func storeNumPlaylists(numPlaylists: Int){
+        UserDefaults.standard.set(numPlaylists, forKey: PlaylistsManager.PLAYLISTS_KEY)
+    }
+    
+    static func retreiveNumPlaylists() -> Int {
+        return UserDefaults.standard.value(forKey: PlaylistsManager.PLAYLISTS_KEY) as! Int? ?? 0
+    }
+    
+    static func storePlaylistTitle(_ title: String, forIndex index: Int) {
+        UserDefaults.standard.set(title, forKey: "playlist_title_\(index)")
+    }
+    
     static func storeSongArray(_ songArray: [Song], forKey key: String) {
         let encodedSongArray = self.encodeSongArray(songArray)
         UserDefaults.standard.set(encodedSongArray, forKey: key)
@@ -182,6 +194,10 @@ class LocalFilesManager {
         }
         let decodedSongArray = self.decodeSongArray(encodedSongArray)
         return decodedSongArray
+    }
+    
+    static func retreivePlaylistTitle(forIndex index: Int) -> String {
+        return UserDefaults.standard.value(forKey: "playlist_title_\(index)") as? String ?? ""
     }
 
 }
