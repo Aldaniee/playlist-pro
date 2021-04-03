@@ -40,8 +40,9 @@ class TabBarViewController: UITabBarController {
 
     // MARK: - View controller lifecycle methods
     convenience init() {
-        self.init(nibName: nil, bundle:nil)
-        LibraryManager.shared.pullLocalLibraryFromDatabase()
+        self.init(nibName: nil, bundle: nil)
+        LibraryManager.shared.fetchLibraryFromDatabase()
+        PlaylistsManager.shared.fetchPlaylistsFromDatabase()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -190,7 +191,8 @@ class TabBarViewController: UITabBarController {
     
     // MARK: - Button interaction methods
     @objc func downloadButtonAction() {
-        LibraryManager.shared.pullLocalLibraryFromDatabase()
+        LibraryManager.shared.fetchLibraryFromDatabase()
+        PlaylistsManager.shared.fetchPlaylistsFromDatabase()
     }
     
     @objc func miniplayerButtonPressed(sender: UIButton!) {

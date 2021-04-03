@@ -26,25 +26,32 @@ class LibraryManager {
     var libraryVC = LibraryViewController()
     
     init() {
-        refreshSongLibraryFromLocalStorage()
+        fetchLibraryFromLocalStorage()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
- 
+    func saveLibraryToLocalStorage() {
+        LocalFilesManager.storeLibrary(self.songLibrary)
+    }
+    
+    func fetchLibraryFromLocalStorage() {
+        songLibrary = LocalFilesManager.retreiveLibrary()
+        libraryVC.tableView.reloadData()
+    }
     
     /// WARNING – this function is expensive and cannot be called just anyway
     /// 1. Downloads library array from the database based on the current logged in user
     /// 2. Downloads all missing song files from youtube on the background thread
     /// 3. Deletes all downloaded songs that are NOT in the library array
     /// This should ONLY be called when a new user is logged in who was not previously logged in
-    func pullLocalLibraryFromDatabase() {
+    func fetchLibraryFromDatabase() {
         if(Auth.auth().currentUser == nil) {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
-        DatabaseManager.shared.downloadLibraryPlaylist(user: Auth.auth().currentUser!, oldLibrary: songLibrary.songList) { newLibrary in
+        DatabaseManager.shared.downloadLibrary() { newLibrary in
             
             let oldLibrary = self.songLibrary.songList.deepCopy()
             self.songLibrary = newLibrary
@@ -61,23 +68,18 @@ class LibraryManager {
             self.deleteExcessSongs(oldLibrary: oldLibrary, newLibrary: newLibrary.songList)
             print("Delete of all excess songs from file storage complete")
             print("Took \(CFAbsoluteTimeGetCurrent() - start) seconds\n")
-                        
-            LocalFilesManager.storePlaylist(self.songLibrary, forIndex: nil)
+                  
+            self.saveLibraryToLocalStorage()
             self.libraryVC.tableView.reloadData()
         }
     }
 
-    func refreshSongLibraryFromLocalStorage() {
-        songLibrary = LocalFilesManager.retreivePlaylist(forIndex: nil)
-        libraryVC.tableView.reloadData()
-    }
-
-    func updateLibraryToDatabase() {
+    func saveLibraryToDatabase() {
         if(Auth.auth().currentUser == nil) {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
-        DatabaseManager.shared.updateLibrary(library: songLibrary, user: Auth.auth().currentUser!) { error in
+        DatabaseManager.shared.updateLibrary() { error in
             if(error) {
                 print("ERROR: \(error)")
                 return
@@ -202,8 +204,8 @@ class LibraryManager {
             PlaylistsManager.shared.addSongToPlaylist(song: enrichedDict, playlistName: playlistTitle!)
         }
 
-        LocalFilesManager.storePlaylist(songLibrary, forIndex: nil)
-        self.updateLibraryToDatabase()
+        LocalFilesManager.storeLibrary(songLibrary)
+        self.saveLibraryToDatabase()
     }
     
     func addSongDictToLibraryArray(song: Song) {
@@ -420,14 +422,14 @@ class LibraryManager {
 				break
 			}
 		}
-        LocalFilesManager.storePlaylist(songLibrary, forIndex: nil)
-        self.updateLibraryToDatabase()
+        LocalFilesManager.storeLibrary(songLibrary)
+        self.saveLibraryToDatabase()
         PlaylistsManager.shared.homeVC.reloadPlaylistDetailsVCTableView()
         libraryVC.tableView.reloadData()
 	}
 
 	func checkSongExistInLibrary(songLink: String) -> Bool {
-        refreshSongLibraryFromLocalStorage()
+        fetchLibraryFromLocalStorage()
 		for i in 0 ..< songLibrary.songList.count {
             let song = songLibrary.songList[i]
             if song.link == songLink {
@@ -438,7 +440,7 @@ class LibraryManager {
 	}
 
 	func getSong(forID songID: String) -> Song? {
-        refreshSongLibraryFromLocalStorage()
+        fetchLibraryFromLocalStorage()
         var songDict : Song
 		for i in 0 ..< songLibrary.songList.count {
 			songDict = songLibrary.songList[i]

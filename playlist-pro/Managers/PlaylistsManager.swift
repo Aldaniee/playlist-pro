@@ -6,10 +6,10 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 class PlaylistsManager {
     static let shared = PlaylistsManager()
-    static let PLAYLISTS_KEY = "PlaylistsArray"
 
     var playlists = [Playlist]()
         
@@ -17,16 +17,6 @@ class PlaylistsManager {
     
     init() {
         fetchPlaylistsFromStorage()
-    }
-    func fetchPlaylistsFromStorage() {
-        playlists = [Playlist]()
-        let numPlaylists = LocalFilesManager.retreiveNumPlaylists()
-        
-        for index in 0..<numPlaylists {
-            let playlist = LocalFilesManager.retreivePlaylist(forIndex: index)
-            playlists.append(playlist)
-            homeVC.reloadTableView()
-        }
     }
     func removePlaylist(playlist: Playlist) {
         if hasPlaylist(named: playlist.title) {
@@ -70,15 +60,39 @@ class PlaylistsManager {
         else {
             print("Tried adding song \(song.title) to playlist \(playlistName) but the playlist was not found")
         }
+        //self.savePlaylistsToDatabase()
     }
     
     func savePlaylistsToStorage() {
-        for index in 0..<playlists.count {
-            LocalFilesManager.storePlaylist(playlists[index], forIndex: index)
-        }
-        LocalFilesManager.storeNumPlaylists(numPlaylists: playlists.count)
+        LocalFilesManager.storePlaylists(playlists)
+        savePlaylistsToDatabase() 
+    }
+    func fetchPlaylistsFromStorage() {
+        playlists = LocalFilesManager.retreivePlaylists()
+        homeVC.reloadTableView()
     }
     
+    func savePlaylistsToDatabase() {
+        if(Auth.auth().currentUser == nil) {
+            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            return
+        }
+        DatabaseManager.shared.updatePlaylists(completion: { error in
+            if(error) {
+                print("ERROR: \(error)")
+                return
+            }
+        })
+    }
+    func fetchPlaylistsFromDatabase() {
+        DatabaseManager.shared.downloadPlaylists() { playlists in
+            LocalFilesManager.storePlaylists(playlists)
+            self.playlists = playlists
+            self.homeVC.reloadTableView()
+            self.savePlaylistsToStorage()
+        }
+    }
+
     func hasPlaylist(named title: String) -> Bool {
         for playlist in playlists {
             if playlist.title == title {

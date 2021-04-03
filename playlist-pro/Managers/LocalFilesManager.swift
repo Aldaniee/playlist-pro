@@ -170,22 +170,34 @@ class LocalFilesManager {
         return songArray
     }
     
-    static func storeNumPlaylists(numPlaylists: Int){
-        UserDefaults.standard.set(numPlaylists, forKey: PlaylistsManager.PLAYLISTS_KEY)
+    static func storeNumPlaylists(numPlaylists: Int) {
+        UserDefaults.standard.set(numPlaylists, forKey: "PlaylistsArray")
     }
     static func retreiveNumPlaylists() -> Int {
-        return UserDefaults.standard.value(forKey: PlaylistsManager.PLAYLISTS_KEY) as! Int? ?? 0
+        return UserDefaults.standard.value(forKey: "PlaylistsArray") as! Int? ?? 0
     }
 
-    static func retreivePlaylist(forIndex index: Int?) -> Playlist {
-        let key = index == nil ? "library" : "playlist_\(index!)"
-        guard let encoded = UserDefaults.standard.object(forKey: key) as? Data else { return Playlist(title: key) }
+    static func retreiveLibrary() -> Playlist {
+        guard let encoded = UserDefaults.standard.object(forKey: "library") as? Data else {
+            print("Library Decoding Error")
+            return Playlist(title: "library")
+        }
         return try! PropertyListDecoder().decode(Playlist.self, from: encoded)
     }
-    static func storePlaylist(_ playlist: Playlist, forIndex index: Int?) {
+    static func retreivePlaylists() -> [Playlist] {
+        guard let encoded = UserDefaults.standard.object(forKey: "playlists") as? Data else {
+            print("Playlist Array Decoding Error")
+            return [Playlist]()
+        }
+        return try! PropertyListDecoder().decode([Playlist].self, from: encoded)
+    }
+    static func storePlaylists(_ playlists: [Playlist]) {
         // Store playlist object
-        let key = index == nil ? "library" : "playlist_\(index!)"
-        try? UserDefaults.standard.set(PropertyListEncoder().encode(playlist), forKey: key)
+        try? UserDefaults.standard.set(PropertyListEncoder().encode(playlists), forKey: "playlists")
+    }
+    static func storeLibrary(_ library: Playlist) {
+        // Store playlist object
+        try? UserDefaults.standard.set(PropertyListEncoder().encode(library), forKey: "library")
 
         /*
         // Store Image

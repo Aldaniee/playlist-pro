@@ -44,12 +44,15 @@ public class DatabaseManager {
     }
     /// Updates a user's music library on the database to match the library on the device
     /// - Parameters
-    ///     - library: Playlist object holding all of a user's songs
-    ///     - user: User object for the current user
     ///     - Async callback for result if database entry succeeded
-    func updateLibrary(library: Playlist, user: User, completion: @escaping (Bool) -> Void) {
+    func updateLibrary(completion: @escaping (Bool) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            return
+        }
+        let library = LibraryManager.shared.songLibrary
         if(user.isAnonymous) {
-            database.child("anonymous-users/\(user.uid)/library").setValue(encodePlaylist(library)) { error, _ in
+            database.child("anonymous-users/\(user.uid)/library)").setValue(encodePlaylist(library)) { error, _ in
                 if error == nil {
                     // succeeded
                     print("Successfully updated library to database")
@@ -59,7 +62,6 @@ public class DatabaseManager {
                     print(error!)
                     // failed
                 }
-                
             }
         }
         else {
@@ -77,7 +79,6 @@ public class DatabaseManager {
                         print(error!)
                         // failed
                     }
-                    
                 }
             }
         }
@@ -85,9 +86,12 @@ public class DatabaseManager {
     }
     /// Updates a user's music library on the device to match the database
     /// - Parameters
-    ///     - user: User object for the current user
     ///     - Async callback for result if database entry succeeded
-    func downloadLibraryPlaylist(user: User, oldLibrary: [Song], completion: @escaping (Playlist) -> Void) {
+    func downloadLibrary(completion: @escaping (Playlist) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            return
+        }
         var userPath : String!
         if(user.isAnonymous) {
             userPath = "anonymous-users/\(user.uid)"
@@ -111,11 +115,81 @@ public class DatabaseManager {
             }
         });
     }
+    
+    func updatePlaylists(completion: @escaping (Bool) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            return
+        }
+        let playlists = PlaylistsManager.shared.playlists
+        if(user.isAnonymous) {
+            database.child("anonymous-users/\(user.uid)/playlists)").setValue(encodePlaylists(playlists)) { error, _ in
+                if error == nil {
+                    // succeeded
+                    print("Successfully updated playlists to database")
+                }
+                else {
+                    print("Error While updating playlists to database")
+                    print(error!)
+                    // failed
+                }
+            }
+        }
+        else {
+            if(user.email == nil) {
+                print("error missing email")
+            }
+            else {
+                database.child("\(user.email!.safeDatabaseKey())/playlists").setValue(encodePlaylists(playlists)) { error, _ in
+                    if error == nil {
+                        // succeeded
+                        print("Successfully updated playlists to database")
+                    }
+                    else {
+                        print("Error While updating playlists to database")
+                        print(error!)
+                        // failed
+                    }
+                }
+            }
+        }
+
+    }
+
+    func downloadPlaylists(completion: @escaping ([Playlist]) -> Void) {
+        guard let user = Auth.auth().currentUser else {
+            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            return
+        }
+        var userPath : String!
+        if(user.isAnonymous) {
+            userPath = "anonymous-users/\(user.uid)"
+        }
+        else {
+            userPath = user.email!.safeDatabaseKey()
+        }
+        database.child(userPath).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? NSDictionary {
+
+                guard let data = dictionary["playlists"] as? [[String : Any]] else {
+                    print("No playlists in database, return empty playlists")
+                    completion([Playlist]())
+                    return
+                }
+                //dump(snapshot)
+                completion(self.decodePlaylists(data))
+            }
+            else {
+                print("ERROR: Snapshot")
+            }
+        });
+    }
     private func encodePlaylist(_ playlist: Playlist) -> [String : Any] {
         if let encodedPlaylist = try? FirestoreEncoder().encode(playlist) {
             return encodedPlaylist
         }
         else {
+            print("ERROR: Failure encoding playlist: \(playlist)")
             return [String : Any]()
         }
     }
@@ -124,8 +198,22 @@ public class DatabaseManager {
             return decodedPlaylist
         }
         else {
-            print("Decoding Error")
+            print("ERROR: Failure decoding playlist")
             return Playlist(title: "")
         }
+    }
+    private func encodePlaylists(_ playlists: [Playlist]) -> [[String : Any]] {
+        var returnArray = [[String : Any]]()
+        for playlist in playlists {
+            returnArray.append(encodePlaylist(playlist))
+        }
+        return returnArray
+    }
+    private func decodePlaylists(_ encodedPlaylists: [[String : Any]]) -> [Playlist] {
+        var returnArray = [Playlist]()
+        for encodedPlaylist in encodedPlaylists {
+            returnArray.append(decodePlaylist(encodedPlaylist))
+        }
+        return returnArray
     }
 }
