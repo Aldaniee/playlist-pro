@@ -107,7 +107,7 @@ class LibraryManager {
             //self.addSongDictToLibraryArray(sID: sID, videoID: videoID, songUrl: songUrl, newExtension: ".m4a", songTitle: songTitle, artists: artists, playlistTitle: playlistTitle) {
             //    completion?()
             //}
-        if !LocalFilesManager.checkFileExist(sID) {
+        if !LocalFilesManager.checkFileExist("\(sID).m4a") {
             var newExtension: String
             var errorStr: String?
             
@@ -180,6 +180,8 @@ class LibraryManager {
                     //currentViewController?.present(alert, animated: true, completion: nil)
                 }
             }
+        } else {
+            print("Song already in library,skipping download")
         }
     }
 	
