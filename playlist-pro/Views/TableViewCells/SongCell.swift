@@ -138,7 +138,7 @@ class SongCell : UITableViewCell {
             //self.durationLabel.text = songDict["duration"] as? String
         }
         if (playlist != nil) {
-            if playlist!.title == LibraryManager.LIBRARY_KEY {
+            if playlist!.title == "library" {
                 self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
                 self.secondaryLabel.text = "\(LibraryManager.shared.songLibrary.songList.count) songs"
             }

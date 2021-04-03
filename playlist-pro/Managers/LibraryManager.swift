@@ -13,7 +13,6 @@ class LibraryManager {
 
     static let shared = LibraryManager()
     
-    static let LIBRARY_KEY = "LibraryArray"
     static let LIBRARY_DISPLAY = "Music"
     
 	enum ValueType {
@@ -22,7 +21,7 @@ class LibraryManager {
 	}
     
     // A playlist storing all songs
-    var songLibrary = Playlist(title: LIBRARY_KEY)
+    var songLibrary = Playlist(title: "library")
     
     var libraryVC = LibraryViewController()
     
@@ -45,21 +44,21 @@ class LibraryManager {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
-        DatabaseManager.shared.downloadSongDictLibrary(user: Auth.auth().currentUser!, oldLibrary: songLibrary.songList) { newLibrary in
+        DatabaseManager.shared.downloadLibraryPlaylist(user: Auth.auth().currentUser!, oldLibrary: songLibrary.songList) { newLibrary in
             
             let oldLibrary = self.songLibrary.songList.deepCopy()
-            self.songLibrary.songList = newLibrary
+            self.songLibrary = newLibrary
 
             print("\nChecking for missing songs to download")
-            print("oldLibraryCount: \(oldLibrary.count) newLibraryCount: \(newLibrary.count)")
+            print("oldLibraryCount: \(oldLibrary.count) newLibraryCount: \(newLibrary.songList.count)")
             var start = CFAbsoluteTimeGetCurrent()
-            self.downloadMissingLibraryFiles(oldLibrary: oldLibrary, newLibrary: newLibrary)
+            self.downloadMissingLibraryFiles(oldLibrary: oldLibrary, newLibrary: newLibrary.songList)
             print("Download of all missing songs complete")
             print("Took \(CFAbsoluteTimeGetCurrent() - start) seconds\n")
             
             start = CFAbsoluteTimeGetCurrent()
             print("Deleting all excess songs from file storage")
-            self.deleteExcessSongs(oldLibrary: oldLibrary, newLibrary: newLibrary)
+            self.deleteExcessSongs(oldLibrary: oldLibrary, newLibrary: newLibrary.songList)
             print("Delete of all excess songs from file storage complete")
             print("Took \(CFAbsoluteTimeGetCurrent() - start) seconds\n")
                         

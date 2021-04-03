@@ -8,11 +8,38 @@
 
 import Foundation
 import UIKit
+import CodableFirebase
+
+/*
+struct FirebasePlaylist {
+    var title : String
+    var songList = NSArray()
+    var description = ""
+    
+    init(playlist: Playlist) {
+        self.title = playlist.title
+        self.songList = encodeSongArray(playlist.songList)
+        self.description = playlist.description
+    }
+}
+*/
 struct Playlist {
     var title : String
     var songList = [Song]()
     var description = ""
     //var image : UIImage?
+    /*init(playlist: FirebasePlaylist) {
+        title = playlist.title
+        songList = decodeSongArray(playlist.songList)
+        description = playlist.description
+    }*/
+    init(title: String) {
+        self.title = title
+    }
+    init(title: String, songList: [Song]) {
+        self.title = title
+        self.songList = songList
+    }
 }
 
 //struct StoragePlaylist {
@@ -63,3 +90,30 @@ enum CodingKeys: String, CodingKey {
     case description
     case image
 }
+
+//private func encodeSongArray(_ songArray: [Song]) -> NSArray {
+//    let encodedSongArray = NSMutableArray()
+//    for song in songArray {
+//        if let encodedSong = try? FirestoreEncoder().encode(song) {
+//            encodedSongArray.add(encodedSong)
+//        }
+//        else {
+//            print("Encoding Error")
+//            return NSArray()
+//        }
+//    }
+//    return NSArray(array: encodedSongArray)
+//}
+//private func decodeSongArray(_ encodedSongArray: NSArray) -> [Song]{
+//    var songArray = [Song]()
+//    for encodedSong in encodedSongArray {
+//        if let decodedSong = try? FirestoreDecoder().decode(Song.self, from: encodedSong as! [String : Any]) {
+//            songArray.append(decodedSong)
+//        }
+//        else {
+//            print("Decoding Error")
+//            return [Song]()
+//        }
+//    }
+//    return songArray
+//}

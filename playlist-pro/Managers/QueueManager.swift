@@ -16,7 +16,6 @@ protocol QueueManagerDelegate: class {
 
 public class QueueManager: NSObject {
     
-    
     static var shared = QueueManager()
     weak var delegate: QueueManagerDelegate?
 
@@ -140,7 +139,7 @@ public class QueueManager: NSObject {
     func shuffle() {
         shuffleStatus = !shuffleStatus
         if shuffleStatus {
-            playlistQueue = NSMutableArray(array: (playlistQueue as! Array<Dictionary<String,Any>>).shuffled())
+            playlistQueue = NSMutableArray(array: (playlistQueue as! [Song]).shuffled())
         }
         else {
             var playingSongPlaylistIndex = 0

@@ -34,7 +34,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         songPlaylistOptionsViewController.delegate = self
         songPlaylistOptionsViewController.setPlaylist(playlist: playlist, index: PlaylistsManager.shared.getPlaylistIndex(title: playlist.title))
 
-        if playlist.title == LibraryManager.LIBRARY_KEY {
+        if playlist.title == "library" {
             navigationItem.title = LibraryManager.LIBRARY_DISPLAY
         }
         else {
@@ -80,7 +80,7 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
 extension PlaylistContentsViewController: SongCellDelegate {
     func optionsButtonTapped(tag: Int) {
         let song = playlist.songList[tag]
-        let isLibrary = playlist.title == LibraryManager.LIBRARY_KEY
+        let isLibrary = playlist.title == "library"
         songPlaylistOptionsViewController.setSong(song: song, isLibrary: isLibrary, index: tag)
         present(songPlaylistOptionsViewController, animated: true, completion: nil)
     }
@@ -89,7 +89,7 @@ extension PlaylistContentsViewController: SongCellDelegate {
 extension PlaylistContentsViewController: SongPlaylistOptionsViewControllerDelegate {
     
     func removeFromPlaylist(index: Int) {
-        if playlist.title != LibraryManager.LIBRARY_KEY { // Should always be true
+        if playlist.title != "library" { // Should always be true
             PlaylistsManager.shared.removeFromPlaylist(playlist: playlist, index: index)
         }
         else {

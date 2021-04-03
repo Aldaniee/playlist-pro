@@ -9,10 +9,9 @@
 import UIKit
 import AVFoundation
 import Alamofire
-import CodableFirebase
+
 class LocalFilesManager {
 	
-    
 	required init?(coder: NSCoder) {
 		fatalError("init(coder:) has not been implemented")
 	}
@@ -56,6 +55,7 @@ class LocalFilesManager {
 		}
 	}
 	
+    
 	static func extractAudioFromVideo(songID: String, completion: ((Error?) -> Void)? = nil) {
 		print("Extracting audio from video")
 		let in_url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(songID).mp4")

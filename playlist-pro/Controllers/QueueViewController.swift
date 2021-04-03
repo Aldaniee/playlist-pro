@@ -218,7 +218,7 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: 30))
         headerView.backgroundColor = .clear
         var playlistTitle = QueueManager.shared.currentPlaylist?.title ?? ""
-        if playlistTitle == LibraryManager.LIBRARY_KEY {
+        if playlistTitle == "library" {
             playlistTitle = LibraryManager.LIBRARY_DISPLAY
         }
         var headerTitle : String!
