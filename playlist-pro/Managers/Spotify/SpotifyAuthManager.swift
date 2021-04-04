@@ -6,11 +6,18 @@
 //
 
 import Foundation
+import FirebaseAuth
 
 final class SpotifyAuthManager {
     static let shared = SpotifyAuthManager()
     
-    private init() {}
+    init() {
+        guard let user = Auth.auth().currentUser else {
+            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            return
+        }
+        DatabaseManager.shared.downloadUserSpotifyAuth(user: user)
+    }
     
     private var refreshingToken = false
 
@@ -25,15 +32,15 @@ final class SpotifyAuthManager {
         return accessToken != nil
     }
     
-    private var accessToken: String? {
+    var accessToken: String? {
         return UserDefaults.standard.string(forKey: "access_token")
     }
     
-    private var refreshToken: String? {
+    var refreshToken: String? {
         return UserDefaults.standard.string(forKey: "refresh_token")
     }
     
-    private var tokenExpirationDate: Date? {
+    var tokenExpirationDate: Date? {
         return UserDefaults.standard.object(forKey: "expirationDate") as? Date
     }
     
@@ -45,10 +52,21 @@ final class SpotifyAuthManager {
         let fiveMinutes: TimeInterval = 300
         return currentDate.addingTimeInterval(fiveMinutes) >= expirationDate
     }
+    
     private func storeTokens(result: SpotifyAuthResponse) {
         UserDefaults.standard.setValue(result.access_token, forKey: "access_token")
         UserDefaults.standard.setValue(result.refresh_token, forKey: "refresh_token")
         UserDefaults.standard.setValue(Date().addingTimeInterval(TimeInterval(result.expires_in)), forKey: "expirationDate")
+        guard let user = Auth.auth().currentUser else {
+            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            return
+        }
+        DatabaseManager.shared.updateUserSpotifyAuth(user: user, completion: { error in
+            if(error) {
+                print("ERROR: \(error)")
+                return
+            }
+        })
     }
     public func exchangeCodeForToken(code: String, completion: @escaping (Bool) -> Void) {
         // Get Token

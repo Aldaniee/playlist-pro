@@ -73,11 +73,11 @@ class PlaylistsManager {
     }
     
     func savePlaylistsToDatabase() {
-        if(Auth.auth().currentUser == nil) {
+        guard let user = Auth.auth().currentUser else {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
-        DatabaseManager.shared.updatePlaylists(completion: { error in
+        DatabaseManager.shared.updatePlaylists(user: user, completion: { error in
             if(error) {
                 print("ERROR: \(error)")
                 return
@@ -85,7 +85,11 @@ class PlaylistsManager {
         })
     }
     func fetchPlaylistsFromDatabase() {
-        DatabaseManager.shared.downloadPlaylists() { playlists in
+        guard let user = Auth.auth().currentUser else {
+            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            return
+        }
+        DatabaseManager.shared.downloadPlaylists(user: user) { playlists in
             LocalFilesManager.storePlaylists(playlists)
             self.playlists = playlists
             self.homeVC.reloadTableView()

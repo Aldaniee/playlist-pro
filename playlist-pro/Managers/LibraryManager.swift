@@ -47,11 +47,11 @@ class LibraryManager {
     /// 3. Deletes all downloaded songs that are NOT in the library array
     /// This should ONLY be called when a new user is logged in who was not previously logged in
     func fetchLibraryFromDatabase() {
-        if(Auth.auth().currentUser == nil) {
+        guard let user = Auth.auth().currentUser else {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
-        DatabaseManager.shared.downloadLibrary() { newLibrary in
+        DatabaseManager.shared.downloadLibrary(user: user) { newLibrary in
             
             let oldLibrary = self.songLibrary.songList.deepCopy()
             self.songLibrary = newLibrary
@@ -75,11 +75,11 @@ class LibraryManager {
     }
 
     func saveLibraryToDatabase() {
-        if(Auth.auth().currentUser == nil) {
+        guard let user = Auth.auth().currentUser else {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
-        DatabaseManager.shared.updateLibrary() { error in
+        DatabaseManager.shared.updateLibrary(user: user) { error in
             if(error) {
                 print("ERROR: \(error)")
                 return
@@ -104,84 +104,85 @@ class LibraryManager {
             // we need to use to old songID so that the file location matches the songDict
             sID = findSongIDfrom(videoID: videoID)!
         }
-            //self.addSongDictToLibraryArray(sID: sID, videoID: videoID, songUrl: songUrl, newExtension: ".m4a", songTitle: songTitle, artists: artists, playlistTitle: playlistTitle) {
-            //    completion?()
-            //}
-        if !LocalFilesManager.checkFileExist("\(sID).m4a") {
-            var newExtension: String
-            var errorStr: String?
-            
-            //let currentViewController = UIApplication.getCurrentViewController()
-            //currentViewController?.showProgressView(onView: (currentViewController?.view)!, withTitle: "Downloading...")
 
-            let dispatchGroup = DispatchGroup()  // To keep track of the async download group
-            print("Starting the required downloads for song")
-            dispatchGroup.enter()
-            if songExtension == "mp4" {
-                LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
-                    if error == nil  {
-                        print("Converting Video to Audio")
-                        LocalFilesManager.extractAudioFromVideo(songID: sID, completion: { error in
-                            
-                            print("Deleting Video")
-                            _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video
+        if LocalFilesManager.checkFileExist("\(sID).m4a") {
+            print("Song already in library, skipping download")
+            return
+        }
+        
+        var newExtension: String
+        var errorStr: String?
+        
+        //let currentViewController = UIApplication.getCurrentViewController()
+        //currentViewController?.showProgressView(onView: (currentViewController?.view)!, withTitle: "Downloading...")
 
-                            dispatchGroup.leave()
-                            if error != nil {  // Failed to extract audio from video
-                                _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).m4a")  // Delete the extracted audio if available
-                                errorStr = error!.localizedDescription
-                            }
-                        })
-                    } else {
-                        _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video if available
-                        print("Error downloading video: " + error!.localizedDescription)
+        let dispatchGroup = DispatchGroup()  // To keep track of the async download group
+        
+        print("Starting song and thumbnail download")
+        
+        dispatchGroup.enter()
+        if songExtension == "mp4" {
+            LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
+                if error == nil  {
+                    print("Converting Video to Audio")
+                    LocalFilesManager.extractAudioFromVideo(songID: sID, completion: { error in
+                        
+                        print("Deleting Video")
+                        _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video
+
                         dispatchGroup.leave()
-                        errorStr = error!.localizedDescription
-                    }
-                })
-                newExtension = "m4a"
-            } else {
-                LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
-                    dispatchGroup.leave()
-                    if error != nil  {
-                        _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).\(songExtension)")  // Delete the downloaded video if available
-                        print("Error downloading song: " + error!.localizedDescription)
-                        errorStr = error!.localizedDescription
-                    }
-                })
-                newExtension = songExtension
-            }
-            // Download Thumbnail
-            if let imageUrl = thumbnailUrl {
-                dispatchGroup.enter()
-                LocalFilesManager.downloadFile(from: imageUrl, filename: sID, extension: "jpg", completion: { error in
-                    dispatchGroup.leave()
-                    if error != nil  {
-                        print("Error downloading thumbnail: " + error!.localizedDescription)
-                    }
-                })
-            }
-            
-            // All Downloads Complete
-            dispatchGroup.notify(queue: DispatchQueue.main) {  // All async download in the group completed
-                print("All async download in the group completed")
-                //currentViewController?.removeProgressView()
-                if errorStr == nil {
-                    if !self.hasSongInLibrary(videoID: videoID) {
-                        self.addSongDictToLibraryArray(sID: sID, videoID: videoID, songUrl: songUrl, newExtension: newExtension, songTitle: songTitle, artists: artists, playlistTitle: playlistTitle)
-                        completion?(true)
-
-                    }
+                        if error != nil {  // Failed to extract audio from video
+                            _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).m4a")  // Delete the extracted audio if available
+                            errorStr = error!.localizedDescription
+                        }
+                    })
                 } else {
-                    print("Error adding the song to the library")
-                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
-                    let alert = UIAlertController(title: "Error", message: errorStr, preferredStyle: UIAlertController.Style.alert)
-                    alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
-                    //currentViewController?.present(alert, animated: true, completion: nil)
+                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video if available
+                    print("Error downloading video: " + error!.localizedDescription)
+                    dispatchGroup.leave()
+                    errorStr = error!.localizedDescription
                 }
-            }
+            })
+            newExtension = "m4a"
         } else {
-            print("Song already in library,skipping download")
+            LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
+                dispatchGroup.leave()
+                if error != nil  {
+                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).\(songExtension)")  // Delete the downloaded video if available
+                    print("Error downloading song: " + error!.localizedDescription)
+                    errorStr = error!.localizedDescription
+                }
+            })
+            newExtension = songExtension
+        }
+        // Download Thumbnail
+        if let imageUrl = thumbnailUrl {
+            dispatchGroup.enter()
+            LocalFilesManager.downloadFile(from: imageUrl, filename: sID, extension: "jpg", completion: { error in
+                dispatchGroup.leave()
+                if error != nil  {
+                    print("Error downloading thumbnail: " + error!.localizedDescription)
+                }
+            })
+        }
+        
+        // All Downloads Complete
+        dispatchGroup.notify(queue: DispatchQueue.main) {  // All async download in the group completed
+            print("All async download in the group completed")
+            //currentViewController?.removeProgressView()
+            if errorStr == nil {
+                if !self.hasSongInLibrary(videoID: videoID) {
+                    self.addSongDictToLibraryArray(sID: sID, videoID: videoID, songUrl: songUrl, newExtension: newExtension, songTitle: songTitle, artists: artists, playlistTitle: playlistTitle)
+                    completion?(true)
+
+                }
+            } else {
+                print("Error adding the song to the library")
+                _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")  // Delete the downloaded thumbnail if available
+                let alert = UIAlertController(title: "Error", message: errorStr, preferredStyle: UIAlertController.Style.alert)
+                alert.addAction(UIAlertAction(title: "Ok", style: .cancel, handler:nil))
+                //currentViewController?.present(alert, animated: true, completion: nil)
+            }
         }
     }
 	

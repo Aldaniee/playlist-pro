@@ -42,69 +42,102 @@ public class DatabaseManager {
             
         }
     }
+    
+    func updateUserSpotifyAuth(user: User, completion: @escaping (Bool) -> Void) {
+        let userPath = user.isAnonymous ? "anonymous-users/\(user.uid)" : "\(user.email!.safeDatabaseKey())"
+        database.child("\(userPath)/access_token)").setValue(SpotifyAuthManager.shared.accessToken) { error, _ in
+            if error == nil {
+                // succeeded
+                print("Successfully updated user access token to database")
+            }
+            else {
+                print("Error while updating user access token to database")
+                print(error!)
+                // failed
+            }
+        }
+        database.child("\(userPath)/refresh_token)").setValue(SpotifyAuthManager.shared.refreshToken) { error, _ in
+            if error == nil {
+                // succeeded
+                print("Successfully updated user refresh token to database")
+            }
+            else {
+                print("Error while updating user refresh token to database")
+                print(error!)
+                // failed
+            }
+        }
+        database.child("\(userPath)/expirationDate)").setValue(SpotifyAuthManager.shared.tokenExpirationDate) { error, _ in
+            if error == nil {
+                // succeeded
+                print("Successfully updated user expirationDate to database")
+            }
+            else {
+                print("Error while updating user expirationDate to database")
+                print(error!)
+                // failed
+            }
+        }
+    }
+    func downloadUserSpotifyAuth(user: User) {
+        
+        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" :             user.email!.safeDatabaseKey()
+        database.child(userPath).observeSingleEvent(of: .value, with: { (snapshot) in
+            if let dictionary = snapshot.value as? NSDictionary {
+
+                guard let refreshToken = dictionary["refresh_token"] as? String else {
+                    print("No refresh token in database")
+                    return
+                }
+                guard let accessToken = dictionary["access_token"] as? String else {
+                    print("No refresh token in database")
+                    return
+                }
+                guard let expirationDate = dictionary["expirationDate"] as? String else {
+                    print("No refresh token in database")
+                    return
+                }
+                UserDefaults.standard.setValue(accessToken, forKey: "access_token")
+                UserDefaults.standard.setValue(refreshToken, forKey: "refresh_token")
+                UserDefaults.standard.setValue(expirationDate, forKey: "expirationDate")
+            }
+            else {
+                print("Snapshot Error")
+            }
+        });
+    }
     /// Updates a user's music library on the database to match the library on the device
     /// - Parameters
     ///     - Async callback for result if database entry succeeded
-    func updateLibrary(completion: @escaping (Bool) -> Void) {
-        guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
-            return
-        }
+    func updateLibrary(user: User, completion: @escaping (Bool) -> Void) {
+
         let library = LibraryManager.shared.songLibrary
-        if(user.isAnonymous) {
-            database.child("anonymous-users/\(user.uid)/library)").setValue(encodePlaylist(library)) { error, _ in
-                if error == nil {
-                    // succeeded
-                    print("Successfully updated library to database")
-                }
-                else {
-                    print("Error While updating library to database")
-                    print(error!)
-                    // failed
-                }
-            }
-        }
-        else {
-            if(user.email == nil) {
-                print("error missing email")
+        let userPath = user.isAnonymous ? "anonymous-users/\(user.uid)" : "\(user.email!.safeDatabaseKey())"
+        database.child("\(userPath)/library)").setValue(encodePlaylist(library)) { error, _ in
+            if error == nil {
+                // succeeded
+                print("Successfully updated library to database")
             }
             else {
-                database.child("\(user.email!.safeDatabaseKey())/library").setValue(encodePlaylist(library)) { error, _ in
-                    if error == nil {
-                        // succeeded
-                        print("Successfully updated library to database")
-                    }
-                    else {
-                        print("Error While updating library to database")
-                        print(error!)
-                        // failed
-                    }
-                }
+                print("Error While updating library to database")
+                print(error!)
+                // failed
             }
         }
-
     }
     /// Updates a user's music library on the device to match the database
     /// - Parameters
     ///     - Async callback for result if database entry succeeded
-    func downloadLibrary(completion: @escaping (Playlist) -> Void) {
-        guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
-            return
-        }
-        var userPath : String!
-        if(user.isAnonymous) {
-            userPath = "anonymous-users/\(user.uid)"
-        }
-        else {
-            userPath = user.email!.safeDatabaseKey()
-        }
+    func downloadLibrary(user: User, completion: @escaping (Playlist) -> Void) {
+        
+        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" :             user.email!.safeDatabaseKey()
+        let key = "library"
         database.child(userPath).observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? NSDictionary {
 
-                guard let data = dictionary["library"] as? [String : Any] else {
+                guard let data = dictionary[key] as? [String : Any] else {
                     print("No library in database, return empty library")
-                    completion(Playlist(title: "library"))
+                    completion(Playlist(title: key))
                     return
                 }
                 //dump(snapshot)
@@ -116,58 +149,24 @@ public class DatabaseManager {
         });
     }
     
-    func updatePlaylists(completion: @escaping (Bool) -> Void) {
-        guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
-            return
-        }
+    func updatePlaylists(user: User, completion: @escaping (Bool) -> Void) {
         let playlists = PlaylistsManager.shared.playlists
-        if(user.isAnonymous) {
-            database.child("anonymous-users/\(user.uid)/playlists)").setValue(encodePlaylists(playlists)) { error, _ in
-                if error == nil {
-                    // succeeded
-                    print("Successfully updated playlists to database")
-                }
-                else {
-                    print("Error While updating playlists to database")
-                    print(error!)
-                    // failed
-                }
-            }
-        }
-        else {
-            if(user.email == nil) {
-                print("error missing email")
+        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" :             user.email!.safeDatabaseKey()
+        database.child("\(userPath)/playlists)").setValue(encodePlaylists(playlists)) { error, _ in
+            if error == nil {
+                // succeeded
+                print("Successfully updated playlists to database")
             }
             else {
-                database.child("\(user.email!.safeDatabaseKey())/playlists").setValue(encodePlaylists(playlists)) { error, _ in
-                    if error == nil {
-                        // succeeded
-                        print("Successfully updated playlists to database")
-                    }
-                    else {
-                        print("Error While updating playlists to database")
-                        print(error!)
-                        // failed
-                    }
-                }
+                print("Error While updating playlists to database")
+                print(error!)
+                // failed
             }
         }
-
     }
 
-    func downloadPlaylists(completion: @escaping ([Playlist]) -> Void) {
-        guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
-            return
-        }
-        var userPath : String!
-        if(user.isAnonymous) {
-            userPath = "anonymous-users/\(user.uid)"
-        }
-        else {
-            userPath = user.email!.safeDatabaseKey()
-        }
+    func downloadPlaylists(user: User, completion: @escaping ([Playlist]) -> Void) {
+        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" :             user.email!.safeDatabaseKey()
         database.child(userPath).observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? NSDictionary {
 
