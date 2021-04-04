@@ -16,31 +16,55 @@ public class AuthManager {
     // MARK: - Public
     public func registerNewUser(email: String, password: String, completion: @escaping (Bool) -> Void) {
         // Check if email is avialable
-        DatabaseManager.shared.canCreateNewUser(with: email) { canCreate in
-            if canCreate {
+        DatabaseManager.shared.emailAvailable(with: email) { canCreate in
+            if canCreate && isValidEmail(email) && isValidPassword(password) {
                 // Create account
                 Auth.auth().createUser(withEmail: email, password: password) { result, error in
-                    guard error == nil, result != nil else {
-                        print("Firebase auth could not create account")
+                    if let error = error as NSError? {
+                    switch AuthErrorCode(rawValue: error.code) {
+                    case .operationNotAllowed: break
+                        // Error: The given sign-in provider is disabled for this Firebase project. Enable it in the Firebase console, under the sign-in method tab of the Auth section.
+                        case .emailAlreadyInUse:
+                            print("email taken")
+                        // Error: The email address is already in use by another account.
+                        case .invalidEmail:
+                            print("invalid email address")
+                        // Error: The email address is badly formatted.
+                        case .weakPassword:
+                            print("password is weak")
+                        // Error: The password must be 6 characters long or more.
+                        default:
+                            print("Error: \(error.localizedDescription)")
+                        }
                         completion(false)
                         return
+                    } else {
+                        print("User signs up successfully")
+                        completion(true)
+                        return
                     }
-                    completion(true)
-                    return
                 }
                 // Insert Account to database
                 DatabaseManager.shared.insertNewUser(with: email) { inserted in
                     if inserted {
                         // Success
                         print("Inserted into database")
+                        guard let user = Auth.auth().currentUser else {
+                            print("shouldn't get here")
+                            return
+                        }
+                        user.sendEmailVerification(completion: { (error) in
+                            guard let error = error else {
+                                return print("user email verification sent")
+                            }
+                            print(error)
+                        })
                         completion(true)
-                        return
                     }
                     else {
                         // Failed to insert into database
                         print("Failed to inserted into database")
                         completion(false)
-                        return
                     }
                 }
             }
@@ -50,7 +74,18 @@ public class AuthManager {
                 completion(false)
             }
         }
+        
+    }
     
+    private func isValidEmail(_ email: String) -> Bool {
+      let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+      let emailPred = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+      return emailPred.evaluate(with: email)
+    }
+    
+    private func isValidPassword(_ password: String) -> Bool {
+      let minPasswordLength = 6
+      return password.count >= minPasswordLength
     }
     public func loginUser(username: String?, email: String?, password: String, completion: @escaping (Bool) -> Void) {
         if let email = email {
@@ -59,6 +94,18 @@ public class AuthManager {
                 guard authResult != nil, error == nil else {
                     completion(false)
                     return
+                }
+                guard let user = Auth.auth().currentUser else {
+                    print("shouldn't get here")
+                    return
+                }
+                if !user.isEmailVerified {
+                    user.sendEmailVerification(completion: { (error) in
+                        guard let error = error else {
+                            return print("user email verification sent")
+                        }
+                        print(error)
+                    })
                 }
                 completion(true)
                 return

@@ -19,9 +19,10 @@ public class DatabaseManager {
     /// Check if email is available
     /// - Parameters
     ///     – email: String representing email
-    public func canCreateNewUser(with email: String, completion: (Bool) -> Void) {
+    public func emailAvailable(with email: String, completion: (Bool) -> Void) {
         completion(true)
     }
+
     /// Insert user data to database
     /// - Parameters
     ///     – email: String representing email
