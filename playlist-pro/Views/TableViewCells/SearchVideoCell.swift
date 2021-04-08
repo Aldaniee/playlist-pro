@@ -51,11 +51,11 @@ class SearchVideoCell: UITableViewCell {
         titleLabel.frame = CGRect(x: thumbnailImageView.width + 20,
                                   y: (80 - 45) / 2,
                                   width: contentView.frame.size.width - 10 - thumbnailImageView.width - 10,
-                                  height: 17)
+                                  height: 21)
         artistLabel.frame = CGRect(x: thumbnailImageView.width + 20,
                                    y: (80 - 45) / 2 + titleLabel.height + 5,
                                   width: contentView.frame.size.width - 10 - thumbnailImageView.width - 10,
-                                  height: 14)
+                                  height: 19)
     }
     
     func setCell(_ video: Video) {

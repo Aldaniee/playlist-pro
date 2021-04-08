@@ -16,6 +16,7 @@ class PlaylistsManager {
     var homeVC = HomeViewController()
     
     init() {
+        fetchPlaylistsFromDatabase()
         fetchPlaylistsFromStorage()
     }
     func removePlaylist(playlist: Playlist) {
@@ -42,9 +43,10 @@ class PlaylistsManager {
         }
     }
     
-    func addPlaylist(title: String, songList: [Song]?) {
-        let uniqueTitle = generateUniqueTitle(from: title)
-        let playlist = Playlist(title: uniqueTitle, songList: songList ?? [Song]())
+    func addPlaylist(playlist: Playlist) {
+        var playlist = playlist
+        let uniqueTitle = generateUniqueTitle(from: playlist.title)
+        playlist.title = uniqueTitle
         playlists.append(playlist)
         homeVC.reloadTableView()
         savePlaylistsToStorage()
@@ -60,7 +62,7 @@ class PlaylistsManager {
         else {
             print("Tried adding song \(song.title) to playlist \(playlistName) but the playlist was not found")
         }
-        //self.savePlaylistsToDatabase()
+        savePlaylistsToStorage()
     }
     
     func savePlaylistsToStorage() {

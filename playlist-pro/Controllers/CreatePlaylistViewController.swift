@@ -135,18 +135,21 @@ class CreatePlaylistViewController: UIViewController {
     }
     
     private func buildPlaylistFromTracks(spotifyPlaylist: SpotifyPlaylist) {
-        let track = tracks[0]
-        let artists = track.artists
-        var searchText = "\(artists[0].name) - \(track.name)"
-        if artists.count > 1 {
-            searchText = searchText + " ft. "
-            for i in 1..<track.artists.count {
-                searchText = searchText + " \(artists[i].name)"
+        let playlist = Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description)
+        PlaylistsManager.shared.addPlaylist(playlist: playlist)
+        for track in tracks {
+            let artists = track.artists
+            var searchText = "\(artists[0].name) - \(track.name)"
+            if artists.count > 1 {
+                searchText = searchText + " ft. "
+                for i in 1..<track.artists.count {
+                    searchText = searchText + " \(artists[i].name)"
+                }
             }
-        }
-        YoutubeSearchManager.shared.search(searchText: searchText) { videos in
-            if videos != nil {
-                LibraryManager.shared.downloadVideoFromSearchList(videos: videos!, playlistName: spotifyPlaylist.name)
+            YoutubeSearchManager.shared.search(searchText: searchText) { videos in
+                if videos != nil {
+                    LibraryManager.shared.downloadVideoFromSearchList(videos: videos!, playlistName: playlist.title)
+                }
             }
         }
 
@@ -154,9 +157,8 @@ class CreatePlaylistViewController: UIViewController {
     
     @objc func onCreateButtonPressed() {
         print("Create Button Pressed")
-
         let title = inputField.text ?? "My Playlist"
-        PlaylistsManager.shared.addPlaylist(title: title, songList: LibraryManager.shared.songLibrary.songList)
+        PlaylistsManager.shared.addPlaylist(playlist: Playlist(title: title))
         dismiss(animated: true) {
             self.delegate?.reloadTableView()
         }

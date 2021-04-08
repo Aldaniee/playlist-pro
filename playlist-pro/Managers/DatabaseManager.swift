@@ -82,7 +82,7 @@ public class DatabaseManager {
     }
     func downloadUserSpotifyAuth(user: User) {
         
-        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" :             user.email!.safeDatabaseKey()
+        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" : user.email!.safeDatabaseKey()
         database.child(userPath).observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? NSDictionary {
 
@@ -114,7 +114,7 @@ public class DatabaseManager {
 
         let library = LibraryManager.shared.songLibrary
         let userPath = user.isAnonymous ? "anonymous-users/\(user.uid)" : "\(user.email!.safeDatabaseKey())"
-        database.child("\(userPath)/library)").setValue(encodePlaylist(library)) { error, _ in
+        database.child("\(userPath)/library").setValue(encodePlaylist(library)) { error, _ in
             if error == nil {
                 // succeeded
                 print("Successfully updated library to database")
@@ -153,7 +153,7 @@ public class DatabaseManager {
     func updatePlaylists(user: User, completion: @escaping (Bool) -> Void) {
         let playlists = PlaylistsManager.shared.playlists
         let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" :             user.email!.safeDatabaseKey()
-        database.child("\(userPath)/playlists)").setValue(encodePlaylists(playlists)) { error, _ in
+        database.child("\(userPath)/playlists").setValue(encodePlaylists(playlists)) { error, _ in
             if error == nil {
                 // succeeded
                 print("Successfully updated playlists to database")

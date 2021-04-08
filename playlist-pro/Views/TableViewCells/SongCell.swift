@@ -75,7 +75,7 @@ class SongCell : UITableViewCell {
     let spacing = CGFloat(20)
     let titleLabelSize = CGFloat(12)
     let artistLabelLabelSize = CGFloat(9)
-    let optionsButtonHeight = CGFloat(30)
+    let optionsButtonHeight = CGFloat(20)
     
     override func layoutSubviews() {
         super.layoutSubviews()

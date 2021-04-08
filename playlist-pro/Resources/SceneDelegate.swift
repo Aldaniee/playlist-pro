@@ -28,8 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
         else {
             let navVC = UINavigationController(rootViewController: AuthSplashScreenViewController())
-            navVC.navigationBar.prefersLargeTitles = true
-            navVC.viewControllers.first?.navigationItem.largeTitleDisplayMode = .always
             window.rootViewController = navVC
         }
         window.makeKeyAndVisible()

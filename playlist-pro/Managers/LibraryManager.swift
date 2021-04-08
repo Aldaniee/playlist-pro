@@ -288,6 +288,7 @@ class LibraryManager {
                     if success {
                         LibraryManager.shared.libraryVC.reloadTableView()
                         PlaylistsManager.shared.homeVC.reloadTableView()
+                        PlaylistsManager.shared.homeVC.reloadPlaylistDetailsVCTableView()
                         return
                     }
                     else {

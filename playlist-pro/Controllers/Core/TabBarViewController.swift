@@ -25,12 +25,6 @@ class TabBarViewController: UITabBarController {
     }()
     
     // Definitions
-    private let tabBarBackground: UIView = {
-        let view = UIView()
-        view.backgroundColor = .blackGray
-        return view
-    }()
-    
     private var miniPlayerView = MiniPlayerView(frame: .zero)
     private var nowPlayingVC = NowPlayingViewController()
     private var queueVC = QueueViewController()
@@ -61,32 +55,28 @@ class TabBarViewController: UITabBarController {
         tabBar.barTintColor = .blackGray
         tabBar.tintColor = .darkPink
 
-        let playlist = PlaylistsManager.shared.homeVC
+        let home = PlaylistsManager.shared.homeVC
         let search = YoutubeSearchManager.shared.searchVC
         let library = LibraryManager.shared.libraryVC
         
-        playlist.title = "Home"
         search.title = "Search"
         library.title = "Library"
         
-        playlist.navigationItem.largeTitleDisplayMode = .always
         search.navigationItem.largeTitleDisplayMode = .always
         library.navigationItem.largeTitleDisplayMode = .always
 
-        let navPlaylist = UINavigationController(rootViewController: playlist)
+        let navHome = UINavigationController(rootViewController: home)
         let navSearch = UINavigationController(rootViewController: search)
         let navLibrary = UINavigationController(rootViewController: library)
         
-        navPlaylist.navigationBar.prefersLargeTitles = true
         navSearch.navigationBar.prefersLargeTitles = true
         navLibrary.navigationBar.prefersLargeTitles = true
         
-        navPlaylist.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 1)
+        navHome.tabBarItem = UITabBarItem(title: "Home", image: UIImage(systemName: "house"), tag: 1)
         navSearch.tabBarItem = UITabBarItem(title: "Search", image: UIImage(systemName: "magnifyingglass"), tag: 1)
         navLibrary.tabBarItem = UITabBarItem(title: "Library", image: UIImage(systemName: "list.bullet"), tag: 1)
         
-        setViewControllers([navPlaylist, navSearch, navLibrary], animated: false)
-        view.addSubview(tabBarBackground)
+        setViewControllers([navHome, navSearch, navLibrary], animated: false)
         view.addSubview(miniPlayerView)
         
         // Added for testing of user login swap
@@ -95,48 +85,24 @@ class TabBarViewController: UITabBarController {
             view.addSubview(spotifyLoggedInView)
         }
     }
-    let miniPlayerHeight = CGFloat(60)
     override func viewDidLayoutSubviews() {
+        
         updateDisplayedSong()
         updateRepeatButton()
         updateShuffleButton()
-        if miniPlayerView.isHidden {
-            miniPlayerView.frame = CGRect(
-                x: 0,
-                y: tabBar.top,
-                width: view.width,
-                height: 0
-            )
-        }
-        else {
-            miniPlayerView.frame = CGRect(
-                x: 0,
-                y: tabBar.top - miniPlayerHeight,
-                width: view.width,
-                height: miniPlayerHeight
-            )
-        }
-
-        tabBarBackground.frame = CGRect(
-            x: 0, y: tabBar.bottom, width: view.width, height: tabBar.height
+        
+        let miniPlayerHeight = miniPlayerView.isHidden ? 0 : CGFloat(60)
+        miniPlayerView.frame = CGRect(
+            x: 0,
+            y: tabBar.top - miniPlayerHeight,
+            width: view.width,
+            height: miniPlayerHeight
         )
-        miniPlayerView.miniPlayerButton.addTarget(self, action: #selector(miniplayerButtonPressed), for: .touchUpInside)
-        miniPlayerView.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
         
-        nowPlayingVC.closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
-        nowPlayingVC.progressBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
-        nowPlayingVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
-        nowPlayingVC.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
-        nowPlayingVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
-        nowPlayingVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
-        nowPlayingVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
-        nowPlayingVC.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
+        linkMiniPlayerButtonActions()
+        linkNowPlayingVCButtonActions()
+        linkQueueVCButtonActions()
         
-        queueVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
-        queueVC.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
-        queueVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
-        queueVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
-        queueVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
         if testingMode {
             downloadButton.frame = CGRect(x: view.center.x-50, y: 50, width: 100, height: 50)
             spotifyLoggedInView.frame = CGRect(x:50, y: 50, width: 100, height: 50)
@@ -190,6 +156,29 @@ class TabBarViewController: UITabBarController {
     }
     
     // MARK: - Button interaction methods
+    
+    private func linkMiniPlayerButtonActions() {
+        miniPlayerView.miniPlayerButton.addTarget(self, action: #selector(miniplayerButtonPressed), for: .touchUpInside)
+        miniPlayerView.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
+    }
+    private func linkNowPlayingVCButtonActions() {
+        nowPlayingVC.closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
+        nowPlayingVC.progressBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
+        nowPlayingVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+        nowPlayingVC.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
+        nowPlayingVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
+        nowPlayingVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
+        nowPlayingVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
+        nowPlayingVC.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
+    }
+    private func linkQueueVCButtonActions() {
+        queueVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
+        queueVC.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
+        queueVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
+        queueVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
+        queueVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
+    }
+    
     @objc func downloadButtonAction() {
         LibraryManager.shared.fetchLibraryFromDatabase()
         PlaylistsManager.shared.fetchPlaylistsFromDatabase()
@@ -330,11 +319,12 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
                 miniPlayerView.isHidden = false
                 UIView.animate(withDuration: 0.5) {
                     self.view.bringSubviewToFront(self.tabBar)
+                    let miniPlayerHeight = CGFloat(60)
                     self.miniPlayerView.frame = CGRect(
                         x: 0,
-                        y: self.tabBar.top - self.miniPlayerHeight,
+                        y: self.tabBar.top - miniPlayerHeight,
                         width: self.view.width,
-                        height: self.miniPlayerHeight
+                        height: miniPlayerHeight
                     )
                 }
             }

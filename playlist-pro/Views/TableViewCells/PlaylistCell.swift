@@ -21,9 +21,6 @@ class PlaylistCell : UITableViewCell {
     // Height of a cell within the table view
     static let rowHeight = CGFloat(80)
     
-    // Song to be displayed
-    var songDict : Song?
-    
     // Playlist to be displayed
     var playlist : Playlist?
     
@@ -113,35 +110,28 @@ class PlaylistCell : UITableViewCell {
         optionsButton.setTitleColor(.white, for: .normal)
     }
 	func refreshCell() {
-        if (songDict != nil) {
-            self.titleLabel.text = songDict?.title
-            self.secondaryLabel.text = NSArray(array: songDict!.artists).componentsJoined(by: ", ")
-            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songDict!.id).jpg"))
-            if let imgData = imageData {
-                self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: Double(PlaylistCell.rowHeight - spacing))
-            } else {
-                self.coverImageView.image = UIImage(named: "placeholder")
-            }
-            //self.durationLabel.text = songDict["duration"] as? String
-        }
         if (playlist != nil) {
-            if playlist!.title == "library"{
+            if playlist!.title == "library" {
                 self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
-                self.secondaryLabel.text = "\(LibraryManager.shared.songLibrary.songList.count) songs"
+                self.coverImageView.image = UIImage(systemName: "music.note.house")
+                self.coverImageView.tintColor = .gray
+                self.coverImageView.contentMode = .scaleAspectFit
             }
             else {
                 self.titleLabel.text = playlist!.title
-            }
-            
-            if playlist!.songList.count > 0 {
-                let firstSong = playlist!.songList[0]
-                let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
-                if let imgData = imageData {
-                    self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: 15.0)
-                } else {
-                    self.coverImageView.image = UIImage(systemName: "list.bullet")
+                if playlist!.songList.count > 0 {
+                    let firstSong = playlist!.songList[0]
+                    let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
+                    if let imgData = imageData {
+                        self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: 15.0)
+                    } else {
+                        self.coverImageView.image = UIImage(systemName: "list.bullet")
+                        self.coverImageView.tintColor = .gray
+                        self.coverImageView.contentMode = .scaleAspectFit
+                    }
                 }
             }
+            self.secondaryLabel.text = "\(playlist!.songList.count) songs"
         }
 	}
     

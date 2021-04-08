@@ -40,6 +40,11 @@ struct Playlist {
         self.title = title
         self.songList = songList
     }
+    init(title: String, songList: [Song], description: String) {
+        self.title = title
+        self.songList = songList
+        self.description = description
+    }
 }
 
 //struct StoragePlaylist {
