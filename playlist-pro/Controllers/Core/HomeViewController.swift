@@ -11,7 +11,7 @@ import FirebaseAuth
 
 class HomeViewController: UIViewController {
     
-    private let playlistDetailViewController = PlaylistContentsViewController()
+    private let playlistContentsViewController = PlaylistContentsViewController()
     
     private let createPlaylistViewController = CreatePlaylistViewController()
 
@@ -19,7 +19,7 @@ class HomeViewController: UIViewController {
     
     private var selectedFilter = 0
     
-    private let navBarView : UIView = {
+    private let headerView : UIView = {
         let navBarView = UIView()
         navBarView.backgroundColor = .white
         return navBarView
@@ -88,7 +88,7 @@ class HomeViewController: UIViewController {
     let addButtonSize: CGFloat = 80
     let spacing: CGFloat = 40
     var statusBarBottom: CGFloat = 47
-    let navBarViewHeight: CGFloat = 214
+    let headerViewHeight: CGFloat = 214
     let tableViewHeaderHeight: CGFloat = 60
     let searchBarHeight: CGFloat = 35
     // Called only when view instatiated
@@ -100,18 +100,24 @@ class HomeViewController: UIViewController {
         tableView.delegate = self
         createPlaylistViewController.delegate = self
         view.addSubview(tableView)
-        navBarView.addSubview(titleLabel)
-        navBarView.addSubview(searchBar)
-        navBarView.addSubview(addButton)
+        headerView.addSubview(titleLabel)
+        headerView.addSubview(searchBar)
+        headerView.addSubview(addButton)
+        view.addSubview(headerView)
+
         addButton.addTarget(self, action: #selector(addButtonAction), for: .touchUpInside)
         // Status bar height = 47.0
         statusBarBottom = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 47
         // Nav bar height = 47.0
         //let navHeight = navigationController?.navigationBar.frame.height ?? 0.0
-        view.addSubview(navBarView)
         // Hide the real NavBar before making our custom one
         self.navigationController?.navigationBar.isHidden = true
-        navBarView.frame = CGRect(x: 0, y: statusBarBottom, width: view.width, height: navBarViewHeight)
+        headerView.frame = CGRect(
+            x: 0,
+            y: statusBarBottom,
+            width: view.width,
+            height: headerViewHeight
+        )
         titleLabel.frame = CGRect(
             x: 10,
             y: 10,
@@ -127,7 +133,7 @@ class HomeViewController: UIViewController {
         segmentedView.frame = CGRect(
             x: 0,
             y: titleLabel.bottom+20,
-            width: navBarView.width*(2/3),
+            width: headerView.width*(2/3),
             height: tableViewHeaderHeight
         )
         allMusicBtn.frame = CGRect(
@@ -171,27 +177,26 @@ class HomeViewController: UIViewController {
     }
 
     private func setTableViewInsets() {
-
         self.tableView.contentInset = UIEdgeInsets(
-            top: navBarViewHeight-statusBarBottom,
+            top: headerViewHeight-statusBarBottom,
             left: 0,
             bottom: tableView.contentSize.height + tableViewHeaderHeight-statusBarBottom,
             right: 0
         )
-        tableView.contentOffset.y = -navBarViewHeight+statusBarBottom
+        tableView.contentOffset.y = -headerViewHeight+statusBarBottom
     }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        navBarView.alpha = 1 - (scrollView.contentOffset.y+navBarViewHeight)/navBarViewHeight
-        let offset = -(scrollView.contentOffset.y + navBarViewHeight)
+        headerView.alpha = 1 - (scrollView.contentOffset.y+headerViewHeight)/headerViewHeight
+        let offset = -(scrollView.contentOffset.y + headerViewHeight)
         print(scrollView.contentOffset.y)
 
-        navBarView.transform = CGAffineTransform(translationX: 0, y: min(0, offset))
+        headerView.transform = CGAffineTransform(translationX: 0, y: min(0, offset))
     }
     private func addSegmentedView() {
-        navBarView.addSubview(segmentedView)
-        allMusicBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        playlistsBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
-        songsBtn.titleLabel?.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        headerView.addSubview(segmentedView)
+        allMusicBtn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
+        playlistsBtn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
+        songsBtn.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
 
         segmentedView.addSubview(allMusicBtn)
         segmentedView.addSubview(playlistsBtn)
@@ -345,15 +350,14 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             let cell = tableView.cellForRow(at: indexPath) as! PlaylistCell
 
             print("Selected cell number \(indexPath.row) -> \(cell.playlist?.title ?? "no playlist found")")
-            if indexPath.section == 0 {
-                playlistDetailViewController.playlist = LibraryManager.shared.songLibrary
-            }
-            else {
-                playlistDetailViewController.playlist = PlaylistsManager.shared.playlists[indexPath.row]
-            }
-            playlistDetailViewController.modalPresentationStyle = .fullScreen
-            playlistDetailViewController.tableView.reloadData()
-            navigationController?.pushViewController(playlistDetailViewController, animated: true)
+            
+            let playlist = indexPath.section == 0 ? LibraryManager.shared.songLibrary : PlaylistsManager.shared.playlists[indexPath.row]
+
+            playlistContentsViewController.modalPresentationStyle = .fullScreen
+            playlistContentsViewController.reloadPlaylistData(playlist: playlist)
+
+
+            navigationController?.pushViewController(playlistContentsViewController, animated: true)
         }
         else {
             if indexPath.section != 0 {
@@ -367,7 +371,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     func reloadPlaylistDetailsVCTableView() {
-        playlistDetailViewController.reloadTableView()
+        playlistContentsViewController.reloadTableView()
     }
     
 }

@@ -10,7 +10,13 @@ import UIKit
 class AddToPlaylistViewController: UIViewController, PlaylistCellDelegate {
 
     var song : Song?
-
+    private let titleLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "Add to Playlist"
+        lbl.textColor = .white
+        lbl.font = .systemFont(ofSize: 24, weight: .bold)
+        return lbl
+    }()
     let tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(PlaylistCell.self, forCellReuseIdentifier: PlaylistCell.identifier)
@@ -26,6 +32,7 @@ class AddToPlaylistViewController: UIViewController, PlaylistCellDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.addSubview(titleLabel)
         view.addSubview(tableView)
         view.insertSubview(blurView, at: 0)
         title = "Add To Playlist"
@@ -37,7 +44,18 @@ class AddToPlaylistViewController: UIViewController, PlaylistCellDelegate {
     }
     
     override func viewDidLayoutSubviews() {
-        tableView.frame = view.frame
+        titleLabel.frame = CGRect(
+            x: 10,
+            y: 30,
+            width: 400,
+            height: 27
+        )
+        tableView.frame = CGRect(
+            x: 0,
+            y: titleLabel.bottom+20,
+            width: view.width,
+            height: view.height-titleLabel.height-20
+        )
         blurView.frame = view.frame
         
     }

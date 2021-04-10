@@ -106,6 +106,7 @@ class PlaylistCell : UITableViewCell {
     }
     func setDarkStyle() {
         titleLabel.textColor = .white
+        self.backgroundColor = .clear
         secondaryLabel.textColor = .lightGray
         optionsButton.setTitleColor(.white, for: .normal)
     }

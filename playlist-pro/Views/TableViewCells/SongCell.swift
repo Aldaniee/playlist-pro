@@ -120,7 +120,6 @@ class SongCell : UITableViewCell {
         titleLabel.textColor = .white
         secondaryLabel.textColor = .lightGray
         contentView.backgroundColor = .clear
-        pressedBackgroundView.backgroundColor = .black
         self.selectedBackgroundView = pressedBackgroundView
 
         optionsButton.setTitleColor(.white, for: .normal)

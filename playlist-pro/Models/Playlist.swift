@@ -24,10 +24,10 @@ struct FirebasePlaylist {
 }
 */
 struct Playlist {
-    var title : String
+    var title: String
     var songList = [Song]()
     var description = ""
-    //var image : UIImage?
+    var image: UIImage?
     /*init(playlist: FirebasePlaylist) {
         title = playlist.title
         songList = decodeSongArray(playlist.songList)
@@ -45,7 +45,39 @@ struct Playlist {
         self.songList = songList
         self.description = description
     }
+    func calcDuration() -> Int {
+        var sum = TimeInterval(0)
+        let inFormatter = DateFormatter()
+        inFormatter.locale = Locale(identifier: "en_US_POSIX")
+        inFormatter.dateFormat = "mm:ss"
+
+        for song in self.songList {
+
+            let duration = convertToTimeInterval(time: song.duration)
+            sum = sum + duration
+            print(sum)
+        }
+        print(sum.stringFromTimeInterval())
+
+        return (Int(sum) / 60 ) % 60
+    }
+    func convertToTimeInterval(time: String) -> TimeInterval {
+        guard time != "" else {
+            return 0
+        }
+
+        var interval:Double = 0
+
+        let parts = time.components(separatedBy: ":")
+        for (index, part) in parts.reversed().enumerated() {
+            interval += (Double(part) ?? 0) * pow(Double(60), Double(index))
+        }
+
+        return interval
+    }
 }
+
+
 
 //struct StoragePlaylist {
 //    var title : String
