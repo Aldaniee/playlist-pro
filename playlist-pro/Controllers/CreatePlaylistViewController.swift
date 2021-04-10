@@ -135,7 +135,7 @@ class CreatePlaylistViewController: UIViewController {
     }
     
     private func buildPlaylistFromTracks(spotifyPlaylist: SpotifyPlaylist) {
-        let playlist = Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description)
+        var playlist = Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description)
         PlaylistsManager.shared.addPlaylist(playlist: playlist)
         for track in tracks {
             let artists = track.artists
@@ -152,7 +152,13 @@ class CreatePlaylistViewController: UIViewController {
                 }
             }
         }
-
+        if /*spotifyPlaylist.images.count == 0 && */playlist.songList.count > 0 {
+            let firstSong = playlist.songList[0]
+            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
+            if let imgData = imageData {
+                playlist.setImage(image: UIImage(data: imgData))
+            }
+        }
     }
     
     @objc func onCreateButtonPressed() {

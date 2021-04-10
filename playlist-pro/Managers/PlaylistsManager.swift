@@ -47,6 +47,7 @@ class PlaylistsManager {
         var playlist = playlist
         let uniqueTitle = generateUniqueTitle(from: playlist.title)
         playlist.title = uniqueTitle
+        
         playlists.append(playlist)
         homeVC.reloadTableView()
         savePlaylistsToStorage()

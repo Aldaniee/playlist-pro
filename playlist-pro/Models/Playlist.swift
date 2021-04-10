@@ -27,7 +27,7 @@ struct Playlist {
     var title: String
     var songList = [Song]()
     var description = ""
-    var image: UIImage?
+    private var image: UIImage?
     /*init(playlist: FirebasePlaylist) {
         title = playlist.title
         songList = decodeSongArray(playlist.songList)
@@ -75,6 +75,23 @@ struct Playlist {
 
         return interval
     }
+    func getImage() -> UIImage? {
+        if image == nil && self.songList.count > 0 {
+            let firstSong = self.songList[0]
+            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
+            if let imgData = imageData {
+                return UIImage(data: imgData)
+            }
+            return nil
+        }
+        else {
+            return image
+        }
+        
+    }
+    mutating func setImage(image: UIImage?) {
+        self.image = image
+    }
 }
 
 
@@ -106,9 +123,22 @@ extension Playlist: Decodable {
         catch {
             songList = [Song]()
         }
-        //image = try values.decode([Song].self, forKey: .songList)
+        do {
+            let imageString = try values.decode(String.self, forKey: .image)
+            image = convertBase64StringToImage(imageBase64String: imageString)
+        }
+        catch {
+            image = nil
+        }
 
-
+    }
+    func convertImageToBase64String(img: UIImage?) -> String {
+        return img?.jpegData(compressionQuality: 1)?.base64EncodedString() ?? ""
+    }
+    func convertBase64StringToImage(imageBase64String: String) -> UIImage? {
+        let imageData = Data.init(base64Encoded: imageBase64String, options: .init(rawValue: 0))
+        let image = UIImage(data: imageData!)
+        return image ?? nil
     }
 }
 extension Playlist: Encodable {
@@ -117,7 +147,7 @@ extension Playlist: Encodable {
         try container.encode(self.title, forKey: .title)
         try container.encode(self.description, forKey: .description)
         try container.encode(self.songList, forKey: .songList)
-        try container.encode(self.title, forKey: .title)
+        try container.encode(convertImageToBase64String(img: self.image), forKey: .image)
     }
 }
 
@@ -127,30 +157,3 @@ enum CodingKeys: String, CodingKey {
     case description
     case image
 }
-
-//private func encodeSongArray(_ songArray: [Song]) -> NSArray {
-//    let encodedSongArray = NSMutableArray()
-//    for song in songArray {
-//        if let encodedSong = try? FirestoreEncoder().encode(song) {
-//            encodedSongArray.add(encodedSong)
-//        }
-//        else {
-//            print("Encoding Error")
-//            return NSArray()
-//        }
-//    }
-//    return NSArray(array: encodedSongArray)
-//}
-//private func decodeSongArray(_ encodedSongArray: NSArray) -> [Song]{
-//    var songArray = [Song]()
-//    for encodedSong in encodedSongArray {
-//        if let decodedSong = try? FirestoreDecoder().decode(Song.self, from: encodedSong as! [String : Any]) {
-//            songArray.append(decodedSong)
-//        }
-//        else {
-//            print("Decoding Error")
-//            return [Song]()
-//        }
-//    }
-//    return songArray
-//}

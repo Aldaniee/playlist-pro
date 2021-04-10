@@ -24,9 +24,6 @@ class SongCell : UITableViewCell {
     // Song to be displayed
     var song : Song?
     
-    // Playlist to be displayed
-    var playlist : Playlist?
-    
     // Background view for selection color
     let pressedBackgroundView : UIView = {
         let view = UIView()
@@ -121,7 +118,6 @@ class SongCell : UITableViewCell {
         secondaryLabel.textColor = .lightGray
         contentView.backgroundColor = .clear
         self.selectedBackgroundView = pressedBackgroundView
-
         optionsButton.setTitleColor(.white, for: .normal)
     }
     func refreshCell() {
@@ -129,31 +125,7 @@ class SongCell : UITableViewCell {
             self.titleLabel.text = song!.title
             self.secondaryLabel.text = (NSArray(array: song!.artists).componentsJoined(by: ", "))
             let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(song!.id).jpg"))
-            if let imgData = imageData {
-                self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: Double(SongCell.rowHeight - spacing))
-            } else {
-                self.coverImageView.image = UIImage(named: "placeholder")
-            }
-            //self.durationLabel.text = songDict["duration"] as? String
-        }
-        if (playlist != nil) {
-            if playlist!.title == "library" {
-                self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
-                self.secondaryLabel.text = "\(LibraryManager.shared.songLibrary.songList.count) songs"
-            }
-            else {
-                self.titleLabel.text = playlist!.title
-            }
-            
-            if playlist!.songList.count > 0 {
-                let firstSong = playlist!.songList[0]
-                let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
-                if let imgData = imageData {
-                    self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: 15.0)
-                } else {
-                    self.coverImageView.image = UIImage(systemName: "list.bullet")
-                }
-            }
+            self.coverImageView.image = UIImage(data: imageData!)?.cropToSquare(sideLength: Double(SongCell.rowHeight - spacing)) ?? UIImage(systemName: "bullet.list")
         }
     }
     

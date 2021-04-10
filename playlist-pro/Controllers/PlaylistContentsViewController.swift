@@ -75,6 +75,8 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
     }
     var statusBarBottom: CGFloat!
     let headerViewHeight: CGFloat = 200
+    let coverArtSize: CGFloat = 200/2
+
     override func viewDidLoad() {
         super.viewDidLoad()
         statusBarBottom = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 47
@@ -102,7 +104,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         )
         backButton.frame = CGRect(
             x: 10,
-            y: 10,
+            y: 5,
             width: 30,
             height: 30
         )
@@ -110,7 +112,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
 
         titleLabel.text = playlist.title == "library" ? LibraryManager.LIBRARY_DISPLAY : playlist.title
         titleLabel.frame = CGRect(
-            x: 10,
+            x: 15,
             y: backButton.bottom,
             width: 400,
             height: 27
@@ -127,7 +129,6 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
             width: view.width - 20,
             height: 15
         )
-        let coverArtSize = headerViewHeight/2
         coverImageView.frame = CGRect(
             x: view.width-coverArtSize-10,
             y: 10,
@@ -168,17 +169,21 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
     }
     func reloadPlaylistData(playlist: Playlist) {
         self.playlist = playlist
-        self.titleLabel.text = playlist.title == "library" ? LibraryManager.LIBRARY_DISPLAY : playlist.title
-        self.durationLabel.text = "\(playlist.calcDuration()) minutes"
-        self.descriptionLabel.text = playlist.description
-        let firstSong = playlist.songList[0]
-        let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
-        if let imgData = imageData {
-            coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: 15.0)
-        } else {
-            coverImageView.image = UIImage(systemName: "list.bullet")
-            coverImageView.tintColor = .gray
-            coverImageView.contentMode = .scaleAspectFit
+        if playlist.title == "library" {
+            self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
+            self.coverImageView.image = UIImage(systemName: "music.note.house")
+            self.coverImageView.tintColor = .gray
+            self.coverImageView.contentMode = .scaleAspectFit
+        }
+        else {
+            if let image = playlist.getImage() {
+                self.coverImageView.image = image.cropToSquare(sideLength: Double(coverArtSize))
+            }
+            else {
+                self.coverImageView.image = UIImage(systemName: "list.bullet")
+                self.coverImageView.tintColor = .gray
+                self.coverImageView.contentMode = .scaleAspectFit
+            }
         }
         self.tableView.reloadData()
     }

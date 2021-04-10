@@ -120,19 +120,17 @@ class PlaylistCell : UITableViewCell {
             }
             else {
                 self.titleLabel.text = playlist!.title
-                if playlist!.songList.count > 0 {
-                    let firstSong = playlist!.songList[0]
-                    let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
-                    if let imgData = imageData {
-                        self.coverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: 15.0)
-                    } else {
-                        self.coverImageView.image = UIImage(systemName: "list.bullet")
-                        self.coverImageView.tintColor = .gray
-                        self.coverImageView.contentMode = .scaleAspectFit
-                    }
+                if let image = playlist!.getImage() {
+                    self.coverImageView.image = image.cropToSquare(sideLength: Double(PlaylistCell.rowHeight - spacing))
+                }
+                else {
+                    self.coverImageView.image = UIImage(systemName: "list.bullet")
+                    self.coverImageView.tintColor = .gray
+                    self.coverImageView.contentMode = .scaleAspectFit
                 }
             }
             self.secondaryLabel.text = "\(playlist!.songList.count) songs"
+
         }
 	}
     
