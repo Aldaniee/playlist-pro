@@ -188,8 +188,6 @@ class HomeViewController: UIViewController {
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         headerView.alpha = 1 - (scrollView.contentOffset.y+headerViewHeight)/headerViewHeight
         let offset = -(scrollView.contentOffset.y + headerViewHeight)
-        print(scrollView.contentOffset.y)
-
         headerView.transform = CGAffineTransform(translationX: 0, y: min(0, offset))
     }
     private func addSegmentedView() {

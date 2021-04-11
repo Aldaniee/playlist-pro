@@ -170,6 +170,14 @@ class LocalFilesManager {
         return songArray
     }
     
+    
+    static func storeEmail(email: String) {
+        UserDefaults.standard.set(email, forKey: "email")
+    }
+    static func retreiveEmail() -> String {
+        return UserDefaults.standard.value(forKey: "email") as! String? ?? ""
+    }
+    
     static func storeNumPlaylists(numPlaylists: Int) {
         UserDefaults.standard.set(numPlaylists, forKey: "PlaylistsArray")
     }
@@ -199,31 +207,5 @@ class LocalFilesManager {
         // Store playlist object
         try? UserDefaults.standard.set(PropertyListEncoder().encode(library), forKey: "library")
 
-        /*
-        // Store Image
-        let image = playlist.image
-        // Convert to Data
-        if let data = image?.pngData() {
-            // Create URL
-            let documents = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            
-            var imageKey = "library_image"
-            if(index != nil) {
-                imageKey = "playlist_image_\(index!)"
-            }
-            let url = documents.appendingPathComponent("\(imageKey).png")
-            do {
-                // Write to Disk
-                try data.write(to: url)
-                let storagePlaylist = StoragePlaylist(
-                    title: playlist.title,
-                    encodedSongArray: encodedSongArray,
-                    description: playlist.description,
-                    imageURL: url
-                )
-            } catch {
-                print("Unable to Write Data to Disk (\(error))")
-            }
-        }*/
     }
 }

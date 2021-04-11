@@ -81,29 +81,108 @@ class AuthSplashScreenViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        view.backgroundColor = .systemBackground
         view.addSubview(background)
         view.addSubview(appTitle)
         view.addSubview(slogan)
         view.addSubview(logo)
         view.addSubview(createAccountButton)
-        createAccountButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
-
         view.addSubview(loginButton)
-        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
         view.addSubview(createAccountWithSpotifyButton)
-        createAccountWithSpotifyButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
-
         view.addSubview(loginAnonymousButton)
+        createAccountButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
+        loginButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
+        createAccountWithSpotifyButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .bold)
         loginAnonymousButton.titleLabel?.font = UIFont.systemFont(ofSize: fontSize, weight: .semibold)
-        
-
-        view.backgroundColor = .systemBackground
     }
     
+    override func viewDidAppear(_ animated: Bool) {
+        createAccountButton.alpha = 0
+        loginButton.alpha = 0
+        createAccountWithSpotifyButton.alpha = 0
+        loginAnonymousButton.alpha = 0
+
+        if AuthManager.shared.isSignedIn {
+            SpotifyAuthManager.shared.refreshIfNeeded(completion: nil)
+            let tabBarVC = TabBarViewController()
+            tabBarVC.modalPresentationStyle = .fullScreen
+            let secondsDelay = 0.5
+            DispatchQueue.main.asyncAfter(deadline: .now() + secondsDelay) {
+                self.present(tabBarVC, animated: false)
+            }
+        }
+        else {
+            self.createAccountButton.titleLabel?.alpha = 0
+            self.loginButton.titleLabel?.alpha = 0
+            self.createAccountWithSpotifyButton.titleLabel?.alpha = 0
+            self.loginAnonymousButton.titleLabel?.alpha = 0
+            
+            createAccountButton.frame = CGRect(
+                x: 40+animationOffset/2,
+                y: view.height/2 + spacing+animationOffset/2,
+                width: view.width - spacing*2-animationOffset,
+                height: 52.0-animationOffset
+            )
+            loginButton.frame = CGRect(
+                x: spacing+animationOffset/2,
+                y: createAccountButton.bottom + 15+animationOffset/2,
+                width: view.width - spacing*2-animationOffset,
+                height: 52.0-animationOffset
+            )
+            createAccountWithSpotifyButton.frame = CGRect(
+                x: spacing+animationOffset/2,
+                y: loginButton.bottom + 15+animationOffset/2,
+                width: view.width - spacing*2-animationOffset,
+                height: 52.0-animationOffset
+            )
+            loginAnonymousButton.frame = CGRect(
+                x: spacing+animationOffset/2,
+                y: createAccountWithSpotifyButton.bottom + spacing/2+animationOffset/2,
+                width: view.width - spacing*2-animationOffset,
+                height: 32.0-animationOffset
+            )
+            UIView.animate(withDuration: 0.5) {
+                self.createAccountButton.alpha = 1
+                self.loginButton.alpha = 1
+                self.createAccountWithSpotifyButton.alpha = 1
+                self.loginAnonymousButton.alpha = 1
+                self.createAccountButton.frame = CGRect(
+                    x: 40,
+                    y: self.view.height/2 + self.spacing,
+                    width: self.view.width - self.spacing*2,
+                    height: 52.0
+                )
+                self.loginButton.frame = CGRect(
+                    x: self.spacing,
+                    y: self.createAccountButton.bottom + 15,
+                    width: self.view.width - self.spacing*2,
+                    height: 52.0
+                )
+                self.createAccountWithSpotifyButton.frame = CGRect(
+                    x: self.spacing,
+                    y: self.loginButton.bottom + 15,
+                    width: self.view.width - self.spacing*2,
+                    height: 52.0
+                )
+                self.loginAnonymousButton.frame = CGRect(
+                    x: self.spacing,
+                    y: self.createAccountWithSpotifyButton.bottom + self.spacing/2,
+                    width: self.view.width - self.spacing*2,
+                    height: 32.0
+                )
+            }
+            UIView.animate(withDuration: 0.5, delay: 0.5) {
+                self.createAccountButton.titleLabel?.alpha = 1
+                self.loginButton.titleLabel?.alpha = 1
+                self.createAccountWithSpotifyButton.titleLabel?.alpha = 1
+                self.loginAnonymousButton.titleLabel?.alpha = 1
+            }
+        }
+    }
     let fontSize = CGFloat(16)
     let logoSize = CGFloat(80)
     let spacing = CGFloat(40)
+    let animationOffset: CGFloat = 20
     override func viewDidLayoutSubviews() {
         background.frame = view.bounds
         logo.frame = CGRect(
@@ -127,31 +206,6 @@ class AuthSplashScreenViewController: UIViewController {
             height: 16+3
         )
         slogan.font = .systemFont(ofSize: 16, weight: .regular)
-
-        createAccountButton.frame = CGRect(
-            x: 40,
-            y: view.height/2 + spacing,
-            width: view.width - spacing*2,
-            height: 52.0
-        )
-        loginButton.frame = CGRect(
-            x: spacing,
-            y: createAccountButton.bottom + 15,
-            width: view.width - spacing*2,
-            height: 52.0
-        )
-        createAccountWithSpotifyButton.frame = CGRect(
-            x: spacing,
-            y: loginButton.bottom + 15,
-            width: view.width - spacing*2,
-            height: 52.0
-        )
-        loginAnonymousButton.frame = CGRect(
-            x: spacing,
-            y: createAccountWithSpotifyButton.bottom + spacing/2,
-            width: view.width - spacing*2,
-            height: 32.0
-        )
         
     }
     @objc private func didTapCreateAccountButton() {
@@ -177,7 +231,7 @@ class AuthSplashScreenViewController: UIViewController {
             if (error == nil) {
                 print("Signed in with Anonymous auth")
                 // dismiss all view controllers down to the root
-                self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+                self.dismiss(animated: true, completion: nil)
                 let tabBarVC = TabBarViewController()
                 tabBarVC.modalPresentationStyle = .fullScreen
                 self.present(tabBarVC, animated: true)
@@ -191,7 +245,7 @@ class AuthSplashScreenViewController: UIViewController {
             alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
             return
         }
-        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
         let vc = RegistrationViewController()
         present(vc, animated: true)
     }

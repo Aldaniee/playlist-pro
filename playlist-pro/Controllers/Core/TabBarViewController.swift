@@ -35,8 +35,8 @@ class TabBarViewController: UITabBarController {
     // MARK: - View controller lifecycle methods
     convenience init() {
         self.init(nibName: nil, bundle: nil)
-        LibraryManager.shared.fetchLibraryFromDatabase()
         PlaylistsManager.shared.fetchPlaylistsFromDatabase()
+        LibraryManager.shared.fetchLibraryFromDatabase()
     }
 
     override func viewDidAppear(_ animated: Bool) {

@@ -226,7 +226,7 @@ class LoginViewController: UIViewController {
                     self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
                     let tabBarVC = TabBarViewController()
                     tabBarVC.modalPresentationStyle = .fullScreen
-                    self.present(tabBarVC, animated: true)
+                    self.view.window?.rootViewController?.present(tabBarVC, animated: true)
                 }
                 else {
                     print("Login Database Error")

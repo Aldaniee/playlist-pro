@@ -13,6 +13,12 @@ public class AuthManager {
     
     var isSignedIn = Auth.auth().currentUser != nil
     
+    init() {
+        if isSignedIn {
+            LocalFilesManager.storeEmail(email: Auth.auth().currentUser!.email!)
+        }
+    }
+    
     // MARK: - Public
     public func registerNewUser(email: String, password: String, completion: @escaping (Bool) -> Void) {
         // Check if email is avialable
@@ -39,7 +45,8 @@ public class AuthManager {
                         completion(false)
                         return
                     } else {
-                        print("User signs up successfully")
+                        print("User registered successfully")
+                        LocalFilesManager.storeEmail(email: Auth.auth().currentUser!.email!)
                         completion(true)
                         return
                     }
@@ -99,6 +106,7 @@ public class AuthManager {
                     print("shouldn't get here")
                     return
                 }
+                LocalFilesManager.storeEmail(email: Auth.auth().currentUser!.email!)
                 if !user.isEmailVerified {
                     user.sendEmailVerification(completion: { (error) in
                         guard let error = error else {

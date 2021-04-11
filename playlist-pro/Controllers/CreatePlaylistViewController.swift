@@ -78,8 +78,6 @@ class CreatePlaylistViewController: UIViewController {
         configureSpotifyImport()
     }
     
-    private var tracks = [AudioTrack]()
-
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let edgePadding = spacing/2
@@ -123,40 +121,12 @@ class CreatePlaylistViewController: UIViewController {
                 DispatchQueue.main.async {
                     switch result {
                     case .success(let model):
-                        self?.tracks = model.tracks.items.compactMap({ $0.track })
-                        self?.buildPlaylistFromTracks(spotifyPlaylist: playlist)
+                        PlaylistsManager.shared.buildPlaylistFromSpotifyPlaylist(spotifyPlaylist: playlist, tracks: model.tracks.items.compactMap({ $0.track }))
                         self?.dismiss(animated: true, completion: nil)
                     case .failure(let error):
                         print(error.localizedDescription)
                     }
                 }
-            }
-        }
-    }
-    
-    private func buildPlaylistFromTracks(spotifyPlaylist: SpotifyPlaylist) {
-        var playlist = Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description)
-        PlaylistsManager.shared.addPlaylist(playlist: playlist)
-        for track in tracks {
-            let artists = track.artists
-            var searchText = "\(artists[0].name) - \(track.name)"
-            if artists.count > 1 {
-                searchText = searchText + " ft. "
-                for i in 1..<track.artists.count {
-                    searchText = searchText + " \(artists[i].name)"
-                }
-            }
-            YoutubeSearchManager.shared.search(searchText: searchText) { videos in
-                if videos != nil {
-                    LibraryManager.shared.downloadVideoFromSearchList(videos: videos!, playlistName: playlist.title)
-                }
-            }
-        }
-        if /*spotifyPlaylist.images.count == 0 && */playlist.songList.count > 0 {
-            let firstSong = playlist.songList[0]
-            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
-            if let imgData = imageData {
-                playlist.setImage(image: UIImage(data: imgData))
             }
         }
     }

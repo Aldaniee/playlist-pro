@@ -163,8 +163,6 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         let bottomHeader = headerViewHeight+statusBarBottom
         headerView.alpha = 1 - (scrollView.contentOffset.y+bottomHeader)/bottomHeader
         let offset = -(scrollView.contentOffset.y + bottomHeader)
-        print(scrollView.contentOffset.y)
-
         headerView.transform = CGAffineTransform(translationX: 0, y: min(0, offset))
     }
     func reloadPlaylistData(playlist: Playlist) {

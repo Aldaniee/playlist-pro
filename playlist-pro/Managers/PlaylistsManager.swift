@@ -16,7 +16,6 @@ class PlaylistsManager {
     var homeVC = HomeViewController()
     
     init() {
-        fetchPlaylistsFromDatabase()
         fetchPlaylistsFromStorage()
     }
     func removePlaylist(playlist: Playlist) {
@@ -53,6 +52,32 @@ class PlaylistsManager {
         savePlaylistsToStorage()
     }
     
+    func buildPlaylistFromSpotifyPlaylist(spotifyPlaylist: SpotifyPlaylist, tracks: [AudioTrack]) {
+        var playlist = Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description)
+        addPlaylist(playlist: playlist)
+        for track in tracks {
+            let artists = track.artists
+            var searchText = "\(artists[0].name) - \(track.name)"
+            if artists.count > 1 {
+                searchText = searchText + " ft. "
+                for i in 1..<track.artists.count {
+                    searchText = searchText + " \(artists[i].name)"
+                }
+            }
+            YoutubeSearchManager.shared.search(searchText: searchText) { videos in
+                if videos != nil {
+                    LibraryManager.shared.downloadVideoFromSearchList(videos: videos!, playlistName: playlist.title)
+                }
+            }
+        }
+        if /*spotifyPlaylist.images.count == 0 && */playlist.songList.count > 0 {
+            let firstSong = playlist.songList[0]
+            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
+            if let imgData = imageData {
+                playlist.setImage(image: UIImage(data: imgData))
+            }
+        }
+    }
     func addSongToPlaylist(song: Song, playlistName: String) {
         if hasPlaylist(named: playlistName) {
             let index = getPlaylistIndex(title: playlistName)
@@ -93,10 +118,10 @@ class PlaylistsManager {
             return
         }
         DatabaseManager.shared.downloadPlaylists(user: user) { playlists in
-            LocalFilesManager.storePlaylists(playlists)
+            print("Downloading user playlists")
             self.playlists = playlists
             self.homeVC.reloadTableView()
-            self.savePlaylistsToStorage()
+            LocalFilesManager.storePlaylists(playlists)
         }
     }
 

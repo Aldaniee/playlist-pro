@@ -167,7 +167,7 @@ public class DatabaseManager {
     }
 
     func downloadPlaylists(user: User, completion: @escaping ([Playlist]) -> Void) {
-        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" :             user.email!.safeDatabaseKey()
+        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" : user.email!.safeDatabaseKey()
         database.child(userPath).observeSingleEvent(of: .value, with: { (snapshot) in
             if let dictionary = snapshot.value as? NSDictionary {
 

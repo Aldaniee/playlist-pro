@@ -124,8 +124,12 @@ class SongCell : UITableViewCell {
         if (song != nil) {
             self.titleLabel.text = song!.title
             self.secondaryLabel.text = (NSArray(array: song!.artists).componentsJoined(by: ", "))
-            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(song!.id).jpg"))
-            self.coverImageView.image = UIImage(data: imageData!)?.cropToSquare(sideLength: Double(SongCell.rowHeight - spacing)) ?? UIImage(systemName: "bullet.list")
+            if let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(song!.id).jpg")) {
+                self.coverImageView.image = UIImage(data: imageData)!.cropToSquare(sideLength: Double(SongCell.rowHeight - spacing))
+            }
+            else {
+                self.coverImageView.image = UIImage(systemName: "bullet.list")
+            }
         }
     }
     

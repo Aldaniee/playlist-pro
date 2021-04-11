@@ -15,7 +15,7 @@ public struct Constants {
         static let PLAYLIST_URL = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=\(Constants.YT.PLAYLIST_ID)&key=\(Constants.YT.API_KEY)"
         static let VIDEOCELL_ID = "VideoCell"
         static let EMBED_URL = "https://www.youtube.com/embed/"
-        static let MAX_RESULTS = 5
+        static let MAX_RESULTS = 10
     
         static let SEARCHLIST_URL_PT1 = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=\(Constants.YT.MAX_RESULTS)&order=relevance&q="
         static let SEARCHLIST_URL_PT2 = "&type=video&key=\(Constants.YT.API_KEY)"
@@ -42,7 +42,6 @@ extension UIColor {
     static let orange = UIColor(
         red: 244/255, green: 111/255, blue: 52/255, alpha: 1.00
     )
-    
     static let spotifyGreen = UIColor(
         red: 97/255, green: 232/255, blue: 123/255, alpha: 1.00
     )
@@ -52,7 +51,6 @@ extension UIColor {
     static let lightPink = UIColor(
         red: 231/255, green: 125/255, blue: 235/255, alpha: 1.00
     )
-
     static let blackGray = UIColor(
         red: 47/255, green: 47/255, blue: 47/255, alpha: 1.00
     )

@@ -98,12 +98,7 @@ final class AccountViewController: UIViewController {
 
                         
                         // Show log in
-                        let loginVC = AuthSplashScreenViewController()
-                        loginVC.modalPresentationStyle = .fullScreen
-                        self.present(loginVC, animated: false) {
-                            self.navigationController?.popToRootViewController(animated: false)
-                            self.tabBarController?.selectedIndex = 0
-                        }
+                        self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
                     }
                     else {
                         // error occurred

@@ -7,7 +7,7 @@
 
 import UIKit
 
-struct Song : Codable{
+struct Song : Codable, Equatable{
     let id: String
     let link: String
     let fileExtension: String
@@ -33,6 +33,9 @@ struct Song : Codable{
         self.duration = duration
         self.lyrics = lyrics
         self.tags = tags
+    }
+    static func == (lhs: Song, rhs: Song) -> Bool {
+        return lhs.id == rhs.id
     }
 }
 

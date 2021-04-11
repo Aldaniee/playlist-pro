@@ -282,7 +282,7 @@ class RegistrationViewController: UIViewController {
                     self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
                     let tabBarVC = TabBarViewController()
                     tabBarVC.modalPresentationStyle = .fullScreen
-                    self.present(tabBarVC, animated: true)
+                    self.view.window?.rootViewController?.present(tabBarVC, animated: true)
                     
                     print("Registration successful")
                     let alert = UIAlertController(title: "Registration Successful",
