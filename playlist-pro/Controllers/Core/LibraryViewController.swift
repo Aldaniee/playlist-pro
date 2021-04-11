@@ -39,6 +39,12 @@ final class LibraryViewController: UIViewController {
 
         tableView.dataSource = self
         tableView.delegate = self
+        tableView.contentInset = UIEdgeInsets(
+            top: 0,
+            left: 0,
+            bottom: tableView.contentSize.height + 100,
+            right: 0
+        )
     }
     @objc private func didTapSettingsButton() {
         let vc = AccountViewController()

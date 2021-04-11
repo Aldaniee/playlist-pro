@@ -139,20 +139,25 @@ extension SearchViewController: UITableViewDataSource {
         
         // Get a reference to the video that was tapped on
         let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
-        
-        let videoID = selectedVideo.videoId
-        let title = selectedVideo.title
-        let artistArray = NSMutableArray(object: selectedVideo.artist)
-        
-        // Download the selected video
-        YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: nil) { completion in
-            if completion {
-                print("downloadYoutubeVideo completed with success")
-                self.tabBarController?.selectedIndex = 2
+        do {
+            let videoID = selectedVideo.videoId
+            let title = try selectedVideo.title.strippingHTML() ?? selectedVideo.title
+            let artistName = try selectedVideo.artist.strippingHTML() ?? selectedVideo.artist
+            let artistArray = NSMutableArray(object: artistName)
+            
+            // Download the selected video
+            YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: nil) { completion in
+                if completion {
+                    print("downloadYoutubeVideo completed with success")
+                    self.tabBarController?.selectedIndex = 2
+                }
+                else {
+                    print("downloadYoutubeVideo completed with failure")
+                }
             }
-            else {
-                print("downloadYoutubeVideo completed with failure")
-            }
+        }
+        catch {
+            print("ERROR: strippingHTML error")
         }
     }
     
