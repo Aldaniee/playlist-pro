@@ -223,7 +223,7 @@ class LibraryManager {
             if AuthManager.shared.isSignedIn {
                 var songFound = false
                 for oldSong in oldLibrary {
-                    if oldSong.id == newSong.id {
+                    if oldSong == newSong {
                         songFound = true
                     }
                 }
