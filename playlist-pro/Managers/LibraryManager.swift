@@ -107,6 +107,15 @@ class LibraryManager {
 
         if LocalFilesManager.checkFileExist("\(sID).m4a") {
             print("Song already in library, skipping download")
+            if (playlistTitle != nil) {
+                for song in songLibrary.songList {
+                    if song.id == sID {
+                        PlaylistsManager.shared.addSongToPlaylist(song: song, playlistName: playlistTitle!)
+                        return
+                    }
+                }
+            }
+            print("ERROR: couldn;t find song? somethign went wrong")
             return
         }
         
