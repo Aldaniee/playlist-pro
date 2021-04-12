@@ -162,7 +162,6 @@ class TabBarViewController: UITabBarController {
         miniPlayerView.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
     }
     private func linkNowPlayingVCButtonActions() {
-        nowPlayingVC.closeButton.addTarget(self, action: #selector(closeButtonAction), for: .touchUpInside)
         nowPlayingVC.progressBar.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
         nowPlayingVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
         nowPlayingVC.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
@@ -190,7 +189,7 @@ class TabBarViewController: UITabBarController {
         nowPlayingVC.modalPresentationStyle = .fullScreen
         nowPlayingVC.transitioningDelegate = self
         nowPlayingVC.modalPresentationStyle = .custom
-
+        nowPlayingVC.presentAnimations()
         present(nowPlayingVC, animated: true, completion: nil)
     }
     

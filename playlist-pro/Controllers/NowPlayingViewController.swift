@@ -13,35 +13,17 @@ class NowPlayingViewController: UIViewController {
     var pointOrigin: CGPoint?
     
     // MARK: Background
+    let statusBarBackground: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blackGray
+        view.alpha = 0.5
+        return view
+    }()
+    
     let blurView : UIVisualEffectView = {
         let vis = UIVisualEffectView(effect: UIBlurEffect(style: .light))
         vis.translatesAutoresizingMaskIntoConstraints = false
         return vis
-    }()
-    // MARK: Tab Bar
-    let closeButton: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        let font = UIFont.systemFont(ofSize: 999) // max size so the icon scales to the image frame
-        let configuration = UIImage.SymbolConfiguration(font: font)
-        btn.setImage(UIImage(systemName: "chevron.down", withConfiguration: configuration), for: UIControl.State.normal)
-        btn.tintColor = .white
-        return btn
-    }()
-    let tabBarTitle: UILabel = {
-        let lbl = UILabel()
-        lbl.numberOfLines = 0
-        lbl.backgroundColor = .clear
-        lbl.textAlignment = .center
-        lbl.text = "Now Playing"
-        lbl.textColor = .white
-        return lbl
-    }()
-    let optionsButton: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        btn.tintColor = .white
-        return btn
     }()
     // MARK: Playback Display
     let albumCoverImageView: UIImageView = {
@@ -202,19 +184,9 @@ class NowPlayingViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .blackGray
-
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerAction))
         view.addGestureRecognizer(panGesture)
         
-        // MARK: Tab Bar
-        view.addSubview(closeButton)
-        view.addSubview(tabBarTitle)
-        tabBarTitle.font = UIFont.boldSystemFont(ofSize: tabBarHeight)
-        view.addSubview(optionsButton)
-        optionsButton.titleLabel!.numberOfLines = 0
-        optionsButton.titleLabel!.font = UIFont.systemFont(ofSize: tabBarHeight)
-        optionsButton.setTitle("···", for: UIControl.State.normal)
-
         // MARK: Playback Display
         view.addSubview(albumCoverImageView)
         view.addSubview(progressBar)
@@ -254,8 +226,17 @@ class NowPlayingViewController: UIViewController {
         editButton.addSubview(editButtonTextLabel)
         editButtonTextLabel.font = UIFont.systemFont(ofSize: editButtonTextSize)
         editButton.addSubview(editButtonImageView)
+        albumCoverImageView.frame = CGRect(
+            x: -50,
+            y: 0,
+            width: view.width+100,
+            height: view.width+100
+        )
     }
     
+    func presentAnimations() {
+        self.albumCoverImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
+    }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         let edgePadding = spacing/2
@@ -264,57 +245,40 @@ class NowPlayingViewController: UIViewController {
             hasSetPointOrigin = true
             pointOrigin = self.view.frame.origin
         }
-        
-        // MARK: Tab Bar
-        let topToTabBarMiddle = CGFloat(70)
-        let closeButtonWidth = tabBarHeight*closeButtonScaleConstant
-        
-        
-        closeButton.frame = CGRect(
-            x: edgePadding,
-            y: topToTabBarMiddle-tabBarHeight/2,
-            width: closeButtonWidth,
-            height: tabBarHeight
+        let statusBarHeight = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 47
+        statusBarBackground.frame = CGRect(
+            x: 0,
+            y: 0,
+            width: view.width,
+            height: statusBarHeight
         )
-        
-        tabBarTitle.frame = CGRect(
-            x: spacing + closeButtonWidth,
-            y: topToTabBarMiddle-tabBarHeight/2,
-            width: view.width-spacing-closeButtonWidth-tabBarHeight-spacing,
-            height: tabBarHeight
-        )
-        optionsButton.frame = CGRect(
-            x: view.width-edgePadding-tabBarHeight,
-            y: topToTabBarMiddle-tabBarHeight/2,
-            width: tabBarHeight,
-            height: tabBarHeight
-        )
-        
         // MARK: Playback View
-        let tabBarTitleBottomToAlbumTop = CGFloat(52)
-        
-        albumCoverImageView.frame = CGRect(x: edgePadding,
-                                          y: tabBarTitle.bottom + tabBarTitleBottomToAlbumTop,
-                                          width: view.width - spacing,
-                                          height: view.width - spacing)
-        songTitleLabel.frame = CGRect(x: edgePadding,
-                                  y: albumCoverImageView.bottom + spacing,
-                                  width: view.width-spacing,
-                                  height: tabBarHeight)
-        artistLabel.frame = CGRect(x: edgePadding,
-                                   y: songTitleLabel.bottom + 5,
-                                   width: view.width-spacing,
-                                   height: artistLabelHeight)
-        progressBar.frame = CGRect(x: edgePadding,
-                                   y: songTitleLabel.bottom + spacing,
-                                   width: view.width-spacing,
-                                   height: progressBarHeight)
+        songTitleLabel.frame = CGRect(
+            x: edgePadding,
+            y: albumCoverImageView.bottom + spacing,
+            width: view.width-spacing,
+            height: tabBarHeight
+        )
+        artistLabel.frame = CGRect(
+            x: edgePadding,
+            y: songTitleLabel.bottom + 5,
+            width: view.width-spacing,
+            height: artistLabelHeight
+        )
+        progressBar.frame = CGRect(
+            x: edgePadding,
+            y: songTitleLabel.bottom + spacing,
+            width: view.width-spacing,
+            height: progressBarHeight
+        )
         let timeLabelWidth = timeLabelSize*timeLabelScaleConstant
         let progressBarToTimeLabels = spacing/4
-        currentTimeLabel.frame = CGRect(x: progressBar.left,
-                                        y: progressBar.bottom+progressBarToTimeLabels,
-                                        width: timeLabelWidth,
-                                        height: timeLabelSize)
+        currentTimeLabel.frame = CGRect(
+            x: progressBar.left,                 
+            y: progressBar.bottom+progressBarToTimeLabels,
+            width: timeLabelWidth,
+            height: timeLabelSize
+        )
         timeLeftLabel.frame = CGRect(x: progressBar.right-timeLabelWidth,
                                      y: progressBar.bottom+progressBarToTimeLabels,
                                      width: timeLabelWidth,
@@ -376,6 +340,10 @@ class NowPlayingViewController: UIViewController {
         // setting x as 0 because we don't want users to move the frame side ways, only want straight up or down
         view.frame.origin = CGPoint(x: 0, y: self.pointOrigin!.y + translation.y)
         
+        let scale = 1 + ((translation.y) / view.height)
+        print(scale)
+        albumCoverImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
+
         if sender.state == .ended {
             let dragVelocity = sender.velocity(in: view)
             if dragVelocity.y >= 1300 {
@@ -383,6 +351,7 @@ class NowPlayingViewController: UIViewController {
             } else {
                 // Set back to original position of the view controller
                 UIView.animate(withDuration: 0.3) {
+                    self.albumCoverImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
                     self.view.frame.origin = self.pointOrigin ?? CGPoint(x: 0, y: 0)
                 }
             }

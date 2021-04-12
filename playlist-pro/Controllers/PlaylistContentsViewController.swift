@@ -154,7 +154,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         self.tableView.contentInset = UIEdgeInsets(
             top: headerViewHeight,
             left: 0,
-            bottom: tableView.contentSize.height-statusBarBottom,
+            bottom: tableView.contentSize.height-statusBarBottom+50,
             right: 0
         )
         tableView.contentOffset.y = -headerViewHeight+statusBarBottom
