@@ -187,9 +187,16 @@ class LibraryManager {
             //currentViewController?.removeProgressView()
             if errorStr == nil {
                 if !self.hasSongInLibrary(videoID: videoID) {
-                    self.addSongDictToLibraryArray(sID: sID, videoID: videoID, songUrl: songUrl, newExtension: newExtension, songTitle: songTitle, artists: artists, playlistTitle: playlistTitle)
+                    let song = self.buildSongForLibrary(sID: sID, videoID: videoID, songUrl: songUrl, newExtension: newExtension, songTitle: songTitle, artists: artists, playlistTitle: playlistTitle)
+                    
+                    self.addSongDictToLibraryArray(song: song)
+                    LocalFilesManager.storeLibrary(self.songLibrary)
+                    self.saveLibraryToDatabase()
+                    
+                    if (playlistTitle != nil) {
+                        PlaylistsManager.shared.addSongToPlaylist(song: song, playlistName: playlistTitle!)
+                    }
                     completion?(true)
-
                 }
             } else {
                 print("Error adding the song to the library")
@@ -201,11 +208,12 @@ class LibraryManager {
         }
     }
 	
-    private func addSongDictToLibraryArray(sID: String, videoID: String?, songUrl: URL, newExtension: String, songTitle: String?, artists: NSMutableArray, playlistTitle: String?) {
+    private func buildSongForLibrary(sID: String, videoID: String?, songUrl: URL, newExtension: String, songTitle: String?, artists: NSMutableArray, playlistTitle: String?) -> Song {
         let duration = LocalFilesManager.extractDurationForSong(songID: sID, songExtension: newExtension)
         let link = videoID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(videoID ?? "UNKNOWN_ERROR")"
-        let song = [SongValues.id: sID,
-                            SongValues.title: songTitle ?? sID,
+        
+        let songDict = [SongValues.id: sID,
+                            SongValues.title: filterSongTitle(songTitle) ?? sID,
                             SongValues.artists: artists,
                             SongValues.album: "",
                             SongValues.releaseYear: "",
@@ -214,21 +222,66 @@ class LibraryManager {
                             SongValues.link: link,
                             SongValues.fileExtension: newExtension] as SongDict
         let metadataDict = LocalFilesManager.extractSongMetadata(songID: sID, songExtension: newExtension)
-        let enrichedDict = self.enrichSongDict(song, fromMetadataDict: metadataDict)
-        
-        self.addSongDictToLibraryArray(song: enrichedDict)
-        
-        if (playlistTitle != nil) {
-            PlaylistsManager.shared.addSongToPlaylist(song: enrichedDict, playlistName: playlistTitle!)
-        }
-
-        LocalFilesManager.storeLibrary(songLibrary)
-        self.saveLibraryToDatabase()
+        let song = self.enrichSong(songDict: songDict, fromMetadataDict: metadataDict)
+        return song
     }
     
     func addSongDictToLibraryArray(song: Song) {
         self.songLibrary.songList.append(song)
         libraryVC.tableView.reloadData()
+    }
+    
+    func filterSongTitle(_ title: String?) -> String? {
+        if title == nil {
+            return nil
+        }
+        var filteredTitle = title!
+        let textToRemove = [
+            "Official Music Video",
+            "Official Video",
+            "Official Lyric Video",
+            "Official Audio",
+            "Official Lyrics",
+            "Audio",
+            "Vizualizer Video",
+            "Vizualizer",
+            "Vizualizer Video",
+            "Lyrics",
+            "Lyrics Audio",
+            "Lyric Video",
+        ]
+        var featuresToRemove = Array<String>()
+        
+        for i in 0..<textToRemove.count {
+            var text = textToRemove[i]
+            featuresToRemove.append("\(text)")
+            featuresToRemove.append("(\(text))")
+            featuresToRemove.append("[\(text)]")
+            featuresToRemove.append("{\(text)}")
+            featuresToRemove.append("<\(text)>")
+            featuresToRemove.append("|\(text)|")
+            text = textToRemove[i].lowercased()
+            featuresToRemove.append("\(text)")
+            featuresToRemove.append("(\(text))")
+            featuresToRemove.append("[\(text)]")
+            featuresToRemove.append("{\(text)}")
+            featuresToRemove.append("<\(text)>")
+            featuresToRemove.append("|\(text)|")
+            text = textToRemove[i].uppercased()
+            featuresToRemove.append("\(text)")
+            featuresToRemove.append("(\(text))")
+            featuresToRemove.append("[\(text)]")
+            featuresToRemove.append("{\(text)}")
+            featuresToRemove.append("<\(text)>")
+            featuresToRemove.append("|\(text)|")
+        }
+        for item in featuresToRemove {
+            if filteredTitle.contains(item) {
+                filteredTitle = filteredTitle.replacingOccurrences(of: item, with: "")
+                print("removed occurance of \(item) from song title")
+            }
+        }
+        return filteredTitle
     }
     
     /// Given the library of songDicts is correct, download all of the missing audio files from youtube
@@ -389,7 +442,7 @@ class LibraryManager {
         return nil
     }
     
-	func enrichSongDict(_ songDict: SongDict, fromMetadataDict mdDict: SongDict) -> Song {
+	func enrichSong(songDict: SongDict, fromMetadataDict mdDict: SongDict) -> Song {
 		var key: String
         let songID = songDict[SongValues.id] as! String
         var songTitle = songDict[SongValues.title] as! String

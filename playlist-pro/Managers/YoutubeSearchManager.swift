@@ -94,6 +94,7 @@ class YoutubeSearchManager {
             }
             //vc?.removeSpinner()
             print(video!.thumbnailURLs!)
+            
             LibraryManager.shared.addSongToLibrary(songTitle: title, artists: artistArray, songUrl: video!.streamURL!, songExtension: "mp4", thumbnailUrl: video!.thumbnailURLs![video!.thumbnailURLs!.count - 1], videoID: videoID, playlistTitle: playlistTitle) { success in
                 completion?(success)
             }

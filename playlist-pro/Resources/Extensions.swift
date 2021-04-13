@@ -518,7 +518,6 @@ extension NSString {
 }
 
 extension String {
-
     var length: Int {
         return count
     }
