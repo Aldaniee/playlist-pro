@@ -18,6 +18,19 @@ class PlaylistsManager {
     init() {
         fetchPlaylistsFromStorage()
     }
+    
+    func refreshPlaylistConnection() {
+        for i in 0..<playlists.count {
+            for j in 0..<playlists[i].songList.count {
+                for librarySong in LibraryManager.shared.songLibrary.songList {
+                    if playlists[i].songList[j].getVideoId() == librarySong.getVideoId() {
+                        playlists[i].songList[j].setID(id: librarySong.id)
+                    }
+                }
+            }
+        }
+    }
+    
     func removePlaylist(playlist: Playlist) {
         if hasPlaylist(named: playlist.title) {
             for i in 0..<playlists.count {
@@ -67,7 +80,7 @@ class PlaylistsManager {
             }
             YoutubeSearchManager.shared.search(searchText: searchText) { videos in
                 if videos != nil {
-                    LibraryManager.shared.downloadVideoFromSearchList(videos: videos!, playlistName: playlist.title)
+                    DatabaseManager.shared.downloadVideoFromSearchList(videos: videos!, playlistName: playlist.title)
                 }
             }
         }
@@ -94,36 +107,11 @@ class PlaylistsManager {
     
     func savePlaylistsToStorage() {
         LocalFilesManager.storePlaylists(playlists)
-        savePlaylistsToDatabase() 
+        DatabaseManager.shared.savePlaylistsToDatabase()
     }
     func fetchPlaylistsFromStorage() {
         playlists = LocalFilesManager.retreivePlaylists()
         homeVC.reloadTableView()
-    }
-    
-    func savePlaylistsToDatabase() {
-        guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
-            return
-        }
-        DatabaseManager.shared.updatePlaylists(user: user, completion: { error in
-            if(error) {
-                print("ERROR: \(error)")
-                return
-            }
-        })
-    }
-    func fetchPlaylistsFromDatabase() {
-        guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
-            return
-        }
-        DatabaseManager.shared.downloadPlaylists(user: user) { playlists in
-            print("Downloading user playlists")
-            self.playlists = playlists
-            self.homeVC.reloadTableView()
-            LocalFilesManager.storePlaylists(playlists)
-        }
     }
 
     func hasPlaylist(named title: String) -> Bool {

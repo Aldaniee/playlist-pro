@@ -35,8 +35,7 @@ class TabBarViewController: UITabBarController {
     // MARK: - View controller lifecycle methods
     convenience init() {
         self.init(nibName: nil, bundle: nil)
-        PlaylistsManager.shared.fetchPlaylistsFromDatabase()
-        LibraryManager.shared.fetchLibraryFromDatabase()
+        DatabaseManager.shared.fetchMusicFromDatabase()
     }
 
     override func viewDidAppear(_ animated: Bool) {
@@ -179,8 +178,7 @@ class TabBarViewController: UITabBarController {
     }
     
     @objc func downloadButtonAction() {
-        LibraryManager.shared.fetchLibraryFromDatabase()
-        PlaylistsManager.shared.fetchPlaylistsFromDatabase()
+        DatabaseManager.shared.fetchMusicFromDatabase()
     }
     
     @objc func miniplayerButtonPressed(sender: UIButton!) {

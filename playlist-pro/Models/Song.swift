@@ -8,7 +8,7 @@
 import UIKit
 
 struct Song : Codable, Equatable{
-    let id: String
+    var id: String
     let link: String
     let fileExtension: String
     let title: String
@@ -37,6 +37,18 @@ struct Song : Codable, Equatable{
     static func == (lhs: Song, rhs: Song) -> Bool {
         return lhs.id == rhs.id
     }
+    func getVideoId() -> String {
+        var songId = self.id
+        if songId.contains("yt_") {
+            songId = songId.substring(fromIndex: 3)
+            songId = songId.substring(toIndex: 11)
+        }
+        return id
+    }
+    mutating func setID(id: String) {
+        self.id = id
+    }
+    
 }
 
 typealias SongDict = Dictionary<String, Any>
