@@ -353,8 +353,6 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 
             playlistContentsViewController.modalPresentationStyle = .fullScreen
             playlistContentsViewController.reloadPlaylistData(playlist: playlist)
-
-
             navigationController?.pushViewController(playlistContentsViewController, animated: true)
         }
         else {

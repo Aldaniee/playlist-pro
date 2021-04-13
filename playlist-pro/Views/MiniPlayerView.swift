@@ -104,7 +104,7 @@ class MiniPlayerView: UIView {
         pBar.tintColor = .darkPink
         pBar.backgroundColor = .clear
         pBar.minimumTrackTintColor = .darkPink
-        pBar.maximumTrackTintColor = .darkGray
+        pBar.maximumTrackTintColor = .lightGray
         return pBar
     }()
     

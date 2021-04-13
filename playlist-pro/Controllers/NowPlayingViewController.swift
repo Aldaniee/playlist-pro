@@ -11,6 +11,24 @@ class NowPlayingViewController: UIViewController {
     
     var hasSetPointOrigin = false
     var pointOrigin: CGPoint?
+    var editMode = false {
+        didSet {
+            if editMode {
+                UIView.animate(withDuration: 0.25) {
+                    self.songControlPane.transform = CGAffineTransform(translationX: 0, y: -250)
+                    self.albumCoverImageView.transform = CGAffineTransform(translationX: 0, y: -50)
+                    self.editButtonImageView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
+                }
+            }
+            else {
+                UIView.animate(withDuration: 0.25) {
+                    self.songControlPane.transform = CGAffineTransform(translationX: 0, y: 0)
+                    self.albumCoverImageView.transform = CGAffineTransform(translationX: 0, y: 0)
+                    self.editButtonImageView.transform = CGAffineTransform(rotationAngle: 0)
+                }
+            }
+        }
+    }
     
     // MARK: Background
     let statusBarBackground: UIView = {
@@ -31,12 +49,17 @@ class NowPlayingViewController: UIViewController {
         imgView.layer.masksToBounds = true
         return imgView
     }()
+    let songControlPane: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blackGray
+        return view
+    }()
     let songTitleLabel: UILabel = {
         let lbl = UILabel()
         lbl.numberOfLines = 0
         lbl.backgroundColor = .clear
         lbl.textColor = .white
-        lbl.textAlignment = .left
+        lbl.textAlignment = .center
         return lbl
     }()
     let artistLabel: UILabel = {
@@ -44,7 +67,7 @@ class NowPlayingViewController: UIViewController {
         lbl.numberOfLines = 0
         lbl.backgroundColor = .clear
         lbl.textColor = .darkGray
-        lbl.textAlignment = .left
+        lbl.textAlignment = .center
         return lbl
     }()
 
@@ -53,7 +76,7 @@ class NowPlayingViewController: UIViewController {
         pBar.tintColor = .darkPink
         pBar.backgroundColor = .clear
         pBar.minimumTrackTintColor = .darkPink
-        pBar.maximumTrackTintColor = .darkGray
+        pBar.maximumTrackTintColor = .lightGray
         return pBar
     }()
 
@@ -147,7 +170,7 @@ class NowPlayingViewController: UIViewController {
         let imgView = UIImageView()
         let font = UIFont.boldSystemFont(ofSize: 999) // max size so the icon scales to the image frame
         let configuration = UIImage.SymbolConfiguration(font: font)
-        imgView.image = UIImage(systemName: "chevron.down", withConfiguration: configuration)
+        imgView.image = UIImage(systemName: "chevron.up", withConfiguration: configuration)
         imgView.tintColor = .darkPink
         return imgView
     }()
@@ -189,7 +212,8 @@ class NowPlayingViewController: UIViewController {
         
         // MARK: Playback Display
         view.addSubview(albumCoverImageView)
-        view.addSubview(progressBar)
+        view.addSubview(songControlPane)
+        songControlPane.addSubview(progressBar)
         let thumbView = UIImageView()
         thumbView.backgroundColor = .darkPink
 
@@ -201,41 +225,49 @@ class NowPlayingViewController: UIViewController {
             thumbView.layer.render(in: rendererContext.cgContext)
         }
         progressBar.setThumbImage(thumbImage, for: UIControl.State.normal)
-        view.addSubview(songTitleLabel)
+        songControlPane.addSubview(songTitleLabel)
         
         songTitleLabel.font = UIFont.boldSystemFont(ofSize: tabBarHeight)
-        view.addSubview(artistLabel)
+        songControlPane.addSubview(artistLabel)
         artistLabel.font = UIFont.systemFont(ofSize: artistLabelHeight)
 
-        view.addSubview(currentTimeLabel)
+        songControlPane.addSubview(currentTimeLabel)
         currentTimeLabel.font = UIFont.boldSystemFont(ofSize: timeLabelSize)
-        view.addSubview(timeLeftLabel)
+        songControlPane.addSubview(timeLeftLabel)
         timeLeftLabel.font = UIFont.boldSystemFont(ofSize: timeLabelSize)
 
         
         // MARK: Playback Controls
-        view.addSubview(shuffleButton)
-        view.addSubview(repeatButton)
-        view.addSubview(pausePlayButton)
-        view.addSubview(previousButton)
-        view.addSubview(nextButton)
+        songControlPane.addSubview(shuffleButton)
+        songControlPane.addSubview(repeatButton)
+        songControlPane.addSubview(pausePlayButton)
+        songControlPane.addSubview(previousButton)
+        songControlPane.addSubview(nextButton)
 
         // MARK: Bottom Bar
-        view.addSubview(queueButton)
-        view.addSubview(editButton)
+        songControlPane.addSubview(queueButton)
+        songControlPane.addSubview(editButton)
         editButton.addSubview(editButtonTextLabel)
         editButtonTextLabel.font = UIFont.systemFont(ofSize: editButtonTextSize)
         editButton.addSubview(editButtonImageView)
+        editButton.addTarget(self, action: #selector(editButtonAction), for: .touchUpInside)
         albumCoverImageView.frame = CGRect(
             x: -50,
             y: 0,
             width: view.width+100,
             height: view.width+100
         )
+        songControlPane.frame = CGRect(
+            x: 0,
+            y: albumCoverImageView.bottom,
+            width: view.width,
+            height: view.height
+        )
     }
     
     func presentAnimations() {
         self.albumCoverImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
+        editMode = false
     }
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -255,7 +287,7 @@ class NowPlayingViewController: UIViewController {
         // MARK: Playback View
         songTitleLabel.frame = CGRect(
             x: edgePadding,
-            y: albumCoverImageView.bottom + spacing,
+            y: spacing,
             width: view.width-spacing,
             height: tabBarHeight
         )
@@ -330,7 +362,11 @@ class NowPlayingViewController: UIViewController {
                                            height: editButtonImageViewSize)
     }
     
-
+    @objc func editButtonAction() {
+        print("Edit button pressed")
+        editMode = !editMode
+    }
+    
     @objc func panGestureRecognizerAction(sender: UIPanGestureRecognizer) {
         let translation = sender.translation(in: view)
         
@@ -339,9 +375,8 @@ class NowPlayingViewController: UIViewController {
         
         // setting x as 0 because we don't want users to move the frame side ways, only want straight up or down
         view.frame.origin = CGPoint(x: 0, y: self.pointOrigin!.y + translation.y)
-        
-        let scale = 1 + ((translation.y) / view.height)
-        print(scale)
+
+        let scale = 1 + (translation.y / view.height)
         albumCoverImageView.transform = CGAffineTransform(scaleX: scale, y: scale)
 
         if sender.state == .ended {
@@ -352,6 +387,7 @@ class NowPlayingViewController: UIViewController {
                 // Set back to original position of the view controller
                 UIView.animate(withDuration: 0.3) {
                     self.albumCoverImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
+
                     self.view.frame.origin = self.pointOrigin ?? CGPoint(x: 0, y: 0)
                 }
             }

@@ -209,6 +209,15 @@ extension UIViewController {
 
 // MARK: UIView
 extension UIView {
+    func rotate() {
+        let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
+        rotation.toValue = NSNumber(value: Double.pi * 2)
+        rotation.duration = 1
+        rotation.isCumulative = true
+        rotation.repeatCount = Float.greatestFiniteMagnitude
+        self.layer.add(rotation, forKey: "rotationAnimation")
+    }
+
     func applyDiagonalButtonGradient(colors: [CGColor]) {
         self.backgroundColor = nil
         self.layoutIfNeeded()

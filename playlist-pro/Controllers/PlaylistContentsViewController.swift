@@ -72,6 +72,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
     
     override func viewDidAppear(_ animated: Bool) {
         tableView.reloadData()
+        reloadPlaylistData(playlist: playlist)
     }
     var statusBarBottom: CGFloat!
     let headerViewHeight: CGFloat = 200
@@ -85,8 +86,8 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
 
         tableView.dataSource = self
         tableView.delegate = self
-        self.navigationController?.navigationBar.isHidden = true
-        view.addSubview(tableView)
+        
+        // MARK: – Header View
         headerView.addSubview(titleLabel)
         headerView.addSubview(descriptionLabel)
         headerView.addSubview(durationLabel)
@@ -94,23 +95,27 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         headerView.addSubview(coverImageView)
         headerView.addSubview(playlistPlayButton)
         headerView.addSubview(optionsButton)
+        
+        view.addSubview(tableView)
         view.addSubview(headerView)
-
-        headerView.frame = CGRect(
+        backButton.addTarget(self, action: #selector(backButtonAction), for: .touchUpInside)
+        playlistPlayButton.addTarget(self, action: #selector(playlistPlayButtonAction), for: .touchUpInside)
+        optionsButton.addTarget(self, action: #selector(playlistOptionsButtonPressed), for: .touchUpInside)
+        
+        self.headerView.frame = CGRect(
             x: 0,
             y: statusBarBottom,
             width: view.width,
             height: headerViewHeight
         )
+        tableView.frame = view.frame
         backButton.frame = CGRect(
             x: 10,
             y: 5,
             width: 30,
             height: 30
         )
-        backButton.addTarget(self, action: #selector(backButtonAction), for: .touchUpInside)
 
-        titleLabel.text = playlist.title == "library" ? LibraryManager.LIBRARY_DISPLAY : playlist.title
         titleLabel.frame = CGRect(
             x: 15,
             y: backButton.bottom,
@@ -141,48 +146,64 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
             width: 60,
             height: 60
         )
-        playlistPlayButton.addTarget(self, action: #selector(playlistPlayButtonAction), for: .touchUpInside)
-
         optionsButton.frame = CGRect(
             x: playlistPlayButton.right + 10,
             y: playlistPlayButton.top+playlistPlayButton.height/2-15,
             width: 40,
             height: 30
         )
-        optionsButton.addTarget(self, action: #selector(playlistOptionsButtonPressed), for: .touchUpInside)
-        tableView.frame = view.frame
         self.tableView.contentInset = UIEdgeInsets(
             top: headerViewHeight,
             left: 0,
-            bottom: tableView.contentSize.height-statusBarBottom+50,
+            bottom: tableView.contentSize.height-statusBarBottom+120,
             right: 0
         )
-        tableView.contentOffset.y = -headerViewHeight+statusBarBottom
+        tableView.contentOffset.y = -headerViewHeight
+        
+        self.reloadPlaylistData(playlist: playlist)
     }
+
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let bottomHeader = headerViewHeight+statusBarBottom
         headerView.alpha = 1 - (scrollView.contentOffset.y+bottomHeader)/bottomHeader
         let offset = -(scrollView.contentOffset.y + bottomHeader)
         headerView.transform = CGAffineTransform(translationX: 0, y: min(0, offset))
+        if offset > 0 {
+            self.headerView.frame = CGRect(
+                x: 0,
+                y: statusBarBottom,
+                width: view.width,
+                height: headerViewHeight+offset
+            )
+            titleLabel.alpha = 1 - offset/60
+            playlistPlayButton.transform = CGAffineTransform(translationX: 0, y: offset)
+            optionsButton.transform = CGAffineTransform(translationX: 0, y: offset)
+            
+            self.coverImageView.frame = CGRect(
+                x: max(view.width-coverArtSize-10-offset, 10),
+                y: 10,
+                width: min(coverArtSize+offset, view.width-20),
+                height: min(coverArtSize+offset, view.width-20)
+            )
+        }
     }
     func reloadPlaylistData(playlist: Playlist) {
         self.playlist = playlist
         if playlist.title == "library" {
             self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
             self.coverImageView.image = UIImage(systemName: "music.note.house")
-            self.coverImageView.tintColor = .gray
-            self.coverImageView.contentMode = .scaleAspectFit
         }
         else {
+            self.titleLabel.text = playlist.title
             if let image = playlist.getImage() {
                 self.coverImageView.image = image.cropToSquare(sideLength: Double(coverArtSize))
             }
             else {
                 self.coverImageView.image = UIImage(systemName: "list.bullet")
-                self.coverImageView.tintColor = .gray
-                self.coverImageView.contentMode = .scaleAspectFit
             }
         }
+        self.coverImageView.tintColor = .gray
+        self.coverImageView.contentMode = .scaleAspectFit
         self.tableView.reloadData()
     }
     

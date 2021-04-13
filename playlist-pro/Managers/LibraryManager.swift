@@ -114,8 +114,9 @@ class LibraryManager {
                         return
                     }
                 }
+                print("ERROR: couldn't find song? should never get here")
+                return
             }
-            print("ERROR: couldn;t find song? somethign went wrong")
             return
         }
         
@@ -131,22 +132,24 @@ class LibraryManager {
         
         dispatchGroup.enter()
         if songExtension == "mp4" {
+            // Downloading YouTube Video
             LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
                 if error == nil  {
-                    print("Converting Video to Audio")
+                    // Converting video to audio
                     LocalFilesManager.extractAudioFromVideo(songID: sID, completion: { error in
-                        
-                        print("Deleting Video")
-                        _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video
+                        // Deleting excess downloaded video
+                        _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")
 
                         dispatchGroup.leave()
-                        if error != nil {  // Failed to extract audio from video
-                            _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).m4a")  // Delete the extracted audio if available
+                        if error != nil {  // Failed to convert audio from video
+                            // Delete the extracted audio if available
+                            _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).m4a")
                             errorStr = error!.localizedDescription
                         }
                     })
                 } else {
-                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")  // Delete the downloaded video if available
+                    // There was an error so delete the downloaded video if available
+                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).mp4")
                     print("Error downloading video: " + error!.localizedDescription)
                     dispatchGroup.leave()
                     errorStr = error!.localizedDescription
@@ -154,10 +157,13 @@ class LibraryManager {
             })
             newExtension = "m4a"
         } else {
+            // case for downloading audio directly, should never get here for a youtube video but this allows for SoundCloud
+            
             LocalFilesManager.downloadFile(from: songUrl, filename: sID, extension: songExtension, completion: { error in
                 dispatchGroup.leave()
                 if error != nil  {
-                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).\(songExtension)")  // Delete the downloaded video if available
+                    // Delete the downloaded audio if available
+                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).\(songExtension)")
                     print("Error downloading song: " + error!.localizedDescription)
                     errorStr = error!.localizedDescription
                 }

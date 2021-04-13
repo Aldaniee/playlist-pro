@@ -60,8 +60,9 @@ class PlaylistsManager {
             var searchText = "\(artists[0].name) - \(track.name)"
             if artists.count > 1 {
                 searchText = searchText + " ft. "
-                for i in 1..<track.artists.count {
-                    searchText = searchText + " \(artists[i].name)"
+                searchText = searchText + "\(artists[1].name)"
+                for i in 2..<track.artists.count {
+                    searchText = searchText + ", \(artists[i].name)"
                 }
             }
             YoutubeSearchManager.shared.search(searchText: searchText) { videos in
