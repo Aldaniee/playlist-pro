@@ -33,6 +33,13 @@ struct Playlist {
         songList = decodeSongArray(playlist.songList)
         description = playlist.description
     }*/
+    init(playlist: Playlist) {
+        self.title = playlist.title
+        self.songList = playlist.songList
+        self.description = playlist.description
+        self.image = playlist.image
+
+    }
     init(title: String) {
         self.title = title
     }
@@ -139,6 +146,14 @@ extension Playlist: Decodable {
         let imageData = Data.init(base64Encoded: imageBase64String, options: .init(rawValue: 0))
         let image = UIImage(data: imageData!)
         return image ?? nil
+    }
+    func songInPlaylist(song: Song) -> Bool{
+        for temp in songList {
+            if song == temp {
+                return true
+            }
+        }
+        return false
     }
 }
 extension Playlist: Encodable {
