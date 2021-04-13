@@ -19,18 +19,12 @@ class PlaylistsManager {
         fetchPlaylistsFromStorage()
     }
     
-    func refreshPlaylistConnection() {
+    func refreshAllPlaylistSongConnectionsToLibrary() {
+        print("Refreshing playlist connections")
         for i in 0..<playlists.count {
-            for j in 0..<playlists[i].songList.count {
-                for librarySong in LibraryManager.shared.songLibrary.songList {
-                    if playlists[i].songList[j].getVideoId() == librarySong.getVideoId() {
-                        playlists[i].songList[j].setID(id: librarySong.id)
-                    }
-                }
-            }
+            playlists[i].refreshSongIdsFromLibrary()
         }
     }
-    
     func removePlaylist(playlist: Playlist) {
         if hasPlaylist(named: playlist.title) {
             for i in 0..<playlists.count {

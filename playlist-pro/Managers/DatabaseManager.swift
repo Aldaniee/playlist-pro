@@ -191,9 +191,8 @@ public class DatabaseManager {
         self.downloadPlaylists(user: user) { playlists in
             print("Downloading user playlists")
             PlaylistsManager.shared.playlists = playlists
+            PlaylistsManager.shared.refreshAllPlaylistSongConnectionsToLibrary()
             PlaylistsManager.shared.homeVC.reloadTableView()
-            PlaylistsManager.shared.refreshPlaylistConnection()
-
             LocalFilesManager.storePlaylists(playlists)
         }
     }

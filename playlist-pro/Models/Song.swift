@@ -48,6 +48,13 @@ struct Song : Codable, Equatable{
     mutating func setID(id: String) {
         self.id = id
     }
+    mutating func refreshSongIDFromLibrary() {
+        for song in LibraryManager.shared.songLibrary.songList {
+            if song.getVideoId() == self.getVideoId() {
+                self = song
+            }
+        }
+    }
     
 }
 

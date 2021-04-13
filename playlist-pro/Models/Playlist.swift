@@ -147,13 +147,18 @@ extension Playlist: Decodable {
         let image = UIImage(data: imageData!)
         return image ?? nil
     }
-    func songInPlaylist(song: Song) -> Bool{
+    func songInPlaylist(song: Song) -> Bool {
         for temp in songList {
             if song == temp {
                 return true
             }
         }
         return false
+    }
+    mutating func refreshSongIdsFromLibrary() {
+        for i in 0..<songList.count {
+            songList[i].refreshSongIDFromLibrary()
+        }
     }
 }
 extension Playlist: Encodable {
