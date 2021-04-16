@@ -22,7 +22,9 @@ final class AccountViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
 
     }
 
@@ -91,7 +93,7 @@ final class AccountViewController: UIViewController {
                     if success {
                         
                         // Clean up View Controllers
-                        YoutubeSearchManager.shared.searchVC = SearchViewController()
+                        YoutubeManager.shared.searchVC = SearchViewController()
                         PlaylistsManager.shared.homeVC = HomeViewController()
                         LibraryManager.shared.libraryVC = LibraryViewController()
                         QueueManager.shared.reset()

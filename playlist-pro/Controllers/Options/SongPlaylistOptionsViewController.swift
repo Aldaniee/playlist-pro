@@ -79,7 +79,7 @@ class SongPlaylistOptionsViewController: UIViewController {
         
         view.addSubview(tableView)
         configureModels()
-        tableView.reloadData()
+        reloadTableView()
         // Do any additional setup after loading the view.
     }
     let spacing = CGFloat(40)
@@ -178,7 +178,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
-        LibraryManager.shared.deleteSongFromLibrary(songID: song.id)
+        _ = LibraryManager.shared.deleteSongFromLibrary(song: song)
         dismiss(animated: true, completion: nil)
     }
     @objc func didTapRemovePlaylist() {
@@ -189,6 +189,12 @@ class SongPlaylistOptionsViewController: UIViewController {
 
 }
 extension SongPlaylistOptionsViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func reloadTableView() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return data.count

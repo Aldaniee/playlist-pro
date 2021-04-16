@@ -44,16 +44,16 @@ class SpotifyImportViewController: UIViewController {
         
     }
     override func viewDidAppear(_ animated: Bool) {
-        tableView.reloadData()
+        reloadTableView()
     }
 
     private func fetchData() {
-        APICaller.shared.getCurrentUserPlaylists { [weak self] result in
+        SpotifyAPICaller.shared.getCurrentUserPlaylists { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
                 case .success(let playlists):
                     self?.playlists = playlists
-                    self?.tableView.reloadData()
+                    self?.reloadTableView()
                 case .failure(let error):
                     print(error.localizedDescription)
                 }
@@ -63,6 +63,13 @@ class SpotifyImportViewController: UIViewController {
 }
 
 extension SpotifyImportViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func reloadTableView() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return playlists.count
     }

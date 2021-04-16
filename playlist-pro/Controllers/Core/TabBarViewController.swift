@@ -55,7 +55,7 @@ class TabBarViewController: UITabBarController {
         tabBar.tintColor = .darkPink
 
         let home = PlaylistsManager.shared.homeVC
-        let search = YoutubeSearchManager.shared.searchVC
+        let search = YoutubeManager.shared.searchVC
         let library = LibraryManager.shared.libraryVC
         
         search.title = "Search"
@@ -245,7 +245,7 @@ class TabBarViewController: UITabBarController {
         print("Shuffle button tapped")
         QueueManager.shared.shuffle()
         updateShuffleButton()
-        queueVC.tableView.reloadData()
+        queueVC.reloadTableView()
     }
     
     @objc func repeatButtonAction(sender: UIButton!) {
@@ -360,12 +360,12 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
         miniPlayerView.progressBar.value = 0.0
         nowPlayingVC.progressBar.value = 0.0
         nowPlayingVC.timeLeftLabel.text = displayedSong?.duration ?? "0:00"
-        queueVC.tableView.reloadData()
+        queueVC.reloadTableView()
     }
     internal func audioPlayerPlayingStatusChanged(isPlaying: Bool) {
         changePlayPauseIcon(isPlaying: isPlaying)
     }
     internal func refreshQueueVC() {
-        queueVC.tableView.reloadData()
+        queueVC.reloadTableView()
     }
 }

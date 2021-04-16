@@ -7,14 +7,10 @@
 
 import Foundation
 
-final class APICaller {
-    static let shared = APICaller()
+final class SpotifyAPICaller {
+    static let shared = SpotifyAPICaller()
 
     private init() {}
-
-    struct Constants {
-        static let baseAPIURL = "https://api.spotify.com/v1"
-    }
 
     enum APIError: Error {
         case failedToGetData
@@ -24,7 +20,7 @@ final class APICaller {
 
     public func getPlaylistDetails(for spotifyplaylist: SpotifyPlaylist, completion: @escaping (Result<PlaylistDetailsResponse, Error>) -> Void) {
         createRequest(
-            with: URL(string: Constants.baseAPIURL + "/playlists/" + spotifyplaylist.id),
+            with: URL(string: Constants.SPOTIFY.baseAPIURL + "/playlists/" + spotifyplaylist.id),
             type: .GET
         ) { request in
             let task = URLSession.shared.dataTask(with: request) { data, _, error in
@@ -46,8 +42,10 @@ final class APICaller {
     }
 
     public func getCurrentUserPlaylists(completion: @escaping (Result<[SpotifyPlaylist], Error>) -> Void) {
+        let offset = 0
+        let limit = 50
         createRequest(
-            with: URL(string: Constants.baseAPIURL + "/me/playlists/?limit=50"),
+            with: URL(string: Constants.SPOTIFY.baseAPIURL + "/me/playlists/?offset=\(offset)&limit=\(limit)"),
             type: .GET
         ) { request in
             let task = URLSession.shared.dataTask(with: request) { data, _, error in
@@ -73,7 +71,7 @@ final class APICaller {
 
     public func getCurrentUserProfile(completion: @escaping (Result<UserProfile, Error>) -> Void) {
         createRequest(
-            with: URL(string: Constants.baseAPIURL + "/me"),
+            with: URL(string: Constants.SPOTIFY.baseAPIURL + "/me"),
             type: .GET
         ) { baseRequest in
             let task = URLSession.shared.dataTask(with: baseRequest) { data, _, error in

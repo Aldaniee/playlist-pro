@@ -66,7 +66,7 @@ class LocalFilesManager {
 			print("Converted video-mp4 to audio-m4a: \(out_url.absoluteString)")
 			completion?(nil)
 		}) { (error) in
-			print(error.localizedDescription)
+			print(error)
 			completion?(error)
 		}
 	}
@@ -104,7 +104,22 @@ class LocalFilesManager {
 			print("file cant not be save at path \(dataPath), with error : \(error)");
 		}
 	}
-
+    
+    static func deleteSong(song: Song) -> Bool{
+        for libSong in LibraryManager.shared.songLibrary.songList {
+            if song == libSong {
+                let songExt = song.fileExtension
+                if LocalFilesManager.deleteFile(withNameAndExtension: "\(song.id).\(songExt)") {
+                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(song.id).jpg")
+                    return true
+                }
+                print("ERROR: deleting song failed")
+                return false
+            }
+        }
+        return false
+    }
+    
 	static func deleteFile(withNameAndExtension filename_ext: String) -> Bool {
 		let paths = NSSearchPathForDirectoriesInDomains(.documentDirectory, .userDomainMask, true)
 		let documentsDirectory = paths[0]

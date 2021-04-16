@@ -77,7 +77,7 @@ class QueueViewController: UIViewController {
     }
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        tableView.reloadData()
+        reloadTableView()
     }
     let tableView: UITableView = {
         let tableView = UITableView()
@@ -167,6 +167,13 @@ class QueueViewController: UIViewController {
     
 }
 extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func reloadTableView() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
     func numberOfSections(in tableView: UITableView) -> Int {
         return 3
     }
@@ -205,12 +212,12 @@ extension QueueViewController: UITableViewDataSource, UITableViewDelegate {
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
         print("Selected cell number \(indexPath.row) -> \(cell.song!.title)")
         QueueManager.shared.selectedSongWithinQueue(index: getIndex(indexPath: indexPath))
-        tableView.reloadData()
+        reloadTableView()
     }
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if (editingStyle == .delete) {
             QueueManager.shared.removeFromQueue(section: indexPath.section, index: indexPath.row)
-            tableView.reloadData()
+            reloadTableView()
         }
     }
     

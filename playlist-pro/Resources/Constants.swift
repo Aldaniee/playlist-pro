@@ -10,26 +10,24 @@ import UIKit
 
 public struct Constants {
     struct YT {
-        static let API_KEY = "***REMOVED***"
-        static let PLAYLIST_ID = "UUnxQ8o9RpqxGF2oLHcCn9VQ"
-        static let PLAYLIST_URL = "https://youtube.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=\(Constants.YT.PLAYLIST_ID)&key=\(Constants.YT.API_KEY)"
-        static let VIDEOCELL_ID = "VideoCell"
+        static let API_KEY = "AIzaSyBEZfAAJYxjnfbfqN5rG-53Vbt-v6HJfDo"
         static let EMBED_URL = "https://www.youtube.com/embed/"
-        static let MAX_RESULTS = 10
+        static let MAX_RESULTS = 5
     
         static let SEARCHLIST_URL_PT1 = "https://www.googleapis.com/youtube/v3/search?part=snippet&maxResults=\(Constants.YT.MAX_RESULTS)&order=relevance&q="
         static let SEARCHLIST_URL_PT2 = "&type=video&key=\(Constants.YT.API_KEY)"
-        static let DOWNLOAD_REPETITIONS = 5
     }
     struct SPOTIFY {
         static let CLIENT_ID = "***REMOVED***"
         static let SECRET_ID = "***REMOVED***"
         static let REDIRECT_URL = "https://www.google.com"//"playlist-pro://login-callback"
         static let tokenAPIURL = "https://accounts.spotify.com/api/token"
+        
+        static let baseAPIURL = "https://api.spotify.com/v1"
+
     }
     struct UI {
         static let cornerRadius: CGFloat = 11.0
-
     }
 }
 

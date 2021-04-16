@@ -8,7 +8,7 @@
 import UIKit
 
 struct Song : Codable, Equatable{
-    var id: String
+    let id: String
     let link: String
     let fileExtension: String
     let title: String
@@ -37,6 +37,8 @@ struct Song : Codable, Equatable{
     static func == (lhs: Song, rhs: Song) -> Bool {
         return lhs.id == rhs.id
     }
+    // SongIDs are of the format yt_ + videoID + generateIDFromTimeStamp()
+    // generateIDFromTimeStamp() is different everytime it is run
     func getVideoId() -> String {
         var songId = self.id
         if songId.contains("yt_") {
@@ -44,16 +46,6 @@ struct Song : Codable, Equatable{
             songId = songId.substring(toIndex: 11)
         }
         return id
-    }
-    mutating func setID(id: String) {
-        self.id = id
-    }
-    mutating func refreshSongIDFromLibrary() {
-        for song in LibraryManager.shared.songLibrary.songList {
-            if song.getVideoId() == self.getVideoId() {
-                self = song
-            }
-        }
     }
     
 }

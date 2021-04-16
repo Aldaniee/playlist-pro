@@ -62,12 +62,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
     // MARK: – Model Delegate Methods
     func videosFetched(_ videos: [Video]) {
         self.videos = videos
-        tableView.reloadData()
+        reloadTableView()
     }
     // MARK: - Search Delegate Methods
     func searchResultsFetched(_ searchResults: [Video]) {
         self.videos = searchResults
-        tableView.reloadData()
+        reloadTableView()
     }
     
     // MARK: - SearchBar Methods
@@ -85,7 +85,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
         searchBar.showsCancelButton = false
         searchBar.endEditing(true)
         searchBar.resignFirstResponder()
-        tableView.reloadData()
+        reloadTableView()
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
@@ -105,6 +105,12 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
 
 extension SearchViewController: UITableViewDataSource {
     // MARK: – TableView Methods
+    
+    func reloadTableView() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         if(isSearching == true) {
@@ -139,26 +145,13 @@ extension SearchViewController: UITableViewDataSource {
         
         // Get a reference to the video that was tapped on
         let selectedVideo = videos[tableView.indexPathForSelectedRow!.row]
-        do {
-            let videoID = selectedVideo.videoId
-            let title = try selectedVideo.title.strippingHTML() ?? selectedVideo.title
-            let artistName = try selectedVideo.artist.strippingHTML() ?? selectedVideo.artist
-            let artistArray = NSMutableArray(object: artistName)
             
-            // Download the selected video
-            YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: nil) { completion in
-                if completion {
-                    print("downloadYoutubeVideo completed with success")
-                    self.tabBarController?.selectedIndex = 2
-                }
-                else {
-                    print("downloadYoutubeVideo completed with failure")
-                }
+        // Download the selected video
+        YoutubeManager.shared.downloadYouTubeVideoAddToLibrary(inVideo: selectedVideo, completion: { success in
+            if success {
+                print("Downloaded from Search View")
             }
-        }
-        catch {
-            print("ERROR: strippingHTML error")
-        }
+        })
     }
     
 }

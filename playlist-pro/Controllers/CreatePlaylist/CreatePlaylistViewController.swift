@@ -117,18 +117,55 @@ class CreatePlaylistViewController: UIViewController {
     
     private func configureSpotifyImport() {
         spotifyImportVC.selectionHandler = { playlist in
-            APICaller.shared.getPlaylistDetails(for: playlist) { [weak self] result in
-                DispatchQueue.main.async {
+            SpotifyAPICaller.shared.getPlaylistDetails(for: playlist) { [weak self] result in
                     switch result {
                     case .success(let model):
-                        PlaylistsManager.shared.buildPlaylistFromSpotifyPlaylist(spotifyPlaylist: playlist, tracks: model.tracks.items.compactMap({ $0.track }))
-                        self?.dismiss(animated: true, completion: nil)
+                        self?.buildPlaylistFromSpotifyPlaylist(spotifyPlaylist: playlist, tracks: model.tracks.items.compactMap({ $0.track }))
+                        DispatchQueue.main.async {
+                            self?.dismiss(animated: true, completion: nil)
+                        }
                     case .failure(let error):
                         print(error.localizedDescription)
+                }
+            }
+        }
+    }
+    
+    func buildPlaylistFromSpotifyPlaylist(spotifyPlaylist: SpotifyPlaylist, tracks: [AudioTrack]) {
+        let playlist = Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description)
+        PlaylistsManager.shared.addPlaylist(playlist: Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description))
+        for track in tracks {
+            let searchText = getSearchTextFromTrack(track: track)
+            print("Searching with text \(searchText)")
+            YoutubeManager.shared.search(searchText: searchText) { videos in
+                if videos != nil {
+                    YoutubeManager.shared.downloadVideoFromSearchList(videos: videos!) { song in
+                        PlaylistsManager.shared.addSongToPlaylist(song: song, playlistName: playlist.title)
+                        let playlistIndex = PlaylistsManager.shared.getPlaylistIndex(title: playlist.title)
+                        if /*spotifyPlaylist.images.count == 0 && */ PlaylistsManager.shared.playlists[playlistIndex].songList.count == 1 {
+                            let firstSong = PlaylistsManager.shared.playlists[playlistIndex].songList[0]
+                            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
+                            if let imgData = imageData {
+                                PlaylistsManager.shared.setImageForPlaylist(playlistName: PlaylistsManager.shared.playlists[playlistIndex].title, image: UIImage(data: imgData) ?? UIImage())
+                            }
+                        }
                     }
                 }
             }
         }
+    }
+    
+    private func getSearchTextFromTrack(track: AudioTrack) -> String {
+        let artists = track.artists
+        var searchText = "\(artists[0].name) - \(track.name)"
+        if artists.count > 1 {
+            searchText = searchText + " ft. "
+            searchText = searchText + "\(artists[1].name)"
+            for i in 2..<track.artists.count {
+                searchText = searchText + ", \(artists[i].name)"
+            }
+        }
+        return searchText
     }
     
     @objc func onCreateButtonPressed() {

@@ -52,6 +52,12 @@ struct Playlist {
         self.songList = songList
         self.description = description
     }
+    init(title: String, songList: [Song], description: String, image: UIImage?) {
+        self.title = title
+        self.songList = songList
+        self.description = description
+        self.image = image
+    }
     func calcDuration() -> Int {
         var sum = TimeInterval(0)
         let inFormatter = DateFormatter()
@@ -154,11 +160,6 @@ extension Playlist: Decodable {
             }
         }
         return false
-    }
-    mutating func refreshSongIdsFromLibrary() {
-        for i in 0..<songList.count {
-            songList[i].refreshSongIDFromLibrary()
-        }
     }
 }
 extension Playlist: Encodable {

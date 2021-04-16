@@ -71,7 +71,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
     }()
     
     override func viewDidAppear(_ animated: Bool) {
-        tableView.reloadData()
+        reloadTableView()
         reloadPlaylistData(playlist: playlist)
     }
     var statusBarBottom: CGFloat!
@@ -204,7 +204,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         }
         self.coverImageView.tintColor = .gray
         self.coverImageView.contentMode = .scaleAspectFit
-        self.tableView.reloadData()
+        self.reloadTableView()
     }
     
     @objc func backButtonAction() {
@@ -238,7 +238,7 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
         let cell = tableView.cellForRow(at: indexPath) as! SongCell
         print("Selected cell number \(indexPath.row) -> \(cell.song!.title)")
         QueueManager.shared.setupQueue(with: playlist, startingAt: indexPath.row)
-        tableView.reloadData()
+        reloadTableView()
     }
 }
 
@@ -263,7 +263,9 @@ extension PlaylistContentsViewController: SongPlaylistOptionsViewControllerDeleg
     }
     
     func reloadTableView() {
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     func openAddToPlaylistViewController(song: Song) {
         let vc = AddToPlaylistViewController()

@@ -68,7 +68,7 @@ public class DatabaseManager {
                 // failed
             }
         }
-        database.child("\(userPath)/expirationDate)").setValue(SpotifyAuthManager.shared.tokenExpirationDate) { error, _ in
+        database.child("\(userPath)/expirationDate)").setValue(SpotifyAuthManager.shared.tokenExpirationDate?.toDict) { error, _ in
             if error == nil {
                 // succeeded
                 print("Successfully updated user expirationDate to database")
@@ -94,7 +94,7 @@ public class DatabaseManager {
                     print("No refresh token in database")
                     return
                 }
-                guard let expirationDate = dictionary["expirationDate"] as? String else {
+                guard let expirationDate = dictionary["expirationDate"] as? Dictionary<String, Any> else {
                     print("No refresh token in database")
                     return
                 }
@@ -174,29 +174,29 @@ public class DatabaseManager {
             }
             if oldEmail != "" {
                 start = CFAbsoluteTimeGetCurrent()
-                let deleteCount = self.deleteExcessSongs(oldLibrary: oldLibrary, newLibrary: newLibrary)
+                let deleteCount = LibraryManager.shared.deleteExcessSongs(oldLibrary: oldLibrary, newLibrary: newLibrary)
                 print("Removed \(deleteCount) songs in \(CFAbsoluteTimeGetCurrent() - start) seconds\n")
                 print("\nDownloading missing songs")
-                downloadCount = self.downloadMissingLibraryFiles(oldLibrary: oldLibrary, newLibrary: newLibrary)
+                downloadCount = LibraryManager.shared.downloadMissingLibraryFiles(oldLibrary: oldLibrary, newLibrary: newLibrary)
             }
             else {
                 print("\nDownloading entire library")
-                downloadCount = self.downloadAllLibraryFiles(newLibrary: newLibrary)
+                downloadCount = LibraryManager.shared.downloadAllLibraryFiles(newLibrary: newLibrary)
             }
             print("Downloaded \(downloadCount) songs in \(CFAbsoluteTimeGetCurrent() - start) seconds\n")
             // TODO: UPDATE PLAYLISTS
-            LibraryManager.shared.libraryVC.tableView.reloadData()
+            LibraryManager.shared.libraryVC.reloadTableView()
             LocalFilesManager.storeLibrary(LibraryManager.shared.songLibrary)
         }
         self.downloadPlaylists(user: user) { playlists in
             print("Downloading user playlists")
-            PlaylistsManager.shared.playlists = playlists
-            PlaylistsManager.shared.refreshAllPlaylistSongConnectionsToLibrary()
+            self.reconnectPlaylistsToSongLibrary(playlists: playlists)
             PlaylistsManager.shared.homeVC.reloadTableView()
             LocalFilesManager.storePlaylists(playlists)
         }
     }
 
+    
     func saveLibraryToDatabase() {
         guard let user = Auth.auth().currentUser else {
             print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
@@ -209,94 +209,6 @@ public class DatabaseManager {
             }
         }
         savePlaylistsToDatabase()
-    }
-    /// Given a user just logged in, download their entire library
-    func downloadAllLibraryFiles(newLibrary: Playlist) -> Int {
-        var downloadCount = 0
-        for newSong in newLibrary.songList {
-            if Auth.auth().currentUser != nil {
-                print("Downloading songs interupted by logout")
-                return downloadCount
-            }
-            let id = newSong.getVideoId()
-            let title = newSong.title
-            let artistArray = NSMutableArray(array: newSong.artists)
-            
-            YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: id, title: title, artistArray: artistArray, playlistTitle: nil)
-            downloadCount += 1
-        }
-        return downloadCount
-
-    }
-    
-    func getVideoId(songId: String) -> String{
-        var id = songId
-        if songId.contains("yt_") {
-            id = songId.substring(fromIndex: 3)
-            id = songId.substring(toIndex: 11)
-        }
-        return id
-    }
-    
-    /// Given the library of songDicts is correct, download all of the missing audio files from youtube
-    func downloadMissingLibraryFiles(oldLibrary: Playlist, newLibrary: Playlist) -> Int {
-        var downloadCount = 0
-        for newSong in newLibrary.songList {
-            if Auth.auth().currentUser != nil {
-                print("Downloading songs interupted by logout")
-                return downloadCount
-            }
-            var id = newSong.id
-            if !oldLibrary.songInPlaylist(song: newSong) {
-                let title = newSong.title
-                print("File not found for song: \(newSong.title). Downloading audio.")
-                let artistArray = NSMutableArray(array: newSong.artists)
-                if id.contains("yt_") {
-                    id = id.substring(fromIndex: 3)
-                    id = id.substring(toIndex: 11)
-                }
-                YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: id, title: title, artistArray: artistArray, playlistTitle: nil)
-                downloadCount += 1
-            } else {
-                //print("Song found in library: \(name), skipping download")
-            }
-        }
-        return downloadCount
-        
-    }
-    func deleteExcessSongs(oldLibrary: Playlist, newLibrary: Playlist) -> Int {
-        var deleteCount = 0
-        for oldSong in oldLibrary.songList {
-            if Auth.auth().currentUser != nil {
-                print("deleting songs interupted by user being logged out")
-                return deleteCount
-            }
-            if !newLibrary.songInPlaylist(song: oldSong) {
-                let id = oldSong.id
-                let name = oldSong.title
-                let didDelete = LocalFilesManager.deleteFile(withNameAndExtension: "\(id).m4a")
-                let didDeleteThumb = LocalFilesManager.deleteFile(withNameAndExtension: "\(id).jpg")
-                
-                if didDelete {
-                    LibraryManager.shared.removeSongFromLibraryArray(song: oldSong)
-                    deleteCount = deleteCount + 1
-                    print("Removing song named: \(name) from local files successfully")
-                }
-                else {
-                    print("ERROR: Song named: \(name) could not be removed from local files")
-                }
-                if didDeleteThumb {
-                    print("Removing thumbnail for song named: \(name) from local files successfully")
-                }
-                else {
-                    print("ERROR: Thumbnail for: \(name) could not be removed from local files")
-                }
-            } else {
-                //print("Didn't remove song: \(name)")
-            }
-        }
-        return deleteCount
-
     }
     
     // MARK: - Playlist Functions
@@ -311,34 +223,6 @@ public class DatabaseManager {
                 return
             }
         })
-    }
-
-    func downloadVideoFromSearchList(videos: [Video], playlistName: String?) {
-        DispatchQueue.main.async {
-
-            do {
-                let video = videos[0]
-                let videoID = video.videoId
-                let title = try video.title.strippingHTML() ?? video.title
-                let artistName = try video.artist.strippingHTML() ?? video.artist
-                let artistArray = NSMutableArray(object: artistName)
-                YoutubeSearchManager.shared.downloadYouTubeVideo(videoID: videoID, title: title, artistArray: artistArray, playlistTitle: playlistName) { success in
-                    if success {
-                        LibraryManager.shared.libraryVC.reloadTableView()
-                        PlaylistsManager.shared.homeVC.reloadTableView()
-                        PlaylistsManager.shared.homeVC.reloadPlaylistDetailsVCTableView()
-                        return
-                    }
-                    else {
-                        // If the previous video fails, download the next available searched video
-                        self.downloadVideoFromSearchList(videos: Array<Video>() + videos[1...], playlistName: playlistName)
-                    }
-                }
-            }
-            catch {
-                print("ERROR: strippingHTML error")
-            }
-        }
     }
     
     func updatePlaylists(user: User, completion: @escaping (Bool) -> Void) {
@@ -375,6 +259,24 @@ public class DatabaseManager {
             }
         });
     }
+    
+    private func reconnectPlaylistsToSongLibrary(playlists: [Playlist]){
+        PlaylistsManager.shared.playlists = [Playlist]()
+        for playlist in playlists {
+            var newPlaylist = Playlist(title: playlist.title, songList: [Song](), description: playlist.description, image: playlist.getImage())
+            for song in playlist.songList {
+                if let libSong = LibraryManager.shared.getSongfrom(videoID: song.getVideoId()) {
+                    newPlaylist.songList.append(libSong)
+                }
+                else {
+                    print("ERROR: Shouldn't get here – Song not found")
+                }
+            }
+            print(newPlaylist.songList)
+            PlaylistsManager.shared.addPlaylist(playlist: newPlaylist)
+        }
+    }
+    
     private func encodePlaylist(_ playlist: Playlist) -> [String : Any] {
         if let encodedPlaylist = try? FirestoreEncoder().encode(playlist) {
             return encodedPlaylist

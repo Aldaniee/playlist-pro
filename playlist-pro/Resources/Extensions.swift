@@ -333,7 +333,7 @@ extension UIView {
 
 // MARK: UITableView
 extension UITableView {
-    
+
     func hasRowAtIndexPath(indexPath: IndexPath) -> Bool {
         return indexPath.section < numberOfSections && indexPath.row < numberOfRows(inSection: indexPath.section)
     }
@@ -403,7 +403,7 @@ extension AVAsset {
                                                        presetName: AVAssetExportPresetAppleM4A) else {
                                                         // This is just a generic error
                                                         let error = NSError(domain: "domain",
-                                                                            code: 0,
+                                                                            code: -1,
                                                                             userInfo: nil)
                                                         failure(error)
 
@@ -417,9 +417,21 @@ extension AVAsset {
             switch exportSession.status {
             case .completed:
                 success()
-            case .unknown, .waiting, .exporting, .failed, .cancelled:
-                let error = NSError(domain: "domain", code: 0, userInfo: nil)
-                failure(error)
+            case .waiting:
+                 let error = NSError(domain: "waiting", code: 1, userInfo: nil)
+                 failure(error)
+            case .exporting:
+                 let error = NSError(domain: "exporting", code: 2, userInfo: nil)
+                 failure(error)
+            case .cancelled:
+                 let error = NSError(domain: "cancelled", code: 3, userInfo: nil)
+                 failure(error)
+            case .failed:
+                 let error = NSError(domain: "failed", code: 4, userInfo: nil)
+                 failure(error)
+            case .unknown:
+                 let error = NSError(domain: "unknown", code: 5, userInfo: nil)
+                 failure(error)
             @unknown default:
                 let error = NSError(domain: "domain", code: 0, userInfo: nil)
                 failure(error)

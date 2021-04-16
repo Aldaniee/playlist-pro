@@ -73,7 +73,7 @@ extension LibraryViewController: UITableViewDataSource, UITableViewDelegate {
 
         print("Selected cell number \(indexPath.row) -> \(cell.song?.title ?? "")")
         QueueManager.shared.setupQueue(with: LibraryManager.shared.songLibrary, startingAt: indexPath.row)
-        tableView.reloadData()
+        reloadTableView()
     }
 }
 extension LibraryViewController: SongCellDelegate {
@@ -98,7 +98,9 @@ extension LibraryViewController: SongPlaylistOptionsViewControllerDelegate {
     }
     
     func reloadTableView() {
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
     func openAddToPlaylistViewController(song: Song) {
         let vc = AddToPlaylistViewController()

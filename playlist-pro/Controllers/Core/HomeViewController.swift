@@ -213,7 +213,7 @@ class HomeViewController: UIViewController {
             songsBtn.isSelected = false
             selectedFilter = 0
             tableView.register(PlaylistCell.self, forCellReuseIdentifier: PlaylistCell.identifier)
-            tableView.reloadData()
+            reloadTableView()
             self.setTableViewInsets()
         }
     }
@@ -225,7 +225,7 @@ class HomeViewController: UIViewController {
             songsBtn.isSelected = false
             selectedFilter = 1
             tableView.register(PlaylistCell.self, forCellReuseIdentifier: PlaylistCell.identifier)
-            tableView.reloadData()
+            reloadTableView()
             self.setTableViewInsets()
         }
     }
@@ -238,7 +238,7 @@ class HomeViewController: UIViewController {
             playlistsBtn.isSelected = false
             selectedFilter = 2
             tableView.register(SongCell.self, forCellReuseIdentifier: SongCell.identifier)
-            tableView.reloadData()
+            reloadTableView()
             self.setTableViewInsets()
         }
     }
@@ -362,7 +362,7 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
 
                 print("Selected cell number \(indexPath.row) -> \(cell.song?.title ?? "no song found")")
                 QueueManager.shared.setupQueue(with: LibraryManager.shared.songLibrary, startingAt: indexPath.row)
-                tableView.reloadData()
+                reloadTableView()
             }
         }
     }
@@ -385,6 +385,8 @@ extension HomeViewController: CreatePlaylistDelegate, SongPlaylistOptionsViewCon
     func removeFromPlaylist(index: Int) {}
     
     func reloadTableView() {
-        tableView.reloadData()
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
     }
 }

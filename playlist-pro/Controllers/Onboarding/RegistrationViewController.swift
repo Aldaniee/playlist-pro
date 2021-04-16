@@ -208,7 +208,7 @@ class RegistrationViewController: UIViewController {
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if SpotifyAuthManager.shared.isSignedIn {
-            APICaller.shared.getCurrentUserProfile { (result) in
+            SpotifyAPICaller.shared.getCurrentUserProfile { (result) in
                 switch result {
                 case .success(let model):
                     print("Fetched Spotify User Profile Success")

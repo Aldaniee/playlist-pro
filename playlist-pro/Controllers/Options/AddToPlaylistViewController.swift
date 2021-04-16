@@ -60,12 +60,19 @@ class AddToPlaylistViewController: UIViewController, PlaylistCellDelegate {
         
     }
     override func viewDidAppear(_ animated: Bool) {
-        tableView.reloadData()
+        reloadTableView()
     }
 
 }
 
 extension AddToPlaylistViewController: UITableViewDataSource, UITableViewDelegate {
+    
+    func reloadTableView() {
+        DispatchQueue.main.async {
+            self.tableView.reloadData()
+        }
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return PlaylistsManager.shared.playlists.count
     }
