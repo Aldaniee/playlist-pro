@@ -187,15 +187,17 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
             )
         }
     }
-    func reloadPlaylistData(playlist: Playlist) {
-        self.playlist = playlist
-        if playlist.title == "library" {
+    func reloadPlaylistData(playlist: Playlist?) {
+        if playlist != nil {
+            self.playlist = playlist!
+        }
+        if self.playlist.title == "library" {
             self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
             self.coverImageView.image = UIImage(systemName: "music.note.house")
         }
         else {
-            self.titleLabel.text = playlist.title
-            if let image = playlist.getImage() {
+            self.titleLabel.text = self.playlist.title
+            if let image = self.playlist.getImage() {
                 self.coverImageView.image = image.cropToSquare(sideLength: Double(coverArtSize))
             }
             else {
@@ -262,7 +264,7 @@ extension PlaylistContentsViewController: SongPlaylistOptionsViewControllerDeleg
         }
     }
     
-    func reloadTableView() {
+    private func reloadTableView() {
         DispatchQueue.main.async {
             self.tableView.reloadData()
         }

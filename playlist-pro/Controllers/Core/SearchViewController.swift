@@ -89,7 +89,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
     }
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
-        print("search bar opened")
         searchBar.showsCancelButton = true
         isSearching = true
         searchBar.becomeFirstResponder()

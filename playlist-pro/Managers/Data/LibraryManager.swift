@@ -29,12 +29,21 @@ class LibraryManager {
         fatalError("init(coder:) has not been implemented")
     }
     
+    private func storeLibrary() {
+        LocalFilesManager.storeLibrary(songLibrary)
+        DatabaseManager.shared.saveLibraryToDatabase()
+    }
+    
+    func fetchLibraryFromLocalStorage() {
+        songLibrary = LocalFilesManager.retreiveLibrary()
+        libraryVC.reloadTableView()
+    }
+    
     // MARK: Adding/Removing Songs
     func addSongToLibraryArray(song: Song) {
         self.songLibrary.songList.append(song)
         self.libraryVC.reloadTableView()
-        LocalFilesManager.storeLibrary(songLibrary)
-        DatabaseManager.shared.saveLibraryToDatabase()
+        storeLibrary()
     }
     /// Given a new library of songDicts that is correct, download all of the missing audio files from youtube
     func downloadMissingLibraryFiles(oldLibrary: Playlist, newLibrary: Playlist) -> Int {
@@ -83,13 +92,10 @@ class LibraryManager {
                 PlaylistsManager.shared.removeFromAllPlaylists(songID: song.id)
                 self.songLibrary.songList.remove(at: i)
                 
-                LocalFilesManager.storeLibrary(songLibrary)
-                DatabaseManager.shared.saveLibraryToDatabase()
+                storeLibrary()
                 
-                PlaylistsManager.shared.homeVC.reloadPlaylistDetailsVCTableView()
-                DispatchQueue.main.async {
-                    self.libraryVC.reloadTableView()
-                }
+                PlaylistsManager.shared.homeVC.reloadPlaylistContentVCTableView()
+                libraryVC.reloadTableView()
                 return
             }
         }
@@ -105,12 +111,12 @@ class LibraryManager {
         return false
     }
     
+    /// Deletes all excess songs from the library
     func deleteExcessSongs(oldLibrary: Playlist, newLibrary: Playlist) -> Int {
         var deleteCount = 0
         for oldSong in oldLibrary.songList {
             if !newLibrary.songInPlaylist(song: oldSong) {
                 if deleteSongFromLibrary(song: oldSong) {
-                    self.removeSongFromLibraryArray(song: oldSong)
                     deleteCount += 1
                 }
             }
@@ -118,43 +124,11 @@ class LibraryManager {
         return deleteCount
 
     }
-    func fetchLibraryFromLocalStorage() {
-        songLibrary = LocalFilesManager.retreiveLibrary()
-        libraryVC.reloadTableView()
-    }
+
     /// Is a song in storage from the downloaded from the video ID
     func videoAlreadyDownloaded(videoID: String) -> Bool {
-        let songID = LibraryManager.shared.findSongIDfrom(videoID: videoID)
+        let songID = LibraryManager.shared.getSongfrom(videoID: videoID)?.id
         return songID != nil && LocalFilesManager.checkFileExist("\(songID!).m4a")
-    }
-    /// Check if a song object is in the library that matches parameter videoID
-    func hasSongInLibrary(videoID: String?) -> Bool{
-        if videoID != nil {
-            for song in songLibrary.songList {
-                let songID = song.id
-                if songID.contains(videoID!) {
-                    print("song \(song.title) found in library")
-                    print("videoID: \(videoID!) is contained in songID: \(songID)")
-                    return true
-                }
-            }
-        }
-        print("videoID: \(videoID!) was not found in the library")
-        return false
-    }
-    
-    func findSongIDfrom(videoID: String?) -> String?{
-        if videoID != nil {
-            for song in songLibrary.songList {
-                let songID = song.id
-                if songID.contains(videoID!) {
-                    print("videoID: \(videoID!) is contained in songID: \(songID)")
-                    return songID
-                }
-            }
-        }
-        print("videoID: \(videoID!) was not found in the library")
-        return nil
     }
     
     func getSongfrom(videoID: String?) -> Song? {
@@ -162,12 +136,10 @@ class LibraryManager {
             for song in songLibrary.songList {
                 let songID = song.id
                 if songID.contains(videoID!) {
-                    print("videoID: \(videoID!) is contained in songID: \(songID)")
                     return song
                 }
             }
         }
-        print("videoID: \(videoID!) was not found in the library")
         return nil
     }
 }

@@ -45,11 +45,10 @@ class LocalFilesManager {
 		AF.download(link, to: destination).downloadProgress { progress in
 			//UIApplication.getCurrentViewController()?.updateProgressView(to: progress.fractionCompleted)
 		}.response { response in
-			if response.error == nil, let filePath = response.fileURL?.path {
-				print("Downloaded successfully to " + filePath)
+			if response.error == nil {
 				completion?(nil)
 			} else {
-				print("Error downlaoding file: " + (response.error?.localizedDescription ?? "Unknown error"))
+				print("Error downloading file: " + (response.error?.localizedDescription ?? "Unknown error"))
 				completion?(response.error)
 			}
 		}
@@ -57,13 +56,12 @@ class LocalFilesManager {
 	
     
 	static func extractAudioFromVideo(songID: String, completion: ((Error?) -> Void)? = nil) {
-		print("Extracting audio from video")
 		let in_url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(songID).mp4")
 		let out_url = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0].appendingPathComponent("\(songID).m4a")
 		let asset = AVURLAsset(url: in_url)
 		
 		asset.writeAudioTrack(to: out_url, success: {
-			print("Converted video-mp4 to audio-m4a: \(out_url.absoluteString)")
+			print("Converted video-mp4 to audio-m4a: \(songID)")
 			completion?(nil)
 		}) { (error) in
 			print(error)
@@ -105,19 +103,15 @@ class LocalFilesManager {
 		}
 	}
     
-    static func deleteSong(song: Song) -> Bool{
-        for libSong in LibraryManager.shared.songLibrary.songList {
-            if song == libSong {
-                let songExt = song.fileExtension
-                if LocalFilesManager.deleteFile(withNameAndExtension: "\(song.id).\(songExt)") {
-                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(song.id).jpg")
-                    return true
-                }
-                print("ERROR: deleting song failed")
-                return false
-            }
+    static func deleteSong(song: Song) -> Bool {
+        if LocalFilesManager.deleteFile(withNameAndExtension: "\(song.id).\(song.fileExtension)") {
+            _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(song.id).jpg")
+            return true
         }
-        return false
+        else {
+            print("ERROR: deleting song failed")
+            return false
+        }
     }
     
 	static func deleteFile(withNameAndExtension filename_ext: String) -> Bool {
@@ -127,7 +121,6 @@ class LocalFilesManager {
 		if FileManager.default.fileExists(atPath: dataPathStr) {
 			do {
 				try FileManager.default.removeItem(atPath: dataPathStr)
-				print("Removed file: \(dataPathStr)")
 			} catch let removeError {
 				print("couldn't remove file at path", removeError.localizedDescription)
 				return false

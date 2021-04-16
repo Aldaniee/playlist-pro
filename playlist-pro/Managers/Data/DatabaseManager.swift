@@ -184,13 +184,11 @@ public class DatabaseManager {
                 downloadCount = LibraryManager.shared.downloadAllLibraryFiles(newLibrary: newLibrary)
             }
             print("Downloaded \(downloadCount) songs in \(CFAbsoluteTimeGetCurrent() - start) seconds\n")
-            // TODO: UPDATE PLAYLISTS
             LibraryManager.shared.libraryVC.reloadTableView()
             LocalFilesManager.storeLibrary(LibraryManager.shared.songLibrary)
         }
         self.downloadPlaylists(user: user) { playlists in
             print("Downloading user playlists")
-            self.reconnectPlaylistsToSongLibrary(playlists: playlists)
             PlaylistsManager.shared.homeVC.reloadTableView()
             LocalFilesManager.storePlaylists(playlists)
         }
@@ -208,7 +206,6 @@ public class DatabaseManager {
                 return
             }
         }
-        savePlaylistsToDatabase()
     }
     
     // MARK: - Playlist Functions
@@ -227,7 +224,7 @@ public class DatabaseManager {
     
     func updatePlaylists(user: User, completion: @escaping (Bool) -> Void) {
         let playlists = PlaylistsManager.shared.playlists
-        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" :             user.email!.safeDatabaseKey()
+        let userPath = user.isAnonymous ?  "anonymous-users/\(user.uid)" : user.email!.safeDatabaseKey()
         database.child("\(userPath)/playlists").setValue(encodePlaylists(playlists)) { error, _ in
             if error == nil {
                 // succeeded
@@ -258,23 +255,6 @@ public class DatabaseManager {
                 print("ERROR: Snapshot")
             }
         });
-    }
-    
-    private func reconnectPlaylistsToSongLibrary(playlists: [Playlist]){
-        PlaylistsManager.shared.playlists = [Playlist]()
-        for playlist in playlists {
-            var newPlaylist = Playlist(title: playlist.title, songList: [Song](), description: playlist.description, image: playlist.getImage())
-            for song in playlist.songList {
-                if let libSong = LibraryManager.shared.getSongfrom(videoID: song.getVideoId()) {
-                    newPlaylist.songList.append(libSong)
-                }
-                else {
-                    print("ERROR: Shouldn't get here – Song not found")
-                }
-            }
-            print(newPlaylist.songList)
-            PlaylistsManager.shared.addPlaylist(playlist: newPlaylist)
-        }
     }
     
     private func encodePlaylist(_ playlist: Playlist) -> [String : Any] {

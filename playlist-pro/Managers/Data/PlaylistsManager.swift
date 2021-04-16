@@ -54,6 +54,13 @@ class PlaylistsManager {
             playlists[index].songList.append(song)
             homeVC.reloadTableView()
             print("Added song \(song.title) to playlist \(playlistName)")
+            if playlists[index].songList.count == 1 {
+                let firstSong = playlists[index].songList[0]
+                let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
+                if let imgData = imageData {
+                    setImageForPlaylist(playlistName: playlists[index].title, image: UIImage(data: imgData) ?? UIImage())
+                }
+            }
         }
         else {
             print("Tried adding song \(song.title) to playlist \(playlistName) but the playlist was not found")

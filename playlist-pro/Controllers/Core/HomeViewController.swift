@@ -364,8 +364,8 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
             }
         }
     }
-    func reloadPlaylistDetailsVCTableView() {
-        playlistContentsViewController.reloadTableView()
+    func reloadPlaylistContentVCTableView() {
+        playlistContentsViewController.reloadPlaylistData(playlist: nil)
     }
     
 }

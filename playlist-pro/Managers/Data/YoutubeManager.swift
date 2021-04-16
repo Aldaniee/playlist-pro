@@ -116,19 +116,18 @@ class YoutubeManager {
                 let thumbnailURL = video!.thumbnailURLs![video!.thumbnailURLs!.count - 1]
                 
                 dispatchGroup.enter()
-                print("Starting song download")
+                // if both the thumbnail and audio download successfully then didSucceed = true
                 var didSucceed = false
                 if self.downloadVideoConvertToAudio(songUrl: songURL, sID: sID, fileExtension: "mp4") {
-                    print("Song download succeeded")
+                    print("Audio download succeeded")
                     didSucceed = true
                 }
                 else {
-                    print("Song download error")
+                    print("Audio download error")
                 }
                 dispatchGroup.leave()
                 
                 dispatchGroup.enter()
-                print("Starting thumbnail download")
                 if self.downloadThumbnail(thumbnailUrl: thumbnailURL, filename: sID) {
                     print("Thumbnail download succeeded")
                     didSucceed = didSucceed && true
@@ -136,31 +135,18 @@ class YoutubeManager {
                 else {
                     print("Thumbnail download error")
                 }
-                dispatchGroup.leave()                // All Downloads Complete
-                
-                /* SOMETHING TO TRY (replacing with block below)
-                dispatchGroup.enter()
-                if didSucceed {
-                    print("Successfully downloaded song: \(title)")
-                    let song = self.buildSongForLibrary(sID: sID, videoID: videoID, songUrl: songURL, newExtension: "m4a", songTitle: title, artists: artistArray)
-                    LibraryManager.shared.addSongToLibraryArray(song: song)
-                    completion?(true)
-                }
-                else {
-                    print("Error downloading the song")
-                    _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")
-                }
-                dispatchGroup.leave()                // All Downloads Complete
-*/
-                dispatchGroup.notify(queue: DispatchQueue.main) {  // All async download in the group completed
+                dispatchGroup.leave()
+
+                // All async download in the group completed (one song audio and thumbnail)
+                dispatchGroup.notify(queue: DispatchQueue.main) {
                     if didSucceed {
-                        print("Successfully downloaded song: \(title)")
+                        print("Downloaded song: \(title)")
                         let song = self.buildSongForLibrary(sID: sID, videoID: videoID, songUrl: songURL, newExtension: "m4a", songTitle: title, artists: artistArray)
                         LibraryManager.shared.addSongToLibraryArray(song: song)
                         completion?(true)
                     }
                     else {
-                        print("Error downloading the song")
+                        print("ERROR: downloading the song")
                         _ = LocalFilesManager.deleteFile(withNameAndExtension: "\(sID).jpg")
                     }
                 }

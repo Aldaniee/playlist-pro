@@ -141,14 +141,6 @@ class CreatePlaylistViewController: UIViewController {
                 if videos != nil {
                     YoutubeManager.shared.downloadVideoFromSearchList(videos: videos!) { song in
                         PlaylistsManager.shared.addSongToPlaylist(song: song, playlistName: playlist.title)
-                        let playlistIndex = PlaylistsManager.shared.getPlaylistIndex(title: playlist.title)
-                        if /*spotifyPlaylist.images.count == 0 && */ PlaylistsManager.shared.playlists[playlistIndex].songList.count == 1 {
-                            let firstSong = PlaylistsManager.shared.playlists[playlistIndex].songList[0]
-                            let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
-                            if let imgData = imageData {
-                                PlaylistsManager.shared.setImageForPlaylist(playlistName: PlaylistsManager.shared.playlists[playlistIndex].title, image: UIImage(data: imgData) ?? UIImage())
-                            }
-                        }
                     }
                 }
             }
