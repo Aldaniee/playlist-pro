@@ -35,10 +35,6 @@ final class AccountViewController: UIViewController {
         tableView.dataSource = self
         guard let user = Auth.auth().currentUser else {
             print("We should never get here!!!")
-            print("No user logged in, presenting authentication splash screen")
-            let vc = AuthSplashScreenViewController()
-            vc.modalPresentationStyle = .fullScreen
-            present(vc, animated: false)
             return
         }
         if user.isAnonymous {

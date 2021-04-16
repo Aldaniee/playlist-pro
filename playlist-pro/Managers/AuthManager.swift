@@ -10,11 +10,9 @@ import FirebaseAuth
 public class AuthManager {
     
     static let shared = AuthManager()
-    
-    var isSignedIn = Auth.auth().currentUser != nil
-    
+        
     init() {
-        if isSignedIn {
+        if Auth.auth().currentUser != nil {
             LocalFilesManager.storeEmail(email: Auth.auth().currentUser!.email!)
         }
     }

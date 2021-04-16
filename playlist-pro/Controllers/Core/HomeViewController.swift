@@ -252,10 +252,8 @@ class HomeViewController: UIViewController {
         // Check auth status and if the user is not logged in, put the auth splash screen in front with this as the root view controller
         if Auth.auth().currentUser == nil {
             // Show log in
-            print("No user logged in, presenting authentication splash screen")
-            let loginVC = AuthSplashScreenViewController()
-            loginVC.modalPresentationStyle = .fullScreen
-            present(loginVC, animated: false)
+            print("No user logged in, dismissing to AuthSplashScreen")
+            self.view.window?.rootViewController?.dismiss(animated: true, completion: nil)
         }
     }
     func openPlaylist(title: String) {

@@ -161,7 +161,7 @@ public class DatabaseManager {
     
     func fetchMusicFromDatabase() {
         guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            print("ERROR fetchMusicFromDatabase: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
         self.downloadLibrary(user: user) { newLibrary in
@@ -199,7 +199,7 @@ public class DatabaseManager {
     
     func saveLibraryToDatabase() {
         guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            print("ERROR saveLibraryToDatabase: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
         self.updateLibrary(user: user) { error in
@@ -214,7 +214,7 @@ public class DatabaseManager {
     // MARK: - Playlist Functions
     func savePlaylistsToDatabase() {
         guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            print("ERROR savePlaylistsToDatabase: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
         DatabaseManager.shared.updatePlaylists(user: user, completion: { error in

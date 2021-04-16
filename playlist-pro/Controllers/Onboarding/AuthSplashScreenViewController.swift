@@ -102,7 +102,7 @@ class AuthSplashScreenViewController: UIViewController {
         createAccountWithSpotifyButton.alpha = 0
         loginAnonymousButton.alpha = 0
 
-        if AuthManager.shared.isSignedIn {
+        if Auth.auth().currentUser != nil {
             SpotifyAuthManager.shared.refreshIfNeeded(completion: nil)
             let tabBarVC = TabBarViewController()
             tabBarVC.modalPresentationStyle = .fullScreen

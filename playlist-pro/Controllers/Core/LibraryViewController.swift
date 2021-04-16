@@ -42,7 +42,7 @@ final class LibraryViewController: UIViewController {
         tableView.contentInset = UIEdgeInsets(
             top: 0,
             left: 0,
-            bottom: tableView.contentSize.height + 100,
+            bottom: tableView.contentSize.height + 150,
             right: 0
         )
     }

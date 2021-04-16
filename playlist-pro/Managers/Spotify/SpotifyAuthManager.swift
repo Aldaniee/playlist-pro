@@ -13,7 +13,7 @@ final class SpotifyAuthManager {
     
     init() {
         guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            print("ERROR SpotifyAuthManagerInit: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
         DatabaseManager.shared.downloadUserSpotifyAuth(user: user)
@@ -58,7 +58,7 @@ final class SpotifyAuthManager {
         UserDefaults.standard.setValue(result.refresh_token, forKey: "refresh_token")
         UserDefaults.standard.setValue(Date().addingTimeInterval(TimeInterval(result.expires_in)), forKey: "expirationDate")
         guard let user = Auth.auth().currentUser else {
-            print("ERROR: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
+            print("ERROR storeTokens: no user logged in. You should never get here. If no email account is logged in then an anonymous account should be logged in.")
             return
         }
         DatabaseManager.shared.updateUserSpotifyAuth(user: user, completion: { error in
