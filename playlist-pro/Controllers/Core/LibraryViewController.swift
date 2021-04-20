@@ -80,22 +80,11 @@ extension LibraryViewController: SongCellDelegate {
     func optionsButtonTapped(tag: Int) {
         let playlist = LibraryManager.shared.songLibrary
         let song = playlist.songList[tag]
-        let isLibrary = playlist.title == "library"
-        songPlaylistOptionsViewController.setSong(song: song, isLibrary: isLibrary, index: tag)
+        songPlaylistOptionsViewController.setSong(song: song, playlist: playlist, index: tag)
         present(songPlaylistOptionsViewController, animated: true, completion: nil)
     }
 }
 extension LibraryViewController: SongPlaylistOptionsViewControllerDelegate {
-    
-    func removeFromPlaylist(index: Int) {
-        let playlist = LibraryManager.shared.songLibrary
-        if playlist.title != "library" { // Should always be true
-            PlaylistsManager.shared.removeFromPlaylist(playlist: playlist, index: index)
-        }
-        else {
-            print("This should be inaccessible")
-        }
-    }
     
     func reloadTableView() {
         DispatchQueue.main.async {

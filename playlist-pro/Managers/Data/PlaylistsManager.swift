@@ -71,7 +71,7 @@ class PlaylistsManager {
         if hasPlaylist(named: playlist.title) {
             let indexOfPlaylist = getPlaylistIndex(title: playlist.title)
             playlists[indexOfPlaylist].songList.remove(at: index)
-            homeVC.reloadTableView()
+            homeVC.reloadPlaylistContentVCTableView()
             savePlaylistsToStorage()
         }
     }

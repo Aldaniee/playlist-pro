@@ -162,7 +162,27 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         
         self.reloadPlaylistData(playlist: playlist)
     }
-
+    internal func reloadPlaylistData(playlist: Playlist?) {
+        if playlist != nil {
+            self.playlist = playlist!
+        }
+        if self.playlist.title == "library" {
+            self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
+            self.coverImageView.image = UIImage(systemName: "music.note.house")
+        }
+        else {
+            self.titleLabel.text = self.playlist.title
+            if let image = self.playlist.getImage() {
+                self.coverImageView.image = image.cropToSquare(sideLength: Double(coverArtSize))
+            }
+            else {
+                self.coverImageView.image = UIImage(systemName: "list.bullet")
+            }
+        }
+        self.coverImageView.tintColor = .gray
+        self.coverImageView.contentMode = .scaleAspectFit
+        self.reloadTableView()
+    }
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         let bottomHeader = headerViewHeight+statusBarBottom
         headerView.alpha = 1 - (scrollView.contentOffset.y+bottomHeader)/bottomHeader
@@ -186,27 +206,6 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
                 height: min(coverArtSize+offset, view.width-20)
             )
         }
-    }
-    func reloadPlaylistData(playlist: Playlist?) {
-        if playlist != nil {
-            self.playlist = playlist!
-        }
-        if self.playlist.title == "library" {
-            self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
-            self.coverImageView.image = UIImage(systemName: "music.note.house")
-        }
-        else {
-            self.titleLabel.text = self.playlist.title
-            if let image = self.playlist.getImage() {
-                self.coverImageView.image = image.cropToSquare(sideLength: Double(coverArtSize))
-            }
-            else {
-                self.coverImageView.image = UIImage(systemName: "list.bullet")
-            }
-        }
-        self.coverImageView.tintColor = .gray
-        self.coverImageView.contentMode = .scaleAspectFit
-        self.reloadTableView()
     }
     
     @objc func backButtonAction() {
@@ -247,23 +246,12 @@ extension PlaylistContentsViewController: UITableViewDataSource, UITableViewDele
 extension PlaylistContentsViewController: SongCellDelegate {
     func optionsButtonTapped(tag: Int) {
         let song = playlist.songList[tag]
-        let isLibrary = playlist.title == "library"
-        songPlaylistOptionsViewController.setSong(song: song, isLibrary: isLibrary, index: tag)
+        songPlaylistOptionsViewController.setSong(song: song, playlist: playlist, index: tag)
         present(songPlaylistOptionsViewController, animated: true, completion: nil)
     }
 }
 
 extension PlaylistContentsViewController: SongPlaylistOptionsViewControllerDelegate {
-    
-    func removeFromPlaylist(index: Int) {
-        if playlist.title != "library" { // Should always be true
-            PlaylistsManager.shared.removeFromPlaylist(playlist: playlist, index: index)
-        }
-        else {
-            print("This should be inaccessible")
-        }
-    }
-    
     private func reloadTableView() {
         DispatchQueue.main.async {
             self.tableView.reloadData()

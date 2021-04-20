@@ -27,8 +27,6 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     private var songPlaylistPos : Int!
     
-    private var isInLibrary = false
-    
     private var playlist : Playlist!
 
     private let albumCoverImageView: UIImageView = {
@@ -112,7 +110,7 @@ class SongPlaylistOptionsViewController: UIViewController {
             data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "text.badge.plus")!, title: "Add to queue") { _ in
                 self.didTapAddToQueue()
             })
-            if isInLibrary == false {
+            if playlist.title != "library" {
                 data.append(SongPlaylistOptionsCellModel(symbol: UIImage(systemName: "rectangle.stack.badge.minus")!, title: "Remove from playlist") { (songPos) in
                     self.didTapRemoveFromPlaylist(songPos: songPos)
                 })
@@ -131,9 +129,9 @@ class SongPlaylistOptionsViewController: UIViewController {
         }
     }
     
-    func setSong(song: Song, isLibrary: Bool, index: Int) {
-        self.isInLibrary = isLibrary
+    func setSong(song: Song, playlist: Playlist, index: Int) {
         self.songPlaylistPos = index
+        self.playlist = playlist
         self.song = song
         let albumSize = CGFloat(view.width - albumSpacing)
         self.titleLabel.text = song.title
@@ -146,8 +144,8 @@ class SongPlaylistOptionsViewController: UIViewController {
         }
     }
     func setPlaylist(playlist: Playlist, index: Int) {
-        self.playlist = playlist
         self.songPlaylistPos = index
+        self.playlist = playlist
         self.titleLabel.text = playlist.title
         self.artistLabel.text = ""
         self.albumCoverImageView.image = placeholder
@@ -165,13 +163,13 @@ class SongPlaylistOptionsViewController: UIViewController {
             QueueManager.shared.addToQueue(songDict: song)
         }
         else {
-            QueueManager.shared.addToQueue(playlist: playlist!)
+            QueueManager.shared.addToQueue(playlist: playlist)
         }
         dismiss(animated: true, completion: nil)
     }
     
     @objc func didTapRemoveFromPlaylist(songPos: Int) {
-        print("Removing Song: \(song!.title) Index: \(songPos) from Playlist: \(playlist?.title ?? "")")
+        print("Removing Song: \(song!.title) Index: \(songPos) from Playlist: \(playlist.title)")
         PlaylistsManager.shared.removeFromPlaylist(playlist: playlist, index: songPos)
         dismiss(animated: true, completion: nil)
     }
@@ -179,11 +177,16 @@ class SongPlaylistOptionsViewController: UIViewController {
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
         _ = LibraryManager.shared.deleteSongFromLibrary(song: song)
+        for i in 0..<playlist.songList.count {
+            if playlist.songList[i] == song {
+                didTapRemoveFromPlaylist(songPos: i)
+            }
+        }
         dismiss(animated: true, completion: nil)
     }
     @objc func didTapRemovePlaylist() {
         print("remove playlist pressed")
-        PlaylistsManager.shared.removePlaylist(playlist: playlist!)
+        PlaylistsManager.shared.removePlaylist(playlist: playlist)
         dismiss(animated: true, completion: nil)
     }
 

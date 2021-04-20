@@ -318,7 +318,9 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
                 cell.optionsButton.isHidden = true
             }
             else {
-                cell.playlist = PlaylistsManager.shared.playlists[indexPath.row]
+                if indexPath.row < PlaylistsManager.shared.playlists.count {
+                    cell.playlist = PlaylistsManager.shared.playlists[indexPath.row]
+                }
             }
             cell.refreshCell()
             cell.delegate = self
@@ -365,7 +367,10 @@ extension HomeViewController: UITableViewDataSource, UITableViewDelegate {
         }
     }
     func reloadPlaylistContentVCTableView() {
-        playlistContentsViewController.reloadPlaylistData(playlist: nil)
+        let secondsDelay = 0.5
+        DispatchQueue.main.asyncAfter(deadline: .now() + secondsDelay) {
+            self.playlistContentsViewController.reloadPlaylistData(playlist: nil)
+        }
     }
     
 }
@@ -378,9 +383,8 @@ extension HomeViewController: PlaylistCellDelegate, SongCellDelegate {
 }
 
 extension HomeViewController: CreatePlaylistDelegate, SongPlaylistOptionsViewControllerDelegate {
+    
     func openAddToPlaylistViewController(song: Song) {}
-
-    func removeFromPlaylist(index: Int) {}
     
     func reloadTableView() {
         DispatchQueue.main.async {
