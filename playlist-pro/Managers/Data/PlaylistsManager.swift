@@ -113,7 +113,7 @@ class PlaylistsManager {
     // MARK: Accessors
     func hasPlaylist(named title: String) -> Bool {
         for playlist in playlists {
-            if playlist.title == title {
+            if playlist.title == title || playlist.title == generateUniqueTitle(from: title) {
                 return true
             }
         }
@@ -122,7 +122,7 @@ class PlaylistsManager {
     
     func getPlaylistIndex(title: String) -> Int {
         for playlistIndex in 0 ..< playlists.count {
-            if playlists[playlistIndex].title == title {
+            if playlists[playlistIndex].title == title || playlists[playlistIndex].title == generateUniqueTitle(from: title){
                 return playlistIndex
             }
         }

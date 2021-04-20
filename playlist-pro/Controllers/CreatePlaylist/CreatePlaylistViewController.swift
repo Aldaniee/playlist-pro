@@ -131,9 +131,12 @@ class CreatePlaylistViewController: UIViewController {
         }
     }
     
-    func buildPlaylistFromSpotifyPlaylist(spotifyPlaylist: SpotifyPlaylist, tracks: [AudioTrack]) {
+    private func buildPlaylistFromSpotifyPlaylist(spotifyPlaylist: SpotifyPlaylist, tracks: [AudioTrack]) {
         let playlist = Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description)
-        PlaylistsManager.shared.addPlaylist(playlist: Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description))
+
+        if !PlaylistsManager.shared.hasPlaylist(named: spotifyPlaylist.name) {
+            PlaylistsManager.shared.addPlaylist(playlist: Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description))
+        }
         for track in tracks {
             let searchText = getSearchTextFromTrack(track: track)
             print("Searching with text \(searchText)")

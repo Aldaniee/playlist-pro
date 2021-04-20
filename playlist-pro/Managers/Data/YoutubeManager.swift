@@ -153,6 +153,7 @@ class YoutubeManager {
             }
             else {
                 print("Song already downloaded, skipping download")
+                completion?(true)
             }
         }
     }
@@ -247,6 +248,7 @@ class YoutubeManager {
             "Lyrics",
             "Lyrics Audio",
             "Lyric Video",
+            "Hq",
         ]
         var featuresToRemove = Array<String>()
         
