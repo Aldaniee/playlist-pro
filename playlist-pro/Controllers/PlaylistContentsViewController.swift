@@ -168,7 +168,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         }
         if self.playlist.title == "library" {
             self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
-            self.coverImageView.image = UIImage(systemName: "music.note.house")
+            self.coverImageView.image = UIImage(named: "all.songs.artwork")
         }
         else {
             self.titleLabel.text = self.playlist.title

@@ -114,7 +114,7 @@ class PlaylistCell : UITableViewCell {
         if (playlist != nil) {
             if playlist!.title == "library" {
                 self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
-                self.coverImageView.image = UIImage(systemName: "music.note.house")
+                self.coverImageView.image = UIImage(named: "all.songs.artwork")
                 self.coverImageView.tintColor = .gray
                 self.coverImageView.contentMode = .scaleAspectFit
             }
