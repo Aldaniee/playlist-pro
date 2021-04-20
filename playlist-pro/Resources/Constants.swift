@@ -10,7 +10,10 @@ import UIKit
 
 public struct Constants {
     struct YT {
-        static let API_KEY = "AIzaSyBEZfAAJYxjnfbfqN5rG-53Vbt-v6HJfDo"
+        // Youtube API Demo Key ***REMOVED***
+        // Playlist Pro Key AIzaSyBEZfAAJYxjnfbfqN5rG-53Vbt-v6HJfDo
+        
+        static let API_KEY = "***REMOVED***"
         static let EMBED_URL = "https://www.youtube.com/embed/"
         static let MAX_RESULTS = 5
     

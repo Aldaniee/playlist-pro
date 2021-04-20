@@ -128,7 +128,7 @@ class SongCell : UITableViewCell {
                 self.coverImageView.image = UIImage(data: imageData)!.cropToSquare(sideLength: Double(SongCell.rowHeight - spacing))
             }
             else {
-                self.coverImageView.image = UIImage(systemName: "bullet.list")
+                self.coverImageView.image = UIImage(systemName: "music.note.house")
             }
         }
     }

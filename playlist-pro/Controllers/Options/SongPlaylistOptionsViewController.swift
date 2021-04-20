@@ -23,7 +23,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     var delegate : SongPlaylistOptionsViewControllerDelegate!
     
-    private var song : Song!
+    private var song : Song?
     
     private var songPlaylistPos : Int!
     
@@ -33,17 +33,19 @@ class SongPlaylistOptionsViewController: UIViewController {
         let img = UIImageView()
         return img
     }()
-    
-    let placeholder = UIImage(named: "placeholder")
-    
+        
     private let titleLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .lightGray
+        lbl.font = .systemFont(ofSize: 13)
+        lbl.textAlignment = .center
         return lbl
     }()
     private let artistLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .lightGray
+        lbl.font = .systemFont(ofSize: 10)
+        lbl.textAlignment = .center
         return lbl
     }()
     
@@ -83,7 +85,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     let spacing = CGFloat(40)
     let albumSpacing = CGFloat(160)
     let titleLabelSize = CGFloat(20)
-    let artistLabelSize = CGFloat(20)
+    let artistLabelSize = CGFloat(16)
 
     override func viewDidLayoutSubviews() {
         let albumSize = CGFloat(view.width - albumSpacing)
@@ -92,10 +94,10 @@ class SongPlaylistOptionsViewController: UIViewController {
             x: albumSpacing/2, y: albumSpacing/2, width: albumSize, height: albumSize
         )
         titleLabel.frame = CGRect(
-            x: albumCoverImageView.left, y: albumCoverImageView.bottom+spacing/4, width: albumCoverImageView.width, height: titleLabelSize
+            x: spacing/2, y: albumCoverImageView.bottom+spacing/4, width: view.width-spacing, height: titleLabelSize
         )
         artistLabel.frame = CGRect(
-            x: titleLabel.left, y: titleLabel.bottom+spacing/4, width: titleLabel.width, height: artistLabelSize
+            x: spacing/2, y: titleLabel.bottom+spacing/4, width: view.width-spacing, height: artistLabelSize
         )
         tableView.frame = CGRect(
             x: 0, y: view.height/2, width: view.width, height: view.height/2
@@ -140,15 +142,16 @@ class SongPlaylistOptionsViewController: UIViewController {
         if let imgData = imageData {
             self.albumCoverImageView.image = UIImage(data: imgData)!.cropToSquare(sideLength: Double(albumSize))
         } else {
-            self.albumCoverImageView.image = placeholder
+            self.albumCoverImageView.image = UIImage(systemName: "music.note.house")
         }
     }
     func setPlaylist(playlist: Playlist, index: Int) {
         self.songPlaylistPos = index
         self.playlist = playlist
-        self.titleLabel.text = playlist.title
+        self.titleLabel.text = playlist.title != "library" ? playlist.title : "Music"
         self.artistLabel.text = ""
-        self.albumCoverImageView.image = placeholder
+        let albumSize = CGFloat(view.width - albumSpacing)
+        self.albumCoverImageView.image = ((playlist.title != "library" ? playlist.getImage() : UIImage(named: "all.songs.artwork"))!).cropToSquare(sideLength: Double(albumSize))
     }
     
     @objc func didTapAddToPlaylist() {
@@ -160,7 +163,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     @objc func didTapAddToQueue() {
         print("add to queue pressed")
         if song != nil {
-            QueueManager.shared.addToQueue(songDict: song)
+            QueueManager.shared.addToQueue(songDict: song!)
         }
         else {
             QueueManager.shared.addToQueue(playlist: playlist)
@@ -176,12 +179,7 @@ class SongPlaylistOptionsViewController: UIViewController {
     
     @objc func didTapRemoveFromLibrary() {
         print("remove from library pressed")
-        _ = LibraryManager.shared.deleteSongFromLibrary(song: song)
-        for i in 0..<playlist.songList.count {
-            if playlist.songList[i] == song {
-                didTapRemoveFromPlaylist(songPos: i)
-            }
-        }
+        _ = LibraryManager.shared.deleteSongFromLibrary(song: song!)
         dismiss(animated: true, completion: nil)
     }
     @objc func didTapRemovePlaylist() {

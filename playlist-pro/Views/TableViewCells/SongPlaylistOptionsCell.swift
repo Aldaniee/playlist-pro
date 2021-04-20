@@ -27,19 +27,19 @@ class SongPlaylistOptionsCell: UITableViewCell {
     
     let spacing = CGFloat(20)
     let titleLabelSize = CGFloat(20)
-    let symbolSize = CGFloat(40)
+    let symbolSize = CGFloat(30)
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         contentView.backgroundColor = .clear
         
         self.contentView.addSubview(symbolImageView)
         self.contentView.addSubview(titleLabel)
-        titleLabel.font = UIFont.boldSystemFont(ofSize: titleLabelSize)
+        titleLabel.font = .systemFont(ofSize: titleLabelSize)
 
     }
     override func layoutSubviews() {
         symbolImageView.frame = CGRect(
-            x: spacing,
+            x: spacing*2,
             y: contentView.height/2 - symbolSize/2,
             width: symbolSize,
             height: symbolSize

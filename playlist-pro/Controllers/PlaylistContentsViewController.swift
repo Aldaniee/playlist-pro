@@ -176,7 +176,7 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
                 self.coverImageView.image = image.cropToSquare(sideLength: Double(coverArtSize))
             }
             else {
-                self.coverImageView.image = UIImage(systemName: "list.bullet")
+                self.coverImageView.image = UIImage(systemName: "music.note.house")
             }
         }
         self.coverImageView.tintColor = .gray

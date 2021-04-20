@@ -52,15 +52,8 @@ class PlaylistsManager {
         if hasPlaylist(named: playlistName) {
             let index = getPlaylistIndex(title: playlistName)
             playlists[index].songList.append(song)
-            homeVC.reloadTableView()
+            homeVC.reloadPlaylistContentVCTableView()
             print("Added song \(song.title) to playlist \(playlistName)")
-            if playlists[index].songList.count == 1 {
-                let firstSong = playlists[index].songList[0]
-                let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(firstSong.id).jpg"))
-                if let imgData = imageData {
-                    setImageForPlaylist(playlistName: playlists[index].title, image: UIImage(data: imgData) ?? UIImage())
-                }
-            }
         }
         else {
             print("Tried adding song \(song.title) to playlist \(playlistName) but the playlist was not found")
@@ -113,7 +106,7 @@ class PlaylistsManager {
     // MARK: Accessors
     func hasPlaylist(named title: String) -> Bool {
         for playlist in playlists {
-            if playlist.title == title || playlist.title == generateUniqueTitle(from: title) {
+            if playlist.title == title {
                 return true
             }
         }
@@ -129,6 +122,15 @@ class PlaylistsManager {
         return -1
     }
     
+    func getPlaylist(named title: String) -> Playlist? {
+        for playlist in playlists {
+            if playlist.title == title {
+                return playlist
+            }
+        }
+        return nil
+    }
+    
     func hasSong(playlist: Playlist, songID: String) -> Bool {
         for song in playlist.songList {
             if (song.id == songID) {
@@ -138,8 +140,7 @@ class PlaylistsManager {
         return false
     }
     
-    // MARK: Internal
-    private func generateUniqueTitle(from title: String) -> String{
+    func generateUniqueTitle(from title: String) -> String{
         var uniqueTitle = title
         if uniqueTitle == "" {
             uniqueTitle = "My Playlist"
@@ -147,10 +148,10 @@ class PlaylistsManager {
         if hasPlaylist(named: uniqueTitle) {
             // If the title is taken add a " 2" to the end
             var nextNum = 2  // If this is still taken incriment the number by 1 and try again
-            while hasPlaylist(named: title) {
+            while hasPlaylist(named: uniqueTitle) {
+                uniqueTitle = uniqueTitle + " \(nextNum)"
                 nextNum += 1
             }
-            uniqueTitle = uniqueTitle + " \(nextNum)"
         }
         return uniqueTitle
     }

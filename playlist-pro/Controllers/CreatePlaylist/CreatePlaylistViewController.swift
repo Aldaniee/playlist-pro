@@ -132,8 +132,6 @@ class CreatePlaylistViewController: UIViewController {
     }
     
     private func buildPlaylistFromSpotifyPlaylist(spotifyPlaylist: SpotifyPlaylist, tracks: [AudioTrack]) {
-        let playlist = Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description)
-
         if !PlaylistsManager.shared.hasPlaylist(named: spotifyPlaylist.name) {
             PlaylistsManager.shared.addPlaylist(playlist: Playlist(title: spotifyPlaylist.name, songList: [Song](), description: spotifyPlaylist.description))
         }
@@ -143,7 +141,14 @@ class CreatePlaylistViewController: UIViewController {
             YoutubeManager.shared.search(searchText: searchText) { videos in
                 if videos != nil {
                     YoutubeManager.shared.downloadVideoFromSearchList(videos: videos!) { song in
-                        PlaylistsManager.shared.addSongToPlaylist(song: song, playlistName: playlist.title)
+                        if let playlist = PlaylistsManager.shared.getPlaylist(named: spotifyPlaylist.name) {
+                            if !PlaylistsManager.shared.hasSong(playlist: playlist, songID: song.id) {
+                                PlaylistsManager.shared.addSongToPlaylist(song: song, playlistName: spotifyPlaylist.name)
+                            }
+                        }
+                        else {
+                            print("Shouldn't get here, playlist with correct title not found")
+                        }
                     }
                 }
             }

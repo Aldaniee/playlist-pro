@@ -124,7 +124,7 @@ class PlaylistCell : UITableViewCell {
                     self.coverImageView.image = image.cropToSquare(sideLength: Double(PlaylistCell.rowHeight - spacing))
                 }
                 else {
-                    self.coverImageView.image = UIImage(systemName: "list.bullet")
+                    self.coverImageView.image = UIImage(systemName: "music.note.house")
                     self.coverImageView.tintColor = .gray
                     self.coverImageView.contentMode = .scaleAspectFit
                 }
