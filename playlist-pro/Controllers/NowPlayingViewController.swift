@@ -18,6 +18,13 @@ class NowPlayingViewController: UIViewController {
                     self.songControlPane.transform = CGAffineTransform(translationX: 0, y: -250)
                     self.albumCoverImageView.transform = CGAffineTransform(translationX: 0, y: -50)
                     self.editButtonImageView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
+                    self.progressBar.alpha = 0.0
+                    self.timeLeftLabel.alpha = 0.0
+                    self.currentTimeLabel.alpha = 0.0
+                    
+                    self.playbackControls.transform = CGAffineTransform(translationX: 0, y: -50)
+                    self.editCard.transform = CGAffineTransform(translationX: 0, y: -80)
+
                 }
             }
             else {
@@ -25,6 +32,13 @@ class NowPlayingViewController: UIViewController {
                     self.songControlPane.transform = CGAffineTransform(translationX: 0, y: 0)
                     self.albumCoverImageView.transform = CGAffineTransform(translationX: 0, y: 0)
                     self.editButtonImageView.transform = CGAffineTransform(rotationAngle: 0)
+                    self.progressBar.alpha = 1.0
+                    self.timeLeftLabel.alpha = 1.0
+                    self.currentTimeLabel.alpha = 1.0
+                    
+                    self.playbackControls.transform = CGAffineTransform(translationX: 0, y: 0)
+                    self.editCard.transform = CGAffineTransform(translationX: 0, y: 0)
+
                 }
             }
         }
@@ -70,17 +84,45 @@ class NowPlayingViewController: UIViewController {
         lbl.textAlignment = .center
         return lbl
     }()
-
+    
+    
     let progressBar: CustomSlider = {
         let pBar = CustomSlider()
         pBar.tintColor = .darkPink
         pBar.backgroundColor = .clear
         pBar.minimumTrackTintColor = .darkPink
         pBar.maximumTrackTintColor = .lightGray
+        let thumbView = UIImageView()
+        thumbView.backgroundColor = .darkPink
+        let progressBarThumbHeight = CGFloat(20)
+        let progressBarThumbWidth = CGFloat(3)
+        thumbView.frame = CGRect(x: 0,
+                                 y: progressBarThumbWidth/2,
+                                 width: progressBarThumbWidth,
+                                 height: progressBarThumbHeight)
+        let thumbImage = UIGraphicsImageRenderer(bounds: thumbView.bounds).image { rendererContext in
+            thumbView.layer.render(in: rendererContext.cgContext)
+        }
+        pBar.setThumbImage(thumbImage, for: UIControl.State.normal)
+
         return pBar
     }()
-
+    let currentTimeLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "00:00"
+        lbl.backgroundColor = .clear
+        lbl.textColor = .white
+        return lbl
+    }()
+    let timeLeftLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "00:00"
+        lbl.backgroundColor = .clear
+        lbl.textColor = .white
+        return lbl
+    }()
     // MARK: Playback Controls
+    let playbackControls = UIView()
     let pausePlayButton: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
@@ -108,20 +150,6 @@ class NowPlayingViewController: UIViewController {
         btn.tintColor = .white
         return btn
     }()
-    let currentTimeLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.text = "00:00"
-        lbl.backgroundColor = .clear
-        lbl.textColor = .white
-        return lbl
-    }()
-    let timeLeftLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.text = "00:00"
-        lbl.backgroundColor = .clear
-        lbl.textColor = .white
-        return lbl
-    }()
     let repeatButton: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
@@ -141,7 +169,8 @@ class NowPlayingViewController: UIViewController {
         btn.tintColor = .white
         return btn
     }()
-    // MARK: Bottom Bar
+    // MARK: Edit Card
+    let editCard = UIView()
     let queueButton: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .clear
@@ -174,6 +203,36 @@ class NowPlayingViewController: UIViewController {
         imgView.tintColor = .darkPink
         return imgView
     }()
+    let editSliderLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "Timeline"
+        lbl.numberOfLines = 0
+        lbl.backgroundColor = .clear
+        lbl.textColor = .white
+        lbl.textAlignment = .center
+        return lbl
+    }()
+    let editSlider: CustomSlider = {
+        let pBar = CustomSlider()
+        pBar.tintColor = .darkPink
+        pBar.backgroundColor = .clear
+        pBar.minimumTrackTintColor = .darkPink
+        pBar.maximumTrackTintColor = .lightGray
+        let thumbView = UIImageView()
+        thumbView.backgroundColor = .darkPink
+        let editBarThumbHeight = CGFloat(60)
+        let editBarThumbWidth = CGFloat(3)
+        thumbView.frame = CGRect(x: 0,
+                                 y: editBarThumbWidth/2,
+                                 width: editBarThumbWidth,
+                                 height: editBarThumbHeight)
+        let thumbImage = UIGraphicsImageRenderer(bounds: thumbView.bounds).image { rendererContext in
+            thumbView.layer.render(in: rendererContext.cgContext)
+        }
+        pBar.setThumbImage(thumbImage, for: UIControl.State.normal)
+        return pBar
+    }()
+    
     /*let playbackRateButton: UIButton = {
         let btn = UIButton()
         btn.backgroundColor = .orange
@@ -182,27 +241,26 @@ class NowPlayingViewController: UIViewController {
         btn.setTitle("x1", for: .normal)
         return btn
     }()*/
-    let spacing = CGFloat(40)
-
+    let spacing: CGFloat = 40
+    let edgePadding: CGFloat = 20 // spacing/2
     // MARK: Tab Bar
     let tabBarHeight = CGFloat(18)
     let closeButtonScaleConstant = CGFloat(1.5)
     // MARK: Playback Display
     let artistLabelHeight = CGFloat(14)
-    let progressBarHeight = CGFloat(5)
-    let progressBarThumbHeight = CGFloat(20)
-    let progressBarThumbWidth = CGFloat(3)
-    let pausePlaySize = CGFloat(80)
+    let pausePlaySize = CGFloat(80) // also height of playbackControls view
     let nextPrevSize = CGFloat(30)
     let repeatShuffleSize = CGFloat(20)
     // MARK: Playback Controls
+    let progressBarHeight = CGFloat(5)
     let timeLabelSize = CGFloat(10)
     let timeLabelScaleConstant = CGFloat(3.5)
-    // MARK: Bottom Bar
+    // MARK: Edit Bar
     let queueButtonSize = CGFloat(20)
     let editButtonSize = CGFloat(38)
     let editButtonTextSize = CGFloat(18)
     let editButtonImageViewSize = CGFloat(10)
+    let editBarHeight = CGFloat(60)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -210,47 +268,49 @@ class NowPlayingViewController: UIViewController {
         let panGesture = UIPanGestureRecognizer(target: self, action: #selector(panGestureRecognizerAction))
         view.addGestureRecognizer(panGesture)
         
+        if !hasSetPointOrigin {
+            hasSetPointOrigin = true
+            pointOrigin = self.view.frame.origin
+        }
+        
         // MARK: Playback Display
         view.addSubview(albumCoverImageView)
         view.addSubview(songControlPane)
-        songControlPane.addSubview(progressBar)
-        let thumbView = UIImageView()
-        thumbView.backgroundColor = .darkPink
-
-        thumbView.frame = CGRect(x: 0,
-                                 y: progressBarThumbWidth/2,
-                                 width: progressBarThumbWidth,
-                                 height: progressBarThumbHeight)
-        let thumbImage = UIGraphicsImageRenderer(bounds: thumbView.bounds).image { rendererContext in
-            thumbView.layer.render(in: rendererContext.cgContext)
-        }
-        progressBar.setThumbImage(thumbImage, for: UIControl.State.normal)
         songControlPane.addSubview(songTitleLabel)
-        
-        songTitleLabel.font = UIFont.boldSystemFont(ofSize: tabBarHeight)
         songControlPane.addSubview(artistLabel)
+        songTitleLabel.font = UIFont.boldSystemFont(ofSize: tabBarHeight)
         artistLabel.font = UIFont.systemFont(ofSize: artistLabelHeight)
-
+        
+        songControlPane.addSubview(progressBar)
         songControlPane.addSubview(currentTimeLabel)
-        currentTimeLabel.font = UIFont.boldSystemFont(ofSize: timeLabelSize)
         songControlPane.addSubview(timeLeftLabel)
+        currentTimeLabel.font = UIFont.boldSystemFont(ofSize: timeLabelSize)
         timeLeftLabel.font = UIFont.boldSystemFont(ofSize: timeLabelSize)
 
         
         // MARK: Playback Controls
-        songControlPane.addSubview(shuffleButton)
-        songControlPane.addSubview(repeatButton)
-        songControlPane.addSubview(pausePlayButton)
-        songControlPane.addSubview(previousButton)
-        songControlPane.addSubview(nextButton)
+        playbackControls.addSubview(shuffleButton)
+        playbackControls.addSubview(repeatButton)
+        playbackControls.addSubview(pausePlayButton)
+        playbackControls.addSubview(previousButton)
+        playbackControls.addSubview(nextButton)
+        
+        songControlPane.addSubview(editCard)
+        songControlPane.addSubview(playbackControls)
 
-        // MARK: Bottom Bar
-        songControlPane.addSubview(queueButton)
-        songControlPane.addSubview(editButton)
+        // MARK: Edit Card
+        editCard.addSubview(queueButton)
+        
+        // Edit button
         editButton.addSubview(editButtonTextLabel)
         editButtonTextLabel.font = UIFont.systemFont(ofSize: editButtonTextSize)
         editButton.addSubview(editButtonImageView)
         editButton.addTarget(self, action: #selector(editButtonAction), for: .touchUpInside)
+        editCard.addSubview(editSliderLabel)
+        editCard.addSubview(editSlider)
+        //editSlider.setThumbImage(thumbImage, for: UIControl.State.normal)
+        editCard.addSubview(editButton)
+
         albumCoverImageView.frame = CGRect(
             x: -50,
             y: 0,
@@ -263,28 +323,80 @@ class NowPlayingViewController: UIViewController {
             width: view.width,
             height: view.height
         )
-    }
-    
-    func presentAnimations() {
-        self.albumCoverImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
-        editMode = false
-    }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        let edgePadding = spacing/2
-
-        if !hasSetPointOrigin {
-            hasSetPointOrigin = true
-            pointOrigin = self.view.frame.origin
-        }
-        let statusBarHeight = view.window?.windowScene?.statusBarManager?.statusBarFrame.height ?? 47
-        statusBarBackground.frame = CGRect(
-            x: 0,
-            y: 0,
-            width: view.width,
-            height: statusBarHeight
+        layoutTitles()
+        
+        progressBar.frame = CGRect(
+            x: edgePadding,
+            y: songTitleLabel.bottom + spacing,
+            width: view.width-spacing,
+            height: progressBarHeight
         )
-        // MARK: Playback View
+        
+        let timeLabelWidth = timeLabelSize*timeLabelScaleConstant
+        let progressBarToTimeLabels = spacing/4
+        currentTimeLabel.frame = CGRect(
+            x: progressBar.left,
+            y: progressBar.bottom+progressBarToTimeLabels,
+            width: timeLabelWidth,
+            height: timeLabelSize
+        )
+        timeLeftLabel.frame = CGRect(x: progressBar.right-timeLabelWidth,
+                                     y: progressBar.bottom+progressBarToTimeLabels,
+                                     width: timeLabelWidth,
+                                     height: timeLabelSize)
+        
+        let progressBarToPlaybackControls = spacing*2 - pausePlaySize/2
+        
+        playbackControls.frame = CGRect(
+            x: 0,
+            y: progressBar.bottom+progressBarToPlaybackControls,
+            width: view.width,
+            height: pausePlaySize
+        )
+        
+        layoutPlaybackControls()
+        
+        let playbackControlsToEditCard = CGFloat(60)
+        
+        // MARK: Edit Card
+        editCard.frame = CGRect(
+            x: 0,
+            y: playbackControls.bottom + playbackControlsToEditCard,
+            width: view.width,
+            height: songControlPane.height-playbackControls.bottom+playbackControlsToEditCard
+        )
+        queueButton.frame = CGRect(x: edgePadding,
+                                   y: editButtonSize/2-queueButtonSize/2,
+                                   width: queueButtonSize,
+                                   height: queueButtonSize)
+        let editButtonWidth = editButtonSize*3.5
+        editButton.frame = CGRect(x: editCard.center.x-editButtonWidth/2,
+                                  y: 0,
+                                  width: editButtonWidth,
+                                  height: editButtonSize)
+        editButtonTextLabel.frame = CGRect(x: 0,
+                                           y: 0,
+                                           width: editButtonWidth,
+                                           height: editButtonTextSize)
+        let editButtonImageViewWidth = editButtonImageViewSize*1.5
+        editButtonImageView.frame = CGRect(x: editButtonWidth/2-editButtonImageViewWidth/2,
+                                           y: editButtonTextLabel.bottom + spacing/4,
+                                           width: editButtonImageViewWidth,
+                                           height: editButtonImageViewSize)
+        editSliderLabel.frame = CGRect(
+            x: edgePadding,
+            y: editButton.bottom + spacing,
+            width: view.width-spacing,
+            height: artistLabelHeight
+        )
+        editSlider.frame = CGRect(
+            x: edgePadding,
+            y: editSliderLabel.bottom + spacing,
+            width: view.width-spacing,
+            height: editBarHeight
+        )
+    }
+    private func layoutTitles() {
         songTitleLabel.frame = CGRect(
             x: edgePadding,
             y: spacing,
@@ -297,69 +409,38 @@ class NowPlayingViewController: UIViewController {
             width: view.width-spacing,
             height: artistLabelHeight
         )
-        progressBar.frame = CGRect(
-            x: edgePadding,
-            y: songTitleLabel.bottom + spacing,
-            width: view.width-spacing,
-            height: progressBarHeight
-        )
-        let timeLabelWidth = timeLabelSize*timeLabelScaleConstant
-        let progressBarToTimeLabels = spacing/4
-        currentTimeLabel.frame = CGRect(
-            x: progressBar.left,                 
-            y: progressBar.bottom+progressBarToTimeLabels,
-            width: timeLabelWidth,
-            height: timeLabelSize
-        )
-        timeLeftLabel.frame = CGRect(x: progressBar.right-timeLabelWidth,
-                                     y: progressBar.bottom+progressBarToTimeLabels,
-                                     width: timeLabelWidth,
-                                     height: timeLabelSize)
-        
+    }
+    private func layoutPlaybackControls() {
         // MARK: Playback Controls
-        let progressBarToControlsCenterLineSpacing = progressBar.bottom+spacing*2
-        
         shuffleButton.frame = CGRect(x: progressBar.left,
-                                     y: progressBarToControlsCenterLineSpacing-repeatShuffleSize/2,
+                                     y: playbackControls.height/2-repeatShuffleSize/2,
                                      width: repeatShuffleSize,
                                      height: repeatShuffleSize)
         repeatButton.frame = CGRect(x: progressBar.right-repeatShuffleSize,
-                                    y: progressBarToControlsCenterLineSpacing-repeatShuffleSize/2,
+                                    y: playbackControls.height/2-repeatShuffleSize/2,
                                     width: repeatShuffleSize,
                                     height: repeatShuffleSize)
         pausePlayButton.frame = CGRect(x: view.center.x-pausePlaySize/2,
-                                       y: progressBarToControlsCenterLineSpacing-pausePlaySize/2,
+                                       y: playbackControls.height/2-pausePlaySize/2,
                                        width: pausePlaySize,
                                        height: pausePlaySize)
         let pausePlayToPrevNextSpacing = spacing*2
         previousButton.frame = CGRect(x: view.center.x-pausePlayToPrevNextSpacing-nextPrevSize,
-                                       y: progressBarToControlsCenterLineSpacing-nextPrevSize/2,
+                                       y: playbackControls.height/2-nextPrevSize/2,
                                        width: nextPrevSize,
                                        height: nextPrevSize)
         nextButton.frame = CGRect(x: view.center.x + pausePlayToPrevNextSpacing,
-                                       y: progressBarToControlsCenterLineSpacing-nextPrevSize/2,
+                                       y: playbackControls.height/2-nextPrevSize/2,
                                        width: nextPrevSize,
                                        height: nextPrevSize)
-        let playPauseBottomToBottomBar = CGFloat(60)
-        // MARK: Bottom Bar
-        queueButton.frame = CGRect(x: edgePadding,
-                                   y: pausePlayButton.bottom + playPauseBottomToBottomBar - queueButtonSize/2,
-                                   width: queueButtonSize,
-                                   height: queueButtonSize)
-        let editButtonWidth = editButtonSize*3.5
-        editButton.frame = CGRect(x: view.center.x-editButtonWidth/2,
-                                  y: pausePlayButton.bottom + playPauseBottomToBottomBar - editButtonTextSize/2,
-                                  width: editButtonWidth,
-                                  height: editButtonSize)
-        editButtonTextLabel.frame = CGRect(x: 0,
-                                           y: 0,
-                                           width: editButtonWidth,
-                                           height: editButtonTextSize)
-        let editButtonImageViewWidth = editButtonImageViewSize*1.5
-        editButtonImageView.frame = CGRect(x: editButtonWidth/2-editButtonImageViewWidth/2,
-                                           y: editButtonTextLabel.bottom + spacing/4,
-                                           width: editButtonImageViewWidth,
-                                           height: editButtonImageViewSize)
+    }
+    
+    func presentAnimations() {
+        self.albumCoverImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
+        editMode = false
+    }
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
     }
     
     @objc func editButtonAction() {
