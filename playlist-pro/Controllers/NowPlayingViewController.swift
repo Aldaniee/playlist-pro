@@ -86,12 +86,12 @@ class NowPlayingViewController: UIViewController {
     }()
     
     
-    let progressBar: CustomSingleSlider = {
-        let pBar = CustomSingleSlider()
-        pBar.tintColor = .darkPink
-        pBar.backgroundColor = .clear
-        pBar.minimumTrackTintColor = .darkPink
-        pBar.maximumTrackTintColor = .lightGray
+    let progressBar: CustomSlider = {
+        let slider = CustomSlider()
+        slider.tintColor = .darkPink
+        slider.backgroundColor = .clear
+        slider.minimumTrackTintColor = .darkPink
+        slider.maximumTrackTintColor = .lightGray
         let thumbView = UIImageView()
         thumbView.backgroundColor = .darkPink
         let progressBarThumbHeight = CGFloat(20)
@@ -103,9 +103,9 @@ class NowPlayingViewController: UIViewController {
         let thumbImage = UIGraphicsImageRenderer(bounds: thumbView.bounds).image { rendererContext in
             thumbView.layer.render(in: rendererContext.cgContext)
         }
-        pBar.setThumbImage(thumbImage, for: UIControl.State.normal)
+        slider.setThumbImage(thumbImage, for: UIControl.State.normal)
 
-        return pBar
+        return slider
     }()
     let currentTimeLabel: UILabel = {
         let lbl = UILabel()
@@ -194,6 +194,7 @@ class NowPlayingViewController: UIViewController {
     let progressBarHeight = CGFloat(5)
     let timeLabelSize = CGFloat(10)
     let timeLabelScaleConstant = CGFloat(3.5)
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -330,10 +331,7 @@ class NowPlayingViewController: UIViewController {
         self.albumCoverImageView.transform = CGAffineTransform(scaleX: 1, y: 1)
         editMode = false
     }
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-    }
-    
+
     @objc func editButtonAction() {
         print("Edit button pressed")
         editMode = !editMode
@@ -345,7 +343,7 @@ class NowPlayingViewController: UIViewController {
         // Not allowing the user to drag the view upward
         guard translation.y >= 0 else { return }
         
-        // setting x as 0 because we don't want users to move the frame side ways, only want straight up or down
+        // setting x as 0 because we don't want users to move the frame side ways, only want straight up oupdater down
         view.frame.origin = CGPoint(x: 0, y: self.pointOrigin!.y + translation.y)
 
         let scale = 1 + (translation.y / view.height)

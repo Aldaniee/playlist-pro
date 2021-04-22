@@ -22,9 +22,14 @@
 		EA637DF5254B408C00FCC983 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637DF4254B408C00FCC983 /* SearchModel.swift */; };
 		EA637DFD254B821200FCC983 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637DFC254B821200FCC983 /* Response.swift */; };
 		EA637E022550B00200FCC983 /* SearchVideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637E012550B00200FCC983 /* SearchVideoCell.swift */; };
-		EA64603B25FBBE4300B73769 /* CustomSingleSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64603A25FBBE4300B73769 /* CustomSingleSlider.swift */; };
+		EA64603B25FBBE4300B73769 /* CustomSlider.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64603A25FBBE4300B73769 /* CustomSlider.swift */; };
 		EA64604D25FC016A00B73769 /* SongPlaylistOptionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64604C25FC016A00B73769 /* SongPlaylistOptionsViewController.swift */; };
 		EA64605525FEC41E00B73769 /* SongPlaylistOptionsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA64605425FEC41E00B73769 /* SongPlaylistOptionsCell.swift */; };
+		EA77F5CE2632107E00307717 /* WaveformImageDrawer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA77F5C82632107D00307717 /* WaveformImageDrawer.swift */; };
+		EA77F5CF2632107E00307717 /* TempiFFT.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA77F5C92632107D00307717 /* TempiFFT.swift */; };
+		EA77F5D02632107E00307717 /* WaveformImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA77F5CA2632107D00307717 /* WaveformImageView.swift */; };
+		EA77F5D12632107E00307717 /* WaveformAnalyzer.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA77F5CB2632107D00307717 /* WaveformAnalyzer.swift */; };
+		EA77F5D22632107E00307717 /* WaveformImageTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA77F5CC2632107D00307717 /* WaveformImageTypes.swift */; };
 		EA7E3FE325A67646009A4DAE /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7E3FE225A67646009A4DAE /* AccountViewController.swift */; };
 		EA82A54E261240530045D2D6 /* AccountSettingsCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA82A54D261240520045D2D6 /* AccountSettingsCell.swift */; };
 		EA8F5AD625926BC50081E9AB /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA8F5AD525926BC50081E9AB /* Extensions.swift */; };
@@ -113,9 +118,14 @@
 		EA637DF4254B408C00FCC983 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		EA637DFC254B821200FCC983 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		EA637E012550B00200FCC983 /* SearchVideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVideoCell.swift; sourceTree = "<group>"; };
-		EA64603A25FBBE4300B73769 /* CustomSingleSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSingleSlider.swift; sourceTree = "<group>"; };
+		EA64603A25FBBE4300B73769 /* CustomSlider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomSlider.swift; sourceTree = "<group>"; };
 		EA64604C25FC016A00B73769 /* SongPlaylistOptionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SongPlaylistOptionsViewController.swift; path = "playlist-pro/Controllers/Options/SongPlaylistOptionsViewController.swift"; sourceTree = SOURCE_ROOT; };
 		EA64605425FEC41E00B73769 /* SongPlaylistOptionsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SongPlaylistOptionsCell.swift; sourceTree = "<group>"; };
+		EA77F5C82632107D00307717 /* WaveformImageDrawer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformImageDrawer.swift; sourceTree = "<group>"; };
+		EA77F5C92632107D00307717 /* TempiFFT.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TempiFFT.swift; sourceTree = "<group>"; };
+		EA77F5CA2632107D00307717 /* WaveformImageView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformImageView.swift; sourceTree = "<group>"; };
+		EA77F5CB2632107D00307717 /* WaveformAnalyzer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformAnalyzer.swift; sourceTree = "<group>"; };
+		EA77F5CC2632107D00307717 /* WaveformImageTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformImageTypes.swift; sourceTree = "<group>"; };
 		EA7E3FE225A67646009A4DAE /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		EA82A54D261240520045D2D6 /* AccountSettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsCell.swift; sourceTree = "<group>"; };
 		EA8F5AD525926BC50081E9AB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
@@ -243,7 +253,7 @@
 			children = (
 				EA82A552261247470045D2D6 /* TableViewCells */,
 				EA0558BB25B1191700B1FF85 /* MiniPlayerView.swift */,
-				EA64603A25FBBE4300B73769 /* CustomSingleSlider.swift */,
+				EA64603A25FBBE4300B73769 /* CustomSlider.swift */,
 				EAA57CCB2631D0EC00BBB35D /* EditCardView.swift */,
 			);
 			path = Views;
@@ -260,6 +270,19 @@
 				EA0558D225B11EBE00B1FF85 /* Search */,
 			);
 			path = Models;
+			sourceTree = "<group>";
+		};
+		EA77F5C72632107D00307717 /* DSWaveformImage */ = {
+			isa = PBXGroup;
+			children = (
+				EA77F5C82632107D00307717 /* WaveformImageDrawer.swift */,
+				EA77F5C92632107D00307717 /* TempiFFT.swift */,
+				EA77F5CA2632107D00307717 /* WaveformImageView.swift */,
+				EA77F5CB2632107D00307717 /* WaveformAnalyzer.swift */,
+				EA77F5CC2632107D00307717 /* WaveformImageTypes.swift */,
+			);
+			name = DSWaveformImage;
+			path = DSWaveformImage/DSWaveformImage;
 			sourceTree = "<group>";
 		};
 		EA82A552261247470045D2D6 /* TableViewCells */ = {
@@ -425,6 +448,7 @@
 				EA637E072550B01D00FCC983 /* Views */,
 				EABA042925B73073000BF883 /* Controllers */,
 				EAF920EF2548DA1400D22ACF /* Info.plist */,
+				EA77F5C72632107D00307717 /* DSWaveformImage */,
 			);
 			path = "playlist-pro";
 			sourceTree = "<group>";
@@ -701,7 +725,9 @@
 				EADD212826052269002AA641 /* LibraryPlaylistsResponse.swift in Sources */,
 				EADD216A2605370A002AA641 /* YoutubeManager.swift in Sources */,
 				EADD2132260522E4002AA641 /* Artist.swift in Sources */,
+				EA77F5CE2632107E00307717 /* WaveformImageDrawer.swift in Sources */,
 				EA5FBE77257AAD4A00473B56 /* Video.swift in Sources */,
+				EA77F5D02632107E00307717 /* WaveformImageView.swift in Sources */,
 				EADD20EA2603A994002AA641 /* SpotifyAuthResponse.swift in Sources */,
 				EA5E9E8925B4BC560026E9AE /* HomeViewController.swift in Sources */,
 				EA9D945025938AA80057493D /* AuthSplashScreenViewController.swift in Sources */,
@@ -722,6 +748,7 @@
 				EA64604D25FC016A00B73769 /* SongPlaylistOptionsViewController.swift in Sources */,
 				EAC06E5F25DEFEB600E86162 /* CreatePlaylistViewController.swift in Sources */,
 				EA82A54E261240530045D2D6 /* AccountSettingsCell.swift in Sources */,
+				EA77F5D22632107E00307717 /* WaveformImageTypes.swift in Sources */,
 				EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */,
 				EADD207F2602D81E002AA641 /* SongCell.swift in Sources */,
 				EADD213726052318002AA641 /* Album.swift in Sources */,
@@ -735,12 +762,14 @@
 				EAE145FA2585970200C09FE9 /* AuthManager.swift in Sources */,
 				EAC06E4025DD92FA00E86162 /* NowPlayingViewController.swift in Sources */,
 				EAC06DE525DC1D4F00E86162 /* TabBarAudioViewController.swift in Sources */,
+				EA77F5D12632107E00307717 /* WaveformAnalyzer.swift in Sources */,
 				EADD209226039686002AA641 /* SpotifyAuthManager.swift in Sources */,
-				EA64603B25FBBE4300B73769 /* CustomSingleSlider.swift in Sources */,
+				EA64603B25FBBE4300B73769 /* CustomSlider.swift in Sources */,
 				EA637DEB254B3EF200FCC983 /* Constants.swift in Sources */,
 				EA0558A025B118DF00B1FF85 /* YYTAudioPlayer.swift in Sources */,
 				EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */,
 				EADD211B260521A6002AA641 /* SpotifyPlaylist.swift in Sources */,
+				EA77F5CF2632107E00307717 /* TempiFFT.swift in Sources */,
 				EADD20712601904F002AA641 /* AddToPlaylistViewController.swift in Sources */,
 				EA637E022550B00200FCC983 /* SearchVideoCell.swift in Sources */,
 				EAE145F52585966D00C09FE9 /* DatabaseManager.swift in Sources */,

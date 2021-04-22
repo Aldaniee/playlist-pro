@@ -6,10 +6,10 @@
 //
 
 import UIKit
-import MultiSlider
 
 class EditCardView: UIView {
-
+    
+    var waveformURL: URL?
     /*
     // Only override draw() if you perform custom drawing.
     // An empty implementation adversely affects performance during animation.
@@ -58,44 +58,50 @@ class EditCardView: UIView {
         lbl.textAlignment = .center
         return lbl
     }()
-    let editSlider: MultiSlider = {
-        let slider = MultiSlider()
-        slider.orientation = .horizontal
-        slider.thumbCount = 3
-        
-        slider.tintColor = .darkPink
-        slider.backgroundColor = .clear
-        slider.valueLabelPosition = .bottom
-        slider.valueLabelColor = .darkPink
-        slider.valueLabelFont = .systemFont(ofSize: 12)
-        slider.outerTrackColor = .darkGray
-        slider.isValueLabelRelative = false
-
-        slider.tintColor = .clear // color of track
-
+    
+    static let currentPositionThumbImage: UIImage = {
+        let currentPositionThumb = UIImageView()
+        currentPositionThumb.backgroundColor = .clear
+        currentPositionThumb.frame = CGRect(x: 0, y: 60/2, width: 3, height: 60)
+        let currentPositionThumbImage = UIGraphicsImageRenderer(bounds: currentPositionThumb.bounds).image { rendererContext in
+            currentPositionThumb.layer.render(in: rendererContext.cgContext)
+        }
+        return currentPositionThumbImage
+    }()
+    
+    static let endThumbImage: UIImage = {
         let endThumb = UIImageView()
         endThumb.backgroundColor = .white
         endThumb.frame = CGRect(x: 0, y: 80/2, width: 3, height: 80)
         let endThumbImage = UIGraphicsImageRenderer(bounds: endThumb.bounds).image { rendererContext in
             endThumb.layer.render(in: rendererContext.cgContext)
         }
-        let currentPositionThumb = UIImageView()
-        currentPositionThumb.backgroundColor = .darkPink
-        currentPositionThumb.frame = CGRect(x: 0, y: 60/2, width: 3, height: 60)
-        let currentPositionThumbImage = UIGraphicsImageRenderer(bounds: currentPositionThumb.bounds).image { rendererContext in
-            currentPositionThumb.layer.render(in: rendererContext.cgContext)
-        }
-        slider.thumbViews[0].image = endThumbImage
-        slider.thumbViews[1].image = currentPositionThumbImage
-        slider.thumbViews[2].image = endThumbImage
-        
+        return endThumbImage
+    }()
+    
+    let positionSlider: CustomSlider = {
+        let slider = CustomSlider()
+        slider.tintColor = .clear
+        slider.backgroundColor = .clear
+        slider.minimumTrackTintColor = .clear
+        slider.maximumTrackTintColor = .clear
+        slider.setThumbImage(currentPositionThumbImage, for: UIControl.State.normal)
         return slider
     }()
+    let waveFormView: UIImageView = {
+        let img = UIImageView()
+        return img
+    }()
+    let progressWaveFormView: UIImageView = {
+        let img = UIImageView()
+        return img
+    }()
+    
     let queueButtonSize = CGFloat(20)
     let editButtonSize = CGFloat(38)
     let editButtonTextSize = CGFloat(18)
     let editButtonImageViewSize = CGFloat(10)
-    let editBarHeight = CGFloat(60)
+    let sliderHeight = CGFloat(85)
     let spacing: CGFloat = 40
     let edgePadding: CGFloat = 20 // spacing/2
     let editLabelHeight = CGFloat(14)
@@ -110,15 +116,12 @@ class EditCardView: UIView {
         editButtonTextLabel.font = UIFont.systemFont(ofSize: editButtonTextSize)
         editButton.addSubview(editButtonImageView)
         self.addSubview(editSliderLabel)
-        self.addSubview(editSlider)
         self.addSubview(editButton)
-        editSlider.minimumValue = 0
-        editSlider.minimumValue = 100
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-            self.editSlider.value = [2, 50, 100]
-        }
+        self.addSubview(waveFormView)
+        self.addSubview(progressWaveFormView)
+        self.addSubview(positionSlider)
+
     }
-    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
@@ -148,12 +151,49 @@ class EditCardView: UIView {
             width: self.width-spacing,
             height: editLabelHeight
         )
-        editSlider.frame = CGRect(
+        positionSlider.frame = CGRect(
             x: edgePadding,
-            y: editSliderLabel.bottom + spacing,
+            y: editSliderLabel.bottom + spacing/2,
             width: self.width-spacing,
-            height: editBarHeight
+            height: sliderHeight
         )
+        waveFormView.frame = positionSlider.frame
+        progressWaveFormView.frame = positionSlider.frame
 
+        displayWaveForm()
+    }
+    
+    func displayWaveForm() {
+        let waveformImageDrawer = WaveformImageDrawer()
+        if waveformURL == nil {
+            return
+        }
+        let waveformConfig = WaveformConfiguration(size: waveFormView.bounds.size, backgroundColor: .clear, style: .striped(.darkGray), position: .middle, scale: UIScreen.main.scale, paddingFactor: nil, stripeWidth: 5, stripeSpacing: 10, shouldAntialias: false)
+        waveformImageDrawer.waveformImage(fromAudioAt: waveformURL!,
+                                          with: waveformConfig) { image in
+            
+            DispatchQueue.main.async {
+                self.waveFormView.image = image
+            }
+        }
+        let progressWaveformConfig = WaveformConfiguration(size: waveFormView.bounds.size, backgroundColor: .clear, style: .striped(.darkPink), position: .middle, scale: UIScreen.main.scale, paddingFactor: nil, stripeWidth: 5, stripeSpacing: 10, shouldAntialias: false)
+        waveformImageDrawer.waveformImage(fromAudioAt: waveformURL!,
+                                          with: progressWaveformConfig) { image in
+            
+            // need to jump back to main queue
+            DispatchQueue.main.async {
+                self.progressWaveFormView.image = image
+            }
+        }
+    }
+    func updateProgressWaveform(_ progress: Double) {
+        let newWidth = Double(progressWaveFormView.width) * progress
+        
+        let maskLayer = CAShapeLayer()
+        let maskRect = CGRect(x: 0.0, y: 0.0, width: newWidth, height: Double(waveFormView.height))
+        let path = CGPath(rect: maskRect, transform: nil)
+        maskLayer.path = path
+
+        progressWaveFormView.layer.mask = maskLayer
     }
 }

@@ -168,6 +168,7 @@ class TabBarViewController: UITabBarController {
         nowPlayingVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
         nowPlayingVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
         nowPlayingVC.editCardView.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
+        nowPlayingVC.editCardView.positionSlider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
     }
     private func linkQueueVCButtonActions() {
         queueVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
@@ -276,6 +277,7 @@ class TabBarViewController: UITabBarController {
                     let timeLeft = (songDuration * (1 - slider.value)).rounded(.toNearestOrAwayFromZero)
                     nowPlayingVC.currentTimeLabel.text = TimeInterval(exactly: selectedTime)?.stringFromTimeInterval()
                     nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: timeLeft)?.stringFromTimeInterval()
+                    nowPlayingVC.editCardView.updateProgressWaveform(Double(slider.value))
                 break
                 default:
                     break
@@ -305,6 +307,9 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
             nowPlayingVC.progressBar.value = currentTime/duration
             nowPlayingVC.currentTimeLabel.text = TimeInterval(exactly: currentTime)?.stringFromTimeInterval()
             nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: duration-currentTime)?.stringFromTimeInterval()
+            nowPlayingVC.editCardView.positionSlider.value = currentTime/duration
+
+            nowPlayingVC.editCardView.updateProgressWaveform(Double(currentTime/duration))
         }
     }
     internal func updateDisplayedSong() {
@@ -332,6 +337,11 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
             miniPlayerView.artistLabel.text = artist
             nowPlayingVC.songTitleLabel.text = title
             nowPlayingVC.artistLabel.text = artist
+            let fileExtension = displayedSong!.fileExtension
+            
+            let url = LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).\(fileExtension)")
+
+            nowPlayingVC.editCardView.waveformURL = url
             
             let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
             if let imgData = imageData {

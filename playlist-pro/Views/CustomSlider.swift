@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CustomSingleSlider: UISlider {
+class CustomSlider: UISlider {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
