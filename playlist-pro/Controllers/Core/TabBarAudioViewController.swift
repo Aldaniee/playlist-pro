@@ -167,7 +167,7 @@ class TabBarViewController: UITabBarController {
         nowPlayingVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
         nowPlayingVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
         nowPlayingVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
-        nowPlayingVC.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
+        nowPlayingVC.editCardView.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
     }
     private func linkQueueVCButtonActions() {
         queueVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
@@ -299,7 +299,6 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
                 nowPlayingVC.progressBar.value = 0.0
                 nowPlayingVC.currentTimeLabel.text = "00:00"
                 nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: duration)?.stringFromTimeInterval()
-
                 return
             }
             miniPlayerView.progressBar.value = currentTime/duration
@@ -343,6 +342,7 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
                 miniPlayerView.albumCover.image = UIImage(systemName: "questionmark")
                 nowPlayingVC.albumCoverImageView.image = UIImage(systemName: "questionmark")
             }
+            
         } else {
             QueueManager.shared.suspend()
             displayedSong = nil

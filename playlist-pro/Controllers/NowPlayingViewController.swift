@@ -86,8 +86,8 @@ class NowPlayingViewController: UIViewController {
     }()
     
     
-    let progressBar: CustomSlider = {
-        let pBar = CustomSlider()
+    let progressBar: CustomSingleSlider = {
+        let pBar = CustomSingleSlider()
         pBar.tintColor = .darkPink
         pBar.backgroundColor = .clear
         pBar.minimumTrackTintColor = .darkPink

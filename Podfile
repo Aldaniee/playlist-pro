@@ -25,6 +25,7 @@ target 'playlist-pro' do
   pod 'Alamofire', '~> 5.2'
   pod "XCDYouTubeKit", "~> 2.15"
   pod 'MultiSlider'
+  pod 'SweeterSwift'
 
   target 'playlist-proTests' do
     inherit! :search_paths

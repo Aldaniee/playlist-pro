@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import MultiSlider
 
 class EditCardView: UIView {
 
@@ -57,25 +58,38 @@ class EditCardView: UIView {
         lbl.textAlignment = .center
         return lbl
     }()
-    let editSlider: CustomSlider = {
-        let pBar = CustomSlider()
-        pBar.tintColor = .darkPink
-        pBar.backgroundColor = .clear
-        pBar.minimumTrackTintColor = .darkPink
-        pBar.maximumTrackTintColor = .lightGray
-        let thumbView = UIImageView()
-        thumbView.backgroundColor = .darkPink
-        let editBarThumbHeight = CGFloat(60)
-        let editBarThumbWidth = CGFloat(3)
-        thumbView.frame = CGRect(x: 0,
-                                 y: editBarThumbWidth/2,
-                                 width: editBarThumbWidth,
-                                 height: editBarThumbHeight)
-        let thumbImage = UIGraphicsImageRenderer(bounds: thumbView.bounds).image { rendererContext in
-            thumbView.layer.render(in: rendererContext.cgContext)
+    let editSlider: MultiSlider = {
+        let slider = MultiSlider()
+        slider.orientation = .horizontal
+        slider.thumbCount = 3
+        
+        slider.tintColor = .darkPink
+        slider.backgroundColor = .clear
+        slider.valueLabelPosition = .bottom
+        slider.valueLabelColor = .darkPink
+        slider.valueLabelFont = .systemFont(ofSize: 12)
+        slider.outerTrackColor = .darkGray
+        slider.isValueLabelRelative = false
+
+        slider.tintColor = .clear // color of track
+
+        let endThumb = UIImageView()
+        endThumb.backgroundColor = .white
+        endThumb.frame = CGRect(x: 0, y: 80/2, width: 3, height: 80)
+        let endThumbImage = UIGraphicsImageRenderer(bounds: endThumb.bounds).image { rendererContext in
+            endThumb.layer.render(in: rendererContext.cgContext)
         }
-        pBar.setThumbImage(thumbImage, for: UIControl.State.normal)
-        return pBar
+        let currentPositionThumb = UIImageView()
+        currentPositionThumb.backgroundColor = .darkPink
+        currentPositionThumb.frame = CGRect(x: 0, y: 60/2, width: 3, height: 60)
+        let currentPositionThumbImage = UIGraphicsImageRenderer(bounds: currentPositionThumb.bounds).image { rendererContext in
+            currentPositionThumb.layer.render(in: rendererContext.cgContext)
+        }
+        slider.thumbViews[0].image = endThumbImage
+        slider.thumbViews[1].image = currentPositionThumbImage
+        slider.thumbViews[2].image = endThumbImage
+        
+        return slider
     }()
     let queueButtonSize = CGFloat(20)
     let editButtonSize = CGFloat(38)
@@ -98,7 +112,11 @@ class EditCardView: UIView {
         self.addSubview(editSliderLabel)
         self.addSubview(editSlider)
         self.addSubview(editButton)
-
+        editSlider.minimumValue = 0
+        editSlider.minimumValue = 100
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            self.editSlider.value = [2, 50, 100]
+        }
     }
     
     required init?(coder: NSCoder) {
@@ -136,5 +154,6 @@ class EditCardView: UIView {
             width: self.width-spacing,
             height: editBarHeight
         )
+
     }
 }
