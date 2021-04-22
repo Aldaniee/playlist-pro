@@ -346,11 +346,11 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
             let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
             if let imgData = imageData {
                 miniPlayerView.albumCover.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
-                nowPlayingVC.albumCoverImageView.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
+                nowPlayingVC.albumCoverImage = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
 
             } else {
                 miniPlayerView.albumCover.image = UIImage(systemName: "questionmark")
-                nowPlayingVC.albumCoverImageView.image = UIImage(systemName: "questionmark")
+                nowPlayingVC.albumCoverImage = UIImage(systemName: "questionmark")!
             }
             
         } else {

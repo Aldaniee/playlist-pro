@@ -11,6 +11,12 @@ class NowPlayingViewController: UIViewController {
     
     var hasSetPointOrigin = false
     var pointOrigin: CGPoint?
+    var albumCoverImage: UIImage = UIImage(){
+        didSet {
+            self.albumCoverImageView.image = albumCoverImage
+            self.backgroundAlbum.image = albumCoverImage
+        }
+    }
     var editMode = false {
         didSet {
             if editMode {
@@ -51,7 +57,6 @@ class NowPlayingViewController: UIViewController {
         view.alpha = 0.5
         return view
     }()
-    
     let blurView : UIVisualEffectView = {
         let vis = UIVisualEffectView(effect: UIBlurEffect(style: .light))
         vis.translatesAutoresizingMaskIntoConstraints = false
@@ -65,8 +70,24 @@ class NowPlayingViewController: UIViewController {
     }()
     let songControlPane: UIView = {
         let view = UIView()
-        view.backgroundColor = .blackGray
         return view
+    }()
+    let backgroundAlbum: UIImageView = {
+        let imgView = UIImageView()
+        imgView.layer.masksToBounds = true
+        imgView.contentMode = .scaleAspectFill
+        return imgView
+    }()
+    let grayOverlay: UIView = {
+        let view = UIView()
+        view.backgroundColor = .blackGray
+        view.alpha = 0.6
+        return view
+    }()
+    let blurOverlay: UIVisualEffectView = {
+        let vis = UIVisualEffectView(effect: UIBlurEffect(style: .systemMaterialDark))
+        vis.translatesAutoresizingMaskIntoConstraints = false
+        return vis
     }()
     let songTitleLabel: UILabel = {
         let lbl = UILabel()
@@ -210,6 +231,10 @@ class NowPlayingViewController: UIViewController {
         // MARK: Playback Display
         view.addSubview(albumCoverImageView)
         view.addSubview(songControlPane)
+        songControlPane.addSubview(backgroundAlbum)
+        songControlPane.addSubview(grayOverlay)
+        songControlPane.addSubview(blurOverlay)
+
         songControlPane.addSubview(songTitleLabel)
         songControlPane.addSubview(artistLabel)
         songTitleLabel.font = UIFont.boldSystemFont(ofSize: tabBarHeight)
@@ -244,6 +269,11 @@ class NowPlayingViewController: UIViewController {
             width: view.width,
             height: view.height
         )
+        grayOverlay.frame = songControlPane.bounds
+        blurOverlay.frame = songControlPane.bounds
+
+        backgroundAlbum.frame = songControlPane.bounds
+
         layoutTitles()
         
         progressBar.frame = CGRect(
