@@ -17,13 +17,13 @@ class NowPlayingViewController: UIViewController {
                 UIView.animate(withDuration: 0.25) {
                     self.songControlPane.transform = CGAffineTransform(translationX: 0, y: -250)
                     self.albumCoverImageView.transform = CGAffineTransform(translationX: 0, y: -50)
-                    self.editButtonImageView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
+                    self.editCardView.editButtonImageView.transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi))
                     self.progressBar.alpha = 0.0
                     self.timeLeftLabel.alpha = 0.0
                     self.currentTimeLabel.alpha = 0.0
                     
                     self.playbackControls.transform = CGAffineTransform(translationX: 0, y: -50)
-                    self.editCard.transform = CGAffineTransform(translationX: 0, y: -80)
+                    self.editCardView.transform = CGAffineTransform(translationX: 0, y: -80)
 
                 }
             }
@@ -31,13 +31,13 @@ class NowPlayingViewController: UIViewController {
                 UIView.animate(withDuration: 0.25) {
                     self.songControlPane.transform = CGAffineTransform(translationX: 0, y: 0)
                     self.albumCoverImageView.transform = CGAffineTransform(translationX: 0, y: 0)
-                    self.editButtonImageView.transform = CGAffineTransform(rotationAngle: 0)
+                    self.editCardView.editButtonImageView.transform = CGAffineTransform(rotationAngle: 0)
                     self.progressBar.alpha = 1.0
                     self.timeLeftLabel.alpha = 1.0
                     self.currentTimeLabel.alpha = 1.0
                     
                     self.playbackControls.transform = CGAffineTransform(translationX: 0, y: 0)
-                    self.editCard.transform = CGAffineTransform(translationX: 0, y: 0)
+                    self.editCardView.transform = CGAffineTransform(translationX: 0, y: 0)
 
                 }
             }
@@ -170,68 +170,7 @@ class NowPlayingViewController: UIViewController {
         return btn
     }()
     // MARK: Edit Card
-    let editCard = UIView()
-    let queueButton: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        btn.imageView!.contentMode = .scaleAspectFit
-        btn.setImage(UIImage(systemName: "list.bullet"), for: UIControl.State.normal)
-        btn.tintColor = .white
-        return btn
-    }()
-    let editButton: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        btn.tintColor = .white
-        return btn
-    }()
-    let editButtonTextLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.numberOfLines = 0
-        lbl.text = "EDIT TRACK"
-        lbl.textAlignment = .center
-        lbl.backgroundColor = .clear
-        lbl.textColor = .white
-        return lbl
-    }()
-    
-    let editButtonImageView: UIImageView = {
-        let imgView = UIImageView()
-        let font = UIFont.boldSystemFont(ofSize: 999) // max size so the icon scales to the image frame
-        let configuration = UIImage.SymbolConfiguration(font: font)
-        imgView.image = UIImage(systemName: "chevron.up", withConfiguration: configuration)
-        imgView.tintColor = .darkPink
-        return imgView
-    }()
-    let editSliderLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.text = "Timeline"
-        lbl.numberOfLines = 0
-        lbl.backgroundColor = .clear
-        lbl.textColor = .white
-        lbl.textAlignment = .center
-        return lbl
-    }()
-    let editSlider: CustomSlider = {
-        let pBar = CustomSlider()
-        pBar.tintColor = .darkPink
-        pBar.backgroundColor = .clear
-        pBar.minimumTrackTintColor = .darkPink
-        pBar.maximumTrackTintColor = .lightGray
-        let thumbView = UIImageView()
-        thumbView.backgroundColor = .darkPink
-        let editBarThumbHeight = CGFloat(60)
-        let editBarThumbWidth = CGFloat(3)
-        thumbView.frame = CGRect(x: 0,
-                                 y: editBarThumbWidth/2,
-                                 width: editBarThumbWidth,
-                                 height: editBarThumbHeight)
-        let thumbImage = UIGraphicsImageRenderer(bounds: thumbView.bounds).image { rendererContext in
-            thumbView.layer.render(in: rendererContext.cgContext)
-        }
-        pBar.setThumbImage(thumbImage, for: UIControl.State.normal)
-        return pBar
-    }()
+    let editCardView = EditCardView(frame: .zero)
     
     /*let playbackRateButton: UIButton = {
         let btn = UIButton()
@@ -255,12 +194,6 @@ class NowPlayingViewController: UIViewController {
     let progressBarHeight = CGFloat(5)
     let timeLabelSize = CGFloat(10)
     let timeLabelScaleConstant = CGFloat(3.5)
-    // MARK: Edit Bar
-    let queueButtonSize = CGFloat(20)
-    let editButtonSize = CGFloat(38)
-    let editButtonTextSize = CGFloat(18)
-    let editButtonImageViewSize = CGFloat(10)
-    let editBarHeight = CGFloat(60)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -295,22 +228,9 @@ class NowPlayingViewController: UIViewController {
         playbackControls.addSubview(previousButton)
         playbackControls.addSubview(nextButton)
         
-        songControlPane.addSubview(editCard)
+        songControlPane.addSubview(editCardView)
         songControlPane.addSubview(playbackControls)
-
-        // MARK: Edit Card
-        editCard.addSubview(queueButton)
         
-        // Edit button
-        editButton.addSubview(editButtonTextLabel)
-        editButtonTextLabel.font = UIFont.systemFont(ofSize: editButtonTextSize)
-        editButton.addSubview(editButtonImageView)
-        editButton.addTarget(self, action: #selector(editButtonAction), for: .touchUpInside)
-        editCard.addSubview(editSliderLabel)
-        editCard.addSubview(editSlider)
-        //editSlider.setThumbImage(thumbImage, for: UIControl.State.normal)
-        editCard.addSubview(editButton)
-
         albumCoverImageView.frame = CGRect(
             x: -50,
             y: 0,
@@ -359,41 +279,12 @@ class NowPlayingViewController: UIViewController {
         let playbackControlsToEditCard = CGFloat(60)
         
         // MARK: Edit Card
-        editCard.frame = CGRect(
+        editCardView.editButton.addTarget(self, action: #selector(editButtonAction), for: .touchUpInside)
+        editCardView.frame = CGRect(
             x: 0,
             y: playbackControls.bottom + playbackControlsToEditCard,
             width: view.width,
             height: songControlPane.height-playbackControls.bottom+playbackControlsToEditCard
-        )
-        queueButton.frame = CGRect(x: edgePadding,
-                                   y: editButtonSize/2-queueButtonSize/2,
-                                   width: queueButtonSize,
-                                   height: queueButtonSize)
-        let editButtonWidth = editButtonSize*3.5
-        editButton.frame = CGRect(x: editCard.center.x-editButtonWidth/2,
-                                  y: 0,
-                                  width: editButtonWidth,
-                                  height: editButtonSize)
-        editButtonTextLabel.frame = CGRect(x: 0,
-                                           y: 0,
-                                           width: editButtonWidth,
-                                           height: editButtonTextSize)
-        let editButtonImageViewWidth = editButtonImageViewSize*1.5
-        editButtonImageView.frame = CGRect(x: editButtonWidth/2-editButtonImageViewWidth/2,
-                                           y: editButtonTextLabel.bottom + spacing/4,
-                                           width: editButtonImageViewWidth,
-                                           height: editButtonImageViewSize)
-        editSliderLabel.frame = CGRect(
-            x: edgePadding,
-            y: editButton.bottom + spacing,
-            width: view.width-spacing,
-            height: artistLabelHeight
-        )
-        editSlider.frame = CGRect(
-            x: edgePadding,
-            y: editSliderLabel.bottom + spacing,
-            width: view.width-spacing,
-            height: editBarHeight
         )
     }
     private func layoutTitles() {
@@ -474,15 +365,4 @@ class NowPlayingViewController: UIViewController {
             }
         }
     }
-    /*private func addPlaybackRateButton() {
-        playbackRateButton.addTarget(self, action: #selector(playbackRateButtonAction), for: .touchUpInside)
-        songControlView.addSubview(playbackRateButton)
-        playbackRateButton.translatesAutoresizingMaskIntoConstraints = false
-        playbackRateButton.leadingAnchor.constraint(equalTo: timeLeftLabel.trailingAnchor, constant: 2.5).isActive = true
-        playbackRateButton.trailingAnchor.constraint(equalTo: songControlView.trailingAnchor, constant: -2.5).isActive = true
-        playbackRateButton.centerYAnchor.constraint(equalTo: songControlView.centerYAnchor).isActive = true
-        playbackRateButton.heightAnchor.constraint(equalTo: songControlView.heightAnchor).isActive = true
-
-    }*/
-
 }

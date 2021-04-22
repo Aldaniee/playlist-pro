@@ -1,5 +1,6 @@
 PODS:
   - Alamofire (5.2.2)
+  - AvailableHapticFeedback (1.0.2)
   - CodableFirebase (0.2.1)
   - Firebase/Analytics (7.3.0):
     - Firebase/Core
@@ -89,6 +90,9 @@ PODS:
     - GoogleUtilities/Logger
   - GTMSessionFetcher/Core (1.5.0)
   - leveldb-library (1.22)
+  - MultiSlider (1.11.2):
+    - AvailableHapticFeedback
+    - SweeterSwift
   - nanopb (2.30906.0):
     - nanopb/decode (= 2.30906.0)
     - nanopb/encode (= 2.30906.0)
@@ -98,6 +102,7 @@ PODS:
   - SDWebImage (5.9.4):
     - SDWebImage/Core (= 5.9.4)
   - SDWebImage/Core (5.9.4)
+  - SweeterSwift (1.1.4)
   - XCDYouTubeKit (2.15.0)
 
 DEPENDENCIES:
@@ -109,12 +114,14 @@ DEPENDENCIES:
   - Firebase/Crashlytics
   - Firebase/Database
   - Firebase/Storage
+  - MultiSlider
   - SDWebImage
   - XCDYouTubeKit (~> 2.15)
 
 SPEC REPOS:
   trunk:
     - Alamofire
+    - AvailableHapticFeedback
     - CodableFirebase
     - Firebase
     - FirebaseAnalytics
@@ -130,13 +137,16 @@ SPEC REPOS:
     - GoogleUtilities
     - GTMSessionFetcher
     - leveldb-library
+    - MultiSlider
     - nanopb
     - PromisesObjC
     - SDWebImage
+    - SweeterSwift
     - XCDYouTubeKit
 
 SPEC CHECKSUMS:
   Alamofire: 814429acc853c6c54ff123fc3d2ef66803823ce0
+  AvailableHapticFeedback: 9b21b9f6d3e4566015988b5de35b40abefe6c09a
   CodableFirebase: 0bf201991eeec35eb9fcd987d271ea463cf34a80
   Firebase: 26223c695fe322633274198cb19dca8cb7e54416
   FirebaseAnalytics: 2580c2d62535ae7b644143d48941fcc239ea897a
@@ -152,11 +162,13 @@ SPEC CHECKSUMS:
   GoogleUtilities: 3dc4ff0d5e4840e2fa8eef0889620e8c33d4218c
   GTMSessionFetcher: b3503b20a988c4e20cc189aa798fd18220133f52
   leveldb-library: 55d93ee664b4007aac644a782d11da33fba316f7
+  MultiSlider: 944d00877d371bbb5ce0a512fec517de87958775
   nanopb: 1bf24dd71191072e120b83dd02d08f3da0d65e53
   PromisesObjC: 8c196f5a328c2cba3e74624585467a557dcb482f
   SDWebImage: b69257f4ab14e9b6a2ef53e910fdf914d8f757c1
+  SweeterSwift: 8a90cf3156f5a1b6f39785c479369a16633b5ea9
   XCDYouTubeKit: c6747c622dd0b52c9e668c028f68097eeffaea39
 
-PODFILE CHECKSUM: aa6820a6a933b108efd9f2aa384a927983796d78
+PODFILE CHECKSUM: 8f223f77133eb95e7294520625c959676ae9249a
 
 COCOAPODS: 1.10.0

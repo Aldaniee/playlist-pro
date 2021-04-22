@@ -31,6 +31,7 @@
 		EA96633425E9647700C8254C /* RepeatType.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA96633325E9647700C8254C /* RepeatType.swift */; };
 		EA96634B25F161BC00C8254C /* PlaylistsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA96634A25F161BC00C8254C /* PlaylistsManager.swift */; };
 		EA9D945025938AA80057493D /* AuthSplashScreenViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA9D944F25938AA80057493D /* AuthSplashScreenViewController.swift */; };
+		EAA57CCC2631D0EC00BBB35D /* EditCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAA57CCB2631D0EC00BBB35D /* EditCardView.swift */; };
 		EABA043525B731AC000BF883 /* SpotifyImportViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */; };
 		EAC06DD425DC1CA300E86162 /* PlaylistContentsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06DD325DC1CA300E86162 /* PlaylistContentsViewController.swift */; };
 		EAC06DE525DC1D4F00E86162 /* TabBarViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC06DE425DC1D4F00E86162 /* TabBarViewController.swift */; };
@@ -121,6 +122,7 @@
 		EA96633325E9647700C8254C /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
 		EA96634A25F161BC00C8254C /* PlaylistsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsManager.swift; sourceTree = "<group>"; };
 		EA9D944F25938AA80057493D /* AuthSplashScreenViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSplashScreenViewController.swift; sourceTree = "<group>"; };
+		EAA57CCB2631D0EC00BBB35D /* EditCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditCardView.swift; sourceTree = "<group>"; };
 		EABA043425B731AC000BF883 /* SpotifyImportViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyImportViewController.swift; sourceTree = "<group>"; };
 		EAC06DD325DC1CA300E86162 /* PlaylistContentsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistContentsViewController.swift; sourceTree = "<group>"; };
 		EAC06DE425DC1D4F00E86162 /* TabBarViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarViewController.swift; sourceTree = "<group>"; };
@@ -242,6 +244,7 @@
 				EA82A552261247470045D2D6 /* TableViewCells */,
 				EA0558BB25B1191700B1FF85 /* MiniPlayerView.swift */,
 				EA64603A25FBBE4300B73769 /* CustomSlider.swift */,
+				EAA57CCB2631D0EC00BBB35D /* EditCardView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -711,6 +714,7 @@
 				EADD213C26052523002AA641 /* SpotifyPlaylistCell.swift in Sources */,
 				EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */,
 				EAC06E0725DC356B00E86162 /* Playlist.swift in Sources */,
+				EAA57CCC2631D0EC00BBB35D /* EditCardView.swift in Sources */,
 				EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */,
 				EA0558BE25B1191700B1FF85 /* MiniPlayerView.swift in Sources */,
 				EADD2103260500ED002AA641 /* APIImage.swift in Sources */,
