@@ -49,7 +49,7 @@ class EditCardView: UIView {
         imgView.tintColor = .darkPink
         return imgView
     }()
-    let editSliderLabel: UILabel = {
+    let timelineLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "Timeline"
         lbl.numberOfLines = 0
@@ -96,6 +96,96 @@ class EditCardView: UIView {
         let img = UIImageView()
         return img
     }()
+    let startLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "Start"
+        lbl.font = .systemFont(ofSize: 12)
+        lbl.textColor = .gray
+        return lbl
+    }()
+    let startTimeLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "0:00"
+        lbl.font = .systemFont(ofSize: 12)
+        lbl.textColor = .gray
+        return lbl
+    }()
+    let endLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "End"
+        lbl.textAlignment = .right
+        lbl.font = .systemFont(ofSize: 12)
+        lbl.textColor = .gray
+        return lbl
+    }()
+    let endTimeLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "0:00"
+        lbl.textAlignment = .right
+        lbl.font = .systemFont(ofSize: 12)
+        lbl.textColor = .gray
+        return lbl
+    }()
+    let editTransitionsLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "Edit Transitions"
+        lbl.numberOfLines = 0
+        lbl.backgroundColor = .clear
+        lbl.textColor = .white
+        lbl.textAlignment = .center
+        return lbl
+    }()
+    
+    let startTransitionButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("Start Transition", for: .normal)
+        btn.titleLabel!.font = .systemFont(ofSize: 14)
+        btn.titleLabel!.textColor = .white
+        btn.contentHorizontalAlignment = .right
+        return btn
+    }()
+    
+    let endTransitionButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("End Transition", for: .normal)
+        btn.titleLabel!.font = .systemFont(ofSize: 14)
+        btn.titleLabel!.textColor = .white
+        btn.contentHorizontalAlignment = .left
+        return btn
+    }()
+    
+    let fadeButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("Fade", for: .normal)
+        btn.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+        btn.titleLabel!.font = .systemFont(ofSize: 12)
+        btn.layer.masksToBounds = true
+        btn.layer.cornerRadius = 5
+        btn.titleLabel!.textColor = .white
+        return btn
+    }()
+    
+    let crossFadeButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("Cross-fade", for: .normal)
+        btn.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+        btn.titleLabel!.font = .systemFont(ofSize: 12)
+        btn.layer.masksToBounds = true
+        btn.layer.cornerRadius = 5
+        btn.titleLabel!.textColor = .white
+        return btn
+    }()
+    
+    let cutButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("Cut", for: .normal)
+        btn.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+        btn.titleLabel!.font = .systemFont(ofSize: 12)
+        btn.layer.masksToBounds = true
+        btn.layer.cornerRadius = 5
+        btn.titleLabel!.textColor = .white
+        return btn
+    }()
     
     let queueButtonSize = CGFloat(20)
     let editButtonSize = CGFloat(38)
@@ -105,6 +195,8 @@ class EditCardView: UIView {
     let spacing: CGFloat = 40
     let edgePadding: CGFloat = 20 // spacing/2
     let editLabelHeight = CGFloat(14)
+    let startEndTransitionButtonHeight: CGFloat = 12
+    let transitionButtonHeight: CGFloat = 20
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -113,13 +205,25 @@ class EditCardView: UIView {
         
         // Edit button
         editButton.addSubview(editButtonTextLabel)
-        editButtonTextLabel.font = UIFont.systemFont(ofSize: editButtonTextSize)
+        editButtonTextLabel.font = .systemFont(ofSize: editButtonTextSize)
         editButton.addSubview(editButtonImageView)
-        self.addSubview(editSliderLabel)
+        self.addSubview(timelineLabel)
         self.addSubview(editButton)
         self.addSubview(waveFormView)
         self.addSubview(progressWaveFormView)
         self.addSubview(positionSlider)
+        
+        self.addSubview(startLabel)
+        self.addSubview(startTimeLabel)
+        self.addSubview(endLabel)
+        self.addSubview(endTimeLabel)
+        
+        self.addSubview(editTransitionsLabel)
+        self.addSubview(startTransitionButton)
+        self.addSubview(endTransitionButton)
+        self.addSubview(fadeButton)
+        self.addSubview(crossFadeButton)
+        self.addSubview(cutButton)
 
     }
     required init?(coder: NSCoder) {
@@ -127,10 +231,6 @@ class EditCardView: UIView {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-        queueButton.frame = CGRect(x: edgePadding,
-                                   y: editButtonSize/2-queueButtonSize/2,
-                                   width: queueButtonSize,
-                                   height: queueButtonSize)
         let editButtonWidth = editButtonSize*3.5
         editButton.frame = CGRect(x: self.center.x-editButtonWidth/2,
                                   y: 0,
@@ -145,7 +245,11 @@ class EditCardView: UIView {
                                            y: editButtonTextLabel.bottom + spacing/4,
                                            width: editButtonImageViewWidth,
                                            height: editButtonImageViewSize)
-        editSliderLabel.frame = CGRect(
+        queueButton.frame = CGRect(x: edgePadding,
+                                   y: editButtonTextSize/2-queueButtonSize/2,
+                                   width: queueButtonSize,
+                                   height: queueButtonSize)
+        timelineLabel.frame = CGRect(
             x: edgePadding,
             y: editButton.bottom + spacing,
             width: self.width-spacing,
@@ -153,13 +257,74 @@ class EditCardView: UIView {
         )
         positionSlider.frame = CGRect(
             x: edgePadding,
-            y: editSliderLabel.bottom + spacing/2,
+            y: timelineLabel.bottom + spacing/4,
             width: self.width-spacing,
             height: sliderHeight
         )
         waveFormView.frame = positionSlider.frame
         progressWaveFormView.frame = positionSlider.frame
 
+        startLabel.frame = CGRect(
+            x: waveFormView.left,
+            y: waveFormView.bottom,
+            width: 30,
+            height: 15
+        )
+        endLabel.frame = CGRect(
+            x: waveFormView.right - 30,
+            y: startLabel.top,
+            width: 30,
+            height: 15
+        )
+        startTimeLabel.frame = CGRect(
+            x: waveFormView.left,
+            y: endLabel.bottom + 3,
+            width: 30,
+            height: 15
+        )
+        endTimeLabel.frame = CGRect(
+            x: waveFormView.right - 30,
+            y: startTimeLabel.top,
+            width: 30,
+            height: 15
+        )
+        editTransitionsLabel.frame = CGRect(
+            x: edgePadding,
+            y: endTimeLabel.bottom,
+            width: self.width-spacing,
+            height: editLabelHeight
+        )
+        startTransitionButton.frame = CGRect(
+            x: 0,
+            y: editTransitionsLabel.bottom+10,
+            width: self.width/2-5,
+            height: transitionButtonHeight+3
+        )
+        endTransitionButton.frame = CGRect(
+            x: startTransitionButton.right+10,
+            y: editTransitionsLabel.bottom+10,
+            width: self.width/2-5,
+            height: transitionButtonHeight+3
+        )
+        crossFadeButton.frame = CGRect(
+            x: self.width/2-40,
+            y: endTransitionButton.bottom+5,
+            width: 80,
+            height: transitionButtonHeight
+        )
+        fadeButton.frame = CGRect(
+            x: crossFadeButton.left - 40 - 10,
+            y: endTransitionButton.bottom+5,
+            width: 40,
+            height: transitionButtonHeight
+        )
+        cutButton.frame = CGRect(
+            x: crossFadeButton.right + 10,
+            y: endTransitionButton.bottom+5,
+            width: 40,
+            height: transitionButtonHeight
+        )
+        
         displayWaveForm()
     }
     

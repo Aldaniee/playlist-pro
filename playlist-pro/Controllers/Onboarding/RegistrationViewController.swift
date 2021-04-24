@@ -9,6 +9,7 @@ import UIKit
 
 class RegistrationViewController: UIViewController {
     
+    private let backgroundButton = UIButton()
     private let logo: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "Login Logo")
@@ -63,7 +64,7 @@ class RegistrationViewController: UIViewController {
         let field = UITextField()
         field.isSecureTextEntry = true
         field.placeholder = "Password"
-        field.returnKeyType = .continue
+        field.returnKeyType = .next
         field.leftViewMode = .always
         field.leftView = UIView(frame: CGRect(x: 0, y: 0, width: 15, height: 0))
         field.autocapitalizationType = .none
@@ -105,6 +106,7 @@ class RegistrationViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        backgroundButton.frame = view.frame
         view.backgroundColor = .systemBackground
         title = "Create Account"
         emailField.delegate = self
@@ -112,7 +114,12 @@ class RegistrationViewController: UIViewController {
         repeatPasswordField.delegate = self
 
         addSubViews()
-
+        createAccount.addTarget(self,
+                                 action: #selector(didTapCreateAccount),
+                                 for: .touchUpInside)
+        backgroundButton.addTarget(self,
+                                 action: #selector(backgroundButtonAction),
+                                 for: .touchUpInside)
     }
     let fontSize = CGFloat(16)
     let logoSize = CGFloat(50)
@@ -189,24 +196,24 @@ class RegistrationViewController: UIViewController {
 
         
     }
-
-    
     private func addSubViews() {
-        view.addSubview(logo)
-        view.addSubview(appTitle)
-        view.addSubview(subTitle)
-        view.addSubview(emailTitle)
-        view.addSubview(emailField)
-        view.addSubview(passwordTitle)
-        view.addSubview(repeatPasswordTitle)
-        view.addSubview(passwordField)
-        view.addSubview(repeatPasswordField)
+        view.addSubview(backgroundButton)
+        backgroundButton.addSubview(logo)
+        backgroundButton.addSubview(appTitle)
+        backgroundButton.addSubview(subTitle)
+        backgroundButton.addSubview(emailTitle)
+        backgroundButton.addSubview(emailField)
+        backgroundButton.addSubview(passwordTitle)
+        backgroundButton.addSubview(repeatPasswordTitle)
+        backgroundButton.addSubview(passwordField)
+        backgroundButton.addSubview(repeatPasswordField)
 
-        view.addSubview(createAccount)
+        backgroundButton.addSubview(createAccount)
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        unTransform()
         if SpotifyAuthManager.shared.isSignedIn {
             SpotifyAPICaller.shared.getCurrentUserProfile { (result) in
                 switch result {
@@ -225,9 +232,6 @@ class RegistrationViewController: UIViewController {
             present(alert, animated: true, completion: nil)
         }
 
-        createAccount.addTarget(self,
-                                 action: #selector(didTapCreateAccount),
-                                 for: .touchUpInside)
         emailField.becomeFirstResponder()
 
     }
@@ -298,7 +302,23 @@ class RegistrationViewController: UIViewController {
                 }
             }
         }
-
+    }
+    @objc func backgroundButtonAction() {
+        unTransform()
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+        repeatPasswordField.resignFirstResponder()
+    }
+    
+    func unTransform() {
+        UIView.animate(withDuration: 0.2) {
+            self.backgroundButton.transform = .init(translationX: 0, y: 0)
+        }
+    }
+    func transform() {
+        UIView.animate(withDuration: 0.2) {
+            self.backgroundButton.transform = .init(translationX: 0, y: -140)
+        }
     }
 }
 
@@ -314,6 +334,14 @@ extension RegistrationViewController: UITextFieldDelegate {
             didTapCreateAccount()
         }
         return true
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == passwordField || textField == repeatPasswordField {
+            transform()
+        }
+        else {
+            unTransform()
+        }
     }
 }
 

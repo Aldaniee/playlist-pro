@@ -45,11 +45,6 @@ class SearchViewController: UIViewController, UITableViewDelegate, UISearchBarDe
         view.addSubview(tableView)
 
     }
-
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        searchBar.becomeFirstResponder()
-    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()

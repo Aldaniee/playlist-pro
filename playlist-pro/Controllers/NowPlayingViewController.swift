@@ -14,7 +14,7 @@ class NowPlayingViewController: UIViewController {
     var albumCoverImage: UIImage = UIImage(){
         didSet {
             self.albumCoverImageView.image = albumCoverImage
-            self.backgroundAlbum.image = albumCoverImage
+            self.backgroundAlbum.image = albumCoverImage.sd_rotatedImage(withAngle: CGFloat(Double.pi), fitSize: false)
         }
     }
     var editMode = false {
@@ -80,8 +80,8 @@ class NowPlayingViewController: UIViewController {
     }()
     let grayOverlay: UIView = {
         let view = UIView()
-        view.backgroundColor = .blackGray
-        view.alpha = 0.6
+        view.backgroundColor = .black
+        view.alpha = 0.5
         return view
     }()
     let blurOverlay: UIVisualEffectView = {

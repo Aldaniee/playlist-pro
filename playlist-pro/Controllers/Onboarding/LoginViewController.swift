@@ -10,6 +10,7 @@ import Foundation
 
 class LoginViewController: UIViewController {
 
+    private let backgroundButton = UIButton()
     private let logo: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "Login Logo")
@@ -97,12 +98,15 @@ class LoginViewController: UIViewController {
         emailField.delegate = self
         passwordField.delegate = self
         
+        backgroundButton.frame = view.frame
         addSubViews()
-        
         view.backgroundColor = .systemBackground
         
         loginButton.addTarget(self, action: #selector(didTapLoginButton), for: .touchUpInside)
         forgotPassword.addTarget(self, action: #selector(didTapForgotPassword), for: .touchUpInside)
+        backgroundButton.addTarget(self,
+                                 action: #selector(backgroundButtonAction),
+                                 for: .touchUpInside)
     }
     let fontSize = CGFloat(16)
     let logoSize = CGFloat(50)
@@ -111,6 +115,7 @@ class LoginViewController: UIViewController {
     let subTitleSize = CGFloat(14)
     let fieldSize = CGFloat(52)
     let fieldTitleSize = CGFloat(14)
+    
     override func viewDidLayoutSubviews() {
         logo.frame = CGRect(
             x: view.center.x-logoSize/2,
@@ -176,15 +181,16 @@ class LoginViewController: UIViewController {
 
     
     private func addSubViews() {
-        view.addSubview(logo)
-        view.addSubview(appTitle)
-        view.addSubview(subTitle)
-        view.addSubview(emailTitle)
-        view.addSubview(emailField)
-        view.addSubview(passwordTitle)
-        view.addSubview(passwordField)
-        view.addSubview(loginButton)
-        view.addSubview(forgotPassword)
+        view.addSubview(backgroundButton)
+        backgroundButton.addSubview(logo)
+        backgroundButton.addSubview(appTitle)
+        backgroundButton.addSubview(subTitle)
+        backgroundButton.addSubview(emailTitle)
+        backgroundButton.addSubview(emailField)
+        backgroundButton.addSubview(passwordTitle)
+        backgroundButton.addSubview(passwordField)
+        backgroundButton.addSubview(loginButton)
+        backgroundButton.addSubview(forgotPassword)
     }
     
     @objc private func didTapLoginButton() {
@@ -245,7 +251,21 @@ class LoginViewController: UIViewController {
     @objc private func didTapForgotPassword() {
 
     }
-    
+    @objc func backgroundButtonAction() {
+        unTransform()
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+    }
+    func unTransform() {
+        UIView.animate(withDuration: 0.2) {
+            self.backgroundButton.transform = .init(translationX: 0, y: 0)
+        }
+    }
+    func transform() {
+        UIView.animate(withDuration: 0.2) {
+            self.backgroundButton.transform = .init(translationX: 0, y: -80)
+        }
+    }
 }
 
 extension LoginViewController: UITextFieldDelegate {
@@ -257,5 +277,13 @@ extension LoginViewController: UITextFieldDelegate {
             didTapLoginButton()
         }
         return true
+    }
+    func textFieldDidBeginEditing(_ textField: UITextField) {
+        if textField == passwordField {
+            transform()
+        }
+        else {
+            unTransform()
+        }
     }
 }

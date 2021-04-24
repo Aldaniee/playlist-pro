@@ -49,6 +49,7 @@ class HomeViewController: UIViewController {
         btn.setTitle("All Music", for: .normal)
         btn.setTitleColor(.gray, for: .normal)
         btn.setTitleColor(.black, for: .selected)
+        btn.contentHorizontalAlignment = .center
         btn.isSelected = true
         return btn
     }()
@@ -57,6 +58,7 @@ class HomeViewController: UIViewController {
         btn.setTitle("Playlists", for: .normal)
         btn.setTitleColor(.gray, for: .normal)
         btn.setTitleColor(.black, for: .selected)
+        btn.contentHorizontalAlignment = .center
         btn.isSelected = false
         return btn
     }()
@@ -65,6 +67,7 @@ class HomeViewController: UIViewController {
         btn.setTitle("Songs", for: .normal)
         btn.setTitleColor(.gray, for: .normal)
         btn.setTitleColor(.black, for: .selected)
+        btn.contentHorizontalAlignment = .center
         btn.isSelected = false
         return btn
     }()
@@ -151,7 +154,7 @@ class HomeViewController: UIViewController {
         songsBtn.frame = CGRect(
             x: playlistsBtn.right,
             y: 0,
-            width: segmentedView.width/3,
+            width: segmentedView.width/3-20,
             height: segmentedView.height
         )
         searchBar.frame = CGRect(
