@@ -412,7 +412,7 @@ extension AVAsset {
 
         exportSession.outputFileType = .m4a
         exportSession.outputURL = url
-
+        
         exportSession.exportAsynchronously {
             switch exportSession.status {
             case .completed:
@@ -454,7 +454,7 @@ extension AVAsset {
             do {
                 // Add the current audio track at the beginning of
                 // the asset for the duration of the source AVAsset
-                try compositionTrack?.insertTimeRange(track.timeRange,
+                try compositionTrack!.insertTimeRange(track.timeRange,
                                                       of: track,
                                                       at: track.timeRange.start)
             } catch {

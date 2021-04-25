@@ -116,7 +116,6 @@ DEPENDENCIES:
   - Firebase/Storage
   - MultiSlider
   - SDWebImage
-  - SweeterSwift
   - XCDYouTubeKit (~> 2.15)
 
 SPEC REPOS:
@@ -170,6 +169,6 @@ SPEC CHECKSUMS:
   SweeterSwift: 8a90cf3156f5a1b6f39785c479369a16633b5ea9
   XCDYouTubeKit: c6747c622dd0b52c9e668c028f68097eeffaea39
 
-PODFILE CHECKSUM: 450e9819dceda8ec469efd0a9150a462b6834a2d
+PODFILE CHECKSUM: fbb2fd231b791b9531c2e5e4589b7f936ad1682f
 
 COCOAPODS: 1.10.0

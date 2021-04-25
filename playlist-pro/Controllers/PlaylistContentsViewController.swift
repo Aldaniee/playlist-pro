@@ -169,8 +169,10 @@ class PlaylistContentsViewController: UIViewController, UISearchBarDelegate {
         if self.playlist.title == "library" {
             self.titleLabel.text = LibraryManager.LIBRARY_DISPLAY
             self.coverImageView.image = UIImage(named: "all.songs.artwork")
+            self.optionsButton.isHidden = true
         }
         else {
+            self.optionsButton.isHidden = false
             self.titleLabel.text = self.playlist.title
             if let image = self.playlist.getImage() {
                 self.coverImageView.image = image.cropToSquare(sideLength: Double(coverArtSize))

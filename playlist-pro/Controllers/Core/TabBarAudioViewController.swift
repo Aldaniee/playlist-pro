@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import MultiSlider
 class TabBarViewController: UITabBarController {
     
     // Testing
@@ -168,7 +168,8 @@ class TabBarViewController: UITabBarController {
         nowPlayingVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
         nowPlayingVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
         nowPlayingVC.editCardView.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
-        nowPlayingVC.editCardView.positionSlider.addTarget(self, action: #selector(onSliderValChanged(slider:event:)), for: .valueChanged)
+        nowPlayingVC.editCardView.waveFormSlider.addTarget(self, action: #selector(multiSliderValChanged(slider:)), for: .valueChanged)
+        nowPlayingVC.editCardView.waveFormSlider.addTarget(self, action: #selector(multiSliderDragEnded(slider:)), for: .touchUpInside)
     }
     private func linkQueueVCButtonActions() {
         queueVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
@@ -254,7 +255,37 @@ class TabBarViewController: UITabBarController {
         QueueManager.shared.toggleRepeatType()
         updateRepeatButton()
     }
+    
+    @objc func multiSliderDragEnded(slider: MultiSlider) {
+        if slider.draggedThumbIndex == 1 {
+            QueueManager.shared.setPlayerCurrentTime(withPercentage: Float(slider.value[1]))
+            isProgressBarSliding = false
+            let songDuration = Float((nowPlayingVC.currentTimeLabel.text?.convertToTimeInterval())! + (nowPlayingVC.timeLeftLabel.text?.convertToTimeInterval())!)
+            let selectedTime = (songDuration * Float(slider.value[1])).rounded(.toNearestOrAwayFromZero)
+            let timeLeft = (songDuration * (1 - Float(slider.value[1]))).rounded(.toNearestOrAwayFromZero)
+            nowPlayingVC.currentTimeLabel.text = TimeInterval(exactly: selectedTime)?.stringFromTimeInterval()
+            nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: timeLeft)?.stringFromTimeInterval()
+            nowPlayingVC.editCardView.updateWaveforms(startCrop: slider.value[0], progress: slider.value[1], endCrop: slider.value[2])
+                
+            nowPlayingVC.editCardView.endTimeLabel.text = TimeInterval(exactly: songDuration)?.stringFromTimeInterval()
+        }
+    }
 
+    @objc func multiSliderValChanged(slider: MultiSlider) {
+        if slider.draggedThumbIndex == 1 {
+            isProgressBarSliding = true
+        }
+        else {
+            nowPlayingVC.editCardView.selectedCropThumbIndex = slider.draggedThumbIndex
+            let songDuration = Float((nowPlayingVC.currentTimeLabel.text?.convertToTimeInterval())! + (nowPlayingVC.timeLeftLabel.text?.convertToTimeInterval())!)
+            let selectedStartTime = (songDuration * Float(slider.value[0])).rounded(.toNearestOrAwayFromZero)
+            let selectedEndTime = (songDuration * Float(slider.value[2])).rounded(.toNearestOrAwayFromZero)
+            nowPlayingVC.editCardView.startTimeLabel.text = TimeInterval(exactly: selectedStartTime)?.stringFromTimeInterval()
+            nowPlayingVC.editCardView.endTimeLabel.text = TimeInterval(exactly: selectedEndTime)?.stringFromTimeInterval()
+        }
+        nowPlayingVC.editCardView.updateWaveforms(startCrop: slider.value[0], progress: slider.value[1], endCrop: slider.value[2])
+    }
+    
     @objc func onSliderValChanged(slider: UISlider, event: UIEvent) {
         if let touchEvent = event.allTouches?.first {
             switch touchEvent.phase {
@@ -277,7 +308,6 @@ class TabBarViewController: UITabBarController {
                     let timeLeft = (songDuration * (1 - slider.value)).rounded(.toNearestOrAwayFromZero)
                     nowPlayingVC.currentTimeLabel.text = TimeInterval(exactly: selectedTime)?.stringFromTimeInterval()
                     nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: timeLeft)?.stringFromTimeInterval()
-                    nowPlayingVC.editCardView.updateProgressWaveform(Double(slider.value))
                 break
                 default:
                     break
@@ -307,9 +337,10 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
             nowPlayingVC.progressBar.value = currentTime/duration
             nowPlayingVC.currentTimeLabel.text = TimeInterval(exactly: currentTime)?.stringFromTimeInterval()
             nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: duration-currentTime)?.stringFromTimeInterval()
-            nowPlayingVC.editCardView.positionSlider.value = currentTime/duration
+            nowPlayingVC.editCardView.waveFormSlider.value[1] = CGFloat(currentTime/duration)
 
-            nowPlayingVC.editCardView.updateProgressWaveform(Double(currentTime/duration))
+            let slider = nowPlayingVC.editCardView.waveFormSlider
+            nowPlayingVC.editCardView.updateWaveforms(startCrop: slider.value[0], progress: CGFloat(currentTime/duration), endCrop: slider.value[2])
         }
     }
     internal func updateDisplayedSong() {

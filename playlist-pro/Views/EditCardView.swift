@@ -6,8 +6,67 @@
 //
 
 import UIKit
+import MultiSlider
 
 class EditCardView: UIView {
+    
+    var selectedCropThumbIndex: Int! {
+        didSet {
+            if selectedCropThumbIndex == 0 {
+                waveFormSlider.thumbViews[0].image = EditCardView.selectedThumbImage
+                waveFormSlider.thumbViews[2].image = EditCardView.unselectedThumbImage
+                startTransitionButton.titleLabel!.textColor = .white
+                endTransitionButton.titleLabel!.textColor = .darkGray
+                startLabel.textColor = .white
+                startTimeLabel.textColor = .white
+                endLabel.textColor = .darkGray
+                endTimeLabel.textColor = .darkGray
+            }
+            else if selectedCropThumbIndex == 2 {
+                waveFormSlider.thumbViews[2].image = EditCardView.selectedThumbImage
+                waveFormSlider.thumbViews[0].image = EditCardView.unselectedThumbImage
+                endTransitionButton.titleLabel!.textColor = .white
+                startTransitionButton.titleLabel!.textColor = .darkGray
+                startLabel.textColor = .darkGray
+                startTimeLabel.textColor = .darkGray
+                endLabel.textColor = .white
+                endTimeLabel.textColor = .white
+            }
+            else {
+                waveFormSlider.thumbViews[2].image = EditCardView.unselectedThumbImage
+                waveFormSlider.thumbViews[0].image = EditCardView.unselectedThumbImage
+                endTransitionButton.titleLabel!.textColor = .white
+                startTransitionButton.titleLabel!.textColor = .white
+                print("Invalid index")
+            }
+        }
+    }
+    var selectedTransition: Int! {
+        didSet {
+            if selectedTransition == 0 {
+                fadeButton.backgroundColor = .darkPink
+                crossFadeButton.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+                cutButton.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+            }
+            else if selectedTransition == 1 {
+                crossFadeButton.backgroundColor = .darkPink
+                fadeButton.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+                cutButton.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+            }
+            else if selectedTransition == 2 {
+                cutButton.backgroundColor = .darkPink
+                fadeButton.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+                crossFadeButton.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+            }
+            else {
+                cutButton.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+                fadeButton.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+                crossFadeButton.backgroundColor = UIColor.gray.withAlphaComponent(0.4)
+                print("Invalid index")
+            }
+        }
+    }
+
     
     var waveformURL: URL?
     /*
@@ -58,7 +117,6 @@ class EditCardView: UIView {
         lbl.textAlignment = .center
         return lbl
     }()
-    
     static let currentPositionThumbImage: UIImage = {
         let currentPositionThumb = UIImageView()
         currentPositionThumb.backgroundColor = .clear
@@ -68,25 +126,39 @@ class EditCardView: UIView {
         }
         return currentPositionThumbImage
     }()
-    
-    static let endThumbImage: UIImage = {
+    static let unselectedThumbImage: UIImage = {
         let endThumb = UIImageView()
-        endThumb.backgroundColor = .white
-        endThumb.frame = CGRect(x: 0, y: 80/2, width: 3, height: 80)
+        endThumb.frame = CGRect(x: 0, y: 80/2, width: 10, height: 80)
+        endThumb.image = UIImage(named: "unselected.thumb")
         let endThumbImage = UIGraphicsImageRenderer(bounds: endThumb.bounds).image { rendererContext in
             endThumb.layer.render(in: rendererContext.cgContext)
         }
         return endThumbImage
     }()
-    
-    let positionSlider: CustomSlider = {
-        let slider = CustomSlider()
-        slider.tintColor = .clear
-        slider.backgroundColor = .clear
-        slider.minimumTrackTintColor = .clear
-        slider.maximumTrackTintColor = .clear
-        slider.setThumbImage(currentPositionThumbImage, for: UIControl.State.normal)
-        return slider
+    static let selectedThumbImage: UIImage = {
+        let endThumb = UIImageView()
+        endThumb.frame = CGRect(x: 0, y: 80/2, width: 10, height: 80)
+        endThumb.image = UIImage(named: "selected.thumb")
+        let endThumbImage = UIGraphicsImageRenderer(bounds: endThumb.bounds).image { rendererContext in
+            endThumb.layer.render(in: rendererContext.cgContext)
+        }
+        return endThumbImage
+    }()
+    let waveFormSlider: MultiSlider = {
+        let horizontalMultiSlider = MultiSlider()
+        horizontalMultiSlider.orientation = .horizontal
+        horizontalMultiSlider.minimumValue = 0
+        horizontalMultiSlider.maximumValue = 1
+        horizontalMultiSlider.outerTrackColor = .gray
+        horizontalMultiSlider.value = [0, 0.5, 1]
+        horizontalMultiSlider.valueLabelColor = .clear
+        horizontalMultiSlider.tintColor = .clear
+        horizontalMultiSlider.trackWidth = 0
+        horizontalMultiSlider.showsThumbImageShadow = false
+        horizontalMultiSlider.thumbViews[0].image = selectedThumbImage
+        horizontalMultiSlider.thumbViews[1].image = currentPositionThumbImage
+        horizontalMultiSlider.thumbViews[2].image = unselectedThumbImage
+        return horizontalMultiSlider
     }()
     let waveFormView: UIImageView = {
         let img = UIImageView()
@@ -96,18 +168,22 @@ class EditCardView: UIView {
         let img = UIImageView()
         return img
     }()
+    let cropWaveFormView: UIImageView = {
+        let img = UIImageView()
+        return img
+    }()
     let startLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "Start"
         lbl.font = .systemFont(ofSize: 12)
-        lbl.textColor = .gray
+        lbl.textColor = .darkGray
         return lbl
     }()
     let startTimeLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "0:00"
         lbl.font = .systemFont(ofSize: 12)
-        lbl.textColor = .gray
+        lbl.textColor = .darkGray
         return lbl
     }()
     let endLabel: UILabel = {
@@ -115,7 +191,7 @@ class EditCardView: UIView {
         lbl.text = "End"
         lbl.textAlignment = .right
         lbl.font = .systemFont(ofSize: 12)
-        lbl.textColor = .gray
+        lbl.textColor = .darkGray
         return lbl
     }()
     let endTimeLabel: UILabel = {
@@ -123,7 +199,7 @@ class EditCardView: UIView {
         lbl.text = "0:00"
         lbl.textAlignment = .right
         lbl.font = .systemFont(ofSize: 12)
-        lbl.textColor = .gray
+        lbl.textColor = .darkGray
         return lbl
     }()
     let editTransitionsLabel: UILabel = {
@@ -197,21 +273,27 @@ class EditCardView: UIView {
     let editLabelHeight = CGFloat(14)
     let startEndTransitionButtonHeight: CGFloat = 12
     let transitionButtonHeight: CGFloat = 20
-
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
+        selectedCropThumbIndex = 0
+        selectedTransition = 2
         // MARK: Edit Card
         self.addSubview(queueButton)
-        
         // Edit button
         editButton.addSubview(editButtonTextLabel)
         editButtonTextLabel.font = .systemFont(ofSize: editButtonTextSize)
         editButton.addSubview(editButtonImageView)
+        // Lower Card
         self.addSubview(timelineLabel)
         self.addSubview(editButton)
+        self.addSubview(cropWaveFormView)
         self.addSubview(waveFormView)
         self.addSubview(progressWaveFormView)
-        self.addSubview(positionSlider)
+        // Horizontal Sldier
+        self.addConstrainedSubview(waveFormSlider, constrain: .leftMargin, .rightMargin, .topMargin)
+
+        //self.addSubview(positionSlider)
         
         self.addSubview(startLabel)
         self.addSubview(startTimeLabel)
@@ -224,7 +306,12 @@ class EditCardView: UIView {
         self.addSubview(fadeButton)
         self.addSubview(crossFadeButton)
         self.addSubview(cutButton)
-
+        
+        startTransitionButton.addTarget(self, action: #selector(startTransitionAction), for: .touchUpInside)
+        endTransitionButton.addTarget(self, action: #selector(endTransitionAction), for: .touchUpInside)
+        fadeButton.addTarget(self, action: #selector(fadeAction), for: .touchUpInside)
+        crossFadeButton.addTarget(self, action: #selector(crossFadeAction), for: .touchUpInside)
+        cutButton.addTarget(self, action: #selector(cutAction), for: .touchUpInside)
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -255,37 +342,44 @@ class EditCardView: UIView {
             width: self.width-spacing,
             height: editLabelHeight
         )
-        positionSlider.frame = CGRect(
+        self.layoutMargins = UIEdgeInsets(
+            top: timelineLabel.bottom + spacing-10,
+            left: edgePadding-5,
+            bottom: 0,
+            right: edgePadding-5
+        )
+
+        cropWaveFormView.frame = CGRect(
             x: edgePadding,
             y: timelineLabel.bottom + spacing/4,
             width: self.width-spacing,
             height: sliderHeight
         )
-        waveFormView.frame = positionSlider.frame
-        progressWaveFormView.frame = positionSlider.frame
+        waveFormView.frame = cropWaveFormView.frame
+        progressWaveFormView.frame = waveFormView.frame
 
         startLabel.frame = CGRect(
             x: waveFormView.left,
             y: waveFormView.bottom,
-            width: 30,
+            width: 40,
             height: 15
         )
         endLabel.frame = CGRect(
-            x: waveFormView.right - 30,
+            x: waveFormView.right - 40,
             y: startLabel.top,
-            width: 30,
+            width: 40,
             height: 15
         )
         startTimeLabel.frame = CGRect(
             x: waveFormView.left,
             y: endLabel.bottom + 3,
-            width: 30,
+            width: 40,
             height: 15
         )
         endTimeLabel.frame = CGRect(
-            x: waveFormView.right - 30,
+            x: waveFormView.right - 40,
             y: startTimeLabel.top,
-            width: 30,
+            width: 40,
             height: 15
         )
         editTransitionsLabel.frame = CGRect(
@@ -333,6 +427,15 @@ class EditCardView: UIView {
         if waveformURL == nil {
             return
         }
+        let cropWaveformConfig = WaveformConfiguration(size: waveFormView.bounds.size, backgroundColor: .clear, style: .striped(.blackGray), position: .middle, scale: UIScreen.main.scale, paddingFactor: nil, stripeWidth: 5, stripeSpacing: 10, shouldAntialias: false)
+        waveformImageDrawer.waveformImage(fromAudioAt: waveformURL!,
+                                          with: cropWaveformConfig) { image in
+            
+            // need to jump back to main queue
+            DispatchQueue.main.async {
+                self.cropWaveFormView.image = image
+            }
+        }
         let waveformConfig = WaveformConfiguration(size: waveFormView.bounds.size, backgroundColor: .clear, style: .striped(.darkGray), position: .middle, scale: UIScreen.main.scale, paddingFactor: nil, stripeWidth: 5, stripeSpacing: 10, shouldAntialias: false)
         waveformImageDrawer.waveformImage(fromAudioAt: waveformURL!,
                                           with: waveformConfig) { image in
@@ -345,20 +448,45 @@ class EditCardView: UIView {
         waveformImageDrawer.waveformImage(fromAudioAt: waveformURL!,
                                           with: progressWaveformConfig) { image in
             
-            // need to jump back to main queue
             DispatchQueue.main.async {
                 self.progressWaveFormView.image = image
             }
         }
     }
-    func updateProgressWaveform(_ progress: Double) {
-        let newWidth = Double(progressWaveFormView.width) * progress
+    
+    func updateWaveforms(startCrop: CGFloat, progress: CGFloat, endCrop: CGFloat) {
+        let width = progressWaveFormView.width
         
-        let maskLayer = CAShapeLayer()
-        let maskRect = CGRect(x: 0.0, y: 0.0, width: newWidth, height: Double(waveFormView.height))
-        let path = CGPath(rect: maskRect, transform: nil)
-        maskLayer.path = path
+        let startCropX = startCrop * width
+        let progressWidth = width * progress - startCropX
+        
+        let progressRect = CGRect(x: startCropX, y: 0.0, width: progressWidth, height: waveFormView.height)
+        let progressLayer = CAShapeLayer()
+        progressLayer.path = CGPath(rect: progressRect, transform: nil)
+        progressWaveFormView.layer.mask = progressLayer
 
-        progressWaveFormView.layer.mask = maskLayer
+        let endCropX = endCrop * width
+        let baseX = startCropX + progressWidth
+        let baseWidth = endCropX - baseX
+        let baseRect = CGRect(x: baseX, y: 0.0, width: baseWidth, height: waveFormView.height)
+        let baseLayer = CAShapeLayer()
+        baseLayer.path = CGPath(rect: baseRect, transform: nil)
+        waveFormView.layer.mask = baseLayer
+    }
+    
+    @objc func startTransitionAction() {
+        selectedCropThumbIndex = 0
+    }
+    @objc func endTransitionAction() {
+        selectedCropThumbIndex = 2
+    }
+    @objc func fadeAction() {
+        selectedTransition = 0
+    }
+    @objc func crossFadeAction() {
+        selectedTransition = 1
+    }
+    @objc func cutAction() {
+        selectedTransition = 2
     }
 }

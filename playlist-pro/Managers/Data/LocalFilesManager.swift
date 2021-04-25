@@ -70,8 +70,9 @@ class LocalFilesManager {
 	}
 	
 	static func extractDurationForSong(songID: String, songExtension: String) -> String {
-		let asset = AVAsset(url: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).\(songExtension)"))
-		return TimeInterval(CMTimeGetSeconds(asset.duration)).stringFromTimeInterval()
+        let asset = AVAsset(url: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).\(songExtension)"))
+        
+        return TimeInterval(CMTimeGetSeconds(asset.duration)).stringFromTimeInterval()
 	}
 
 	static func extractSongMetadata(songID: String, songExtension: String) -> SongDict {
