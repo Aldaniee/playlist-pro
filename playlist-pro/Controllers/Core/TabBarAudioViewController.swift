@@ -100,6 +100,7 @@ class TabBarViewController: UITabBarController {
         
         linkMiniPlayerButtonActions()
         linkNowPlayingVCButtonActions()
+        linkEditCardViewButtonActions()
         linkQueueVCButtonActions()
         
         if testingMode {
@@ -167,16 +168,26 @@ class TabBarViewController: UITabBarController {
         nowPlayingVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
         nowPlayingVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
         nowPlayingVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
+    }
+    private func linkEditCardViewButtonActions() {
         nowPlayingVC.editCardView.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
         nowPlayingVC.editCardView.waveFormSlider.addTarget(self, action: #selector(multiSliderValChanged(slider:)), for: .valueChanged)
         nowPlayingVC.editCardView.waveFormSlider.addTarget(self, action: #selector(multiSliderDragEnded(slider:)), for: .touchUpInside)
+        nowPlayingVC.editCardView.applyCropButton.addTarget(self, action: #selector(cropAction), for: .touchUpInside)
     }
+
     private func linkQueueVCButtonActions() {
         queueVC.nextButton.addTarget(self, action: #selector(nextButtonAction), for: .touchUpInside)
         queueVC.pausePlayButton.addTarget(self, action: #selector(pausePlayButtonAction), for: .touchUpInside)
         queueVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
         queueVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
         queueVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
+    }
+    
+    @objc func cropAction() {
+        let song = QueueManager.shared.nowPlaying!
+        let playlist = QueueManager.shared.currentPlaylist!
+        PlaylistsManager.shared.updateCrop(song: song, playlist: playlist, startTime: nowPlayingVC.editCardView.tempStartTime.stringFromTimeInterval(), endTime: nowPlayingVC.editCardView.tempEndTime.stringFromTimeInterval())
     }
     
     @objc func downloadButtonAction() {
@@ -257,17 +268,24 @@ class TabBarViewController: UITabBarController {
     }
     
     @objc func multiSliderDragEnded(slider: MultiSlider) {
+        let songDuration = Float((nowPlayingVC.currentTimeLabel.text?.convertToTimeInterval())! + (nowPlayingVC.timeLeftLabel.text?.convertToTimeInterval())!)
         if slider.draggedThumbIndex == 1 {
             QueueManager.shared.setPlayerCurrentTime(withPercentage: Float(slider.value[1]))
             isProgressBarSliding = false
-            let songDuration = Float((nowPlayingVC.currentTimeLabel.text?.convertToTimeInterval())! + (nowPlayingVC.timeLeftLabel.text?.convertToTimeInterval())!)
             let selectedTime = (songDuration * Float(slider.value[1])).rounded(.toNearestOrAwayFromZero)
             let timeLeft = (songDuration * (1 - Float(slider.value[1]))).rounded(.toNearestOrAwayFromZero)
             nowPlayingVC.currentTimeLabel.text = TimeInterval(exactly: selectedTime)?.stringFromTimeInterval()
             nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: timeLeft)?.stringFromTimeInterval()
-            nowPlayingVC.editCardView.updateWaveforms(startCrop: slider.value[0], progress: slider.value[1], endCrop: slider.value[2])
-                
+            nowPlayingVC.progressBar.setValue(selectedTime, animated: false)
+
+            nowPlayingVC.editCardView.updateWaveforms(startCrop: nil, progress: slider.value[1], endCrop: nil)
             nowPlayingVC.editCardView.endTimeLabel.text = TimeInterval(exactly: songDuration)?.stringFromTimeInterval()
+        }
+        else {
+            nowPlayingVC.editCardView.tempStartTime = Double((Float(slider.value[0]) * songDuration).rounded(.toNearestOrAwayFromZero))
+            nowPlayingVC.editCardView.tempEndTime = Double((Float(slider.value[2]) * songDuration).rounded(.toNearestOrAwayFromZero))
+            nowPlayingVC.editCardView.updateWaveforms(startCrop: slider.value[0], progress: nil, endCrop: slider.value[2])
+            nowPlayingVC.editCardView.newCrop = true
         }
     }
 
@@ -308,6 +326,8 @@ class TabBarViewController: UITabBarController {
                     let timeLeft = (songDuration * (1 - slider.value)).rounded(.toNearestOrAwayFromZero)
                     nowPlayingVC.currentTimeLabel.text = TimeInterval(exactly: selectedTime)?.stringFromTimeInterval()
                     nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: timeLeft)?.stringFromTimeInterval()
+                    nowPlayingVC.editCardView.waveFormSlider.value[1] = CGFloat(selectedTime)
+                    nowPlayingVC.editCardView.updateWaveforms(startCrop: nil, progress: CGFloat(selectedTime), endCrop: nil)
                 break
                 default:
                     break
@@ -374,6 +394,9 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
 
             nowPlayingVC.editCardView.waveformURL = url
             
+            nowPlayingVC.editCardView.tempStartTime = displayedSong!.startTime.convertToTimeInterval()
+            nowPlayingVC.editCardView.tempEndTime = displayedSong!.endTime.convertToTimeInterval()
+            
             let imageData = try? Data(contentsOf: LocalFilesManager.getLocalFileURL(withNameAndExtension: "\(songID).jpg"))
             if let imgData = imageData {
                 miniPlayerView.albumCover.image = (UIImage(data: imgData) ?? UIImage()).cropToSquare(sideLength: Double(miniPlayerView.height))
@@ -401,6 +424,7 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
         miniPlayerView.progressBar.value = 0.0
         nowPlayingVC.progressBar.value = 0.0
         nowPlayingVC.timeLeftLabel.text = displayedSong?.duration ?? "0:00"
+
         queueVC.reloadTableView()
     }
     internal func audioPlayerPlayingStatusChanged(isPlaying: Bool) {

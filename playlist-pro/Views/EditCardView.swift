@@ -9,7 +9,8 @@ import UIKit
 import MultiSlider
 
 class EditCardView: UIView {
-    
+    var tempStartTime = 0.00
+    var tempEndTime = 1.00
     var selectedCropThumbIndex: Int! {
         didSet {
             if selectedCropThumbIndex == 0 {
@@ -66,6 +67,16 @@ class EditCardView: UIView {
             }
         }
     }
+    var newCrop = false {
+        didSet {
+            if newCrop {
+                applyCropButton.isHidden = false
+            }
+            else {
+                applyCropButton.isHidden = true
+            }
+        }
+    }
 
     
     var waveformURL: URL?
@@ -117,7 +128,16 @@ class EditCardView: UIView {
         lbl.textAlignment = .center
         return lbl
     }()
-    static let currentPositionThumbImage: UIImage = {
+    static let pinkThumbImage: UIImage = {
+        let currentPositionThumb = UIImageView()
+        currentPositionThumb.backgroundColor = .darkPink
+        currentPositionThumb.frame = CGRect(x: 0, y: 40/2, width: 3, height: 40)
+        let currentPositionThumbImage = UIGraphicsImageRenderer(bounds: currentPositionThumb.bounds).image { rendererContext in
+            currentPositionThumb.layer.render(in: rendererContext.cgContext)
+        }
+        return currentPositionThumbImage
+    }()
+    static let clearThumbImage: UIImage = {
         let currentPositionThumb = UIImageView()
         currentPositionThumb.backgroundColor = .clear
         currentPositionThumb.frame = CGRect(x: 0, y: 60/2, width: 3, height: 60)
@@ -156,7 +176,7 @@ class EditCardView: UIView {
         horizontalMultiSlider.trackWidth = 0
         horizontalMultiSlider.showsThumbImageShadow = false
         horizontalMultiSlider.thumbViews[0].image = selectedThumbImage
-        horizontalMultiSlider.thumbViews[1].image = currentPositionThumbImage
+        horizontalMultiSlider.thumbViews[1].image = clearThumbImage
         horizontalMultiSlider.thumbViews[2].image = unselectedThumbImage
         return horizontalMultiSlider
     }()
@@ -176,14 +196,14 @@ class EditCardView: UIView {
         let lbl = UILabel()
         lbl.text = "Start"
         lbl.font = .systemFont(ofSize: 12)
-        lbl.textColor = .darkGray
+        lbl.textColor = .white
         return lbl
     }()
     let startTimeLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "0:00"
         lbl.font = .systemFont(ofSize: 12)
-        lbl.textColor = .darkGray
+        lbl.textColor = .white
         return lbl
     }()
     let endLabel: UILabel = {
@@ -202,6 +222,19 @@ class EditCardView: UIView {
         lbl.textColor = .darkGray
         return lbl
     }()
+    
+    let applyCropButton: UIButton = {
+        let btn = UIButton()
+        btn.setTitle("Apply Crop", for: .normal)
+        btn.backgroundColor = .darkPink
+        btn.titleLabel!.font = .systemFont(ofSize: 12)
+        btn.layer.masksToBounds = true
+        btn.layer.cornerRadius = 5
+        btn.titleLabel!.textColor = .white
+        btn.isHidden = true
+        return btn
+    }()
+    
     let editTransitionsLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "Edit Transitions"
@@ -225,7 +258,7 @@ class EditCardView: UIView {
         let btn = UIButton()
         btn.setTitle("End Transition", for: .normal)
         btn.titleLabel!.font = .systemFont(ofSize: 14)
-        btn.titleLabel!.textColor = .white
+        btn.titleLabel!.textColor = .darkGray
         btn.contentHorizontalAlignment = .left
         return btn
     }()
@@ -262,7 +295,55 @@ class EditCardView: UIView {
         btn.titleLabel!.textColor = .white
         return btn
     }()
-    
+    let speedLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "Speed"
+        lbl.numberOfLines = 0
+        lbl.font = .systemFont(ofSize: 16)
+        lbl.backgroundColor = .clear
+        lbl.textColor = .white
+        lbl.textAlignment = .center
+        return lbl
+    }()
+    let changeBPMLabel: UILabel = {
+        let lbl = UILabel()
+        lbl.text = "Change song BPM"
+        lbl.numberOfLines = 0
+        lbl.backgroundColor = .clear
+        lbl.font = .systemFont(ofSize: 12)
+        lbl.textColor = .darkGray
+        lbl.textAlignment = .center
+        return lbl
+    }()
+    let bpmSlider: MultiSlider = {
+        let horizontalMultiSlider = MultiSlider()
+        horizontalMultiSlider.orientation = .horizontal
+        horizontalMultiSlider.minimumValue = 0.25
+        horizontalMultiSlider.maximumValue = 1.75
+        horizontalMultiSlider.value = [1.00]
+        horizontalMultiSlider.valueLabelColor = .darkPink
+        horizontalMultiSlider.valueLabelFont = .systemFont(ofSize: 12, weight: .medium)
+        horizontalMultiSlider.valueLabelPosition = .bottom
+        horizontalMultiSlider.valueLabelFormatter.positiveSuffix = "x"
+        horizontalMultiSlider.tintColor = .darkGray
+        horizontalMultiSlider.trackWidth = 5
+        horizontalMultiSlider.showsThumbImageShadow = false
+        horizontalMultiSlider.keepsDistanceBetweenThumbs = false
+        horizontalMultiSlider.thumbViews[0].image = pinkThumbImage
+        horizontalMultiSlider.snapStepSize = 0.125
+        return horizontalMultiSlider
+    }()
+    static let grayTickImageView: UIImageView = {
+        let grayTickImageView = UIImageView()
+        grayTickImageView.backgroundColor = .darkGray
+        return grayTickImageView
+    }()
+    let grayTickImageView1 = grayTickImageView.copyView()
+    let grayTickImageView2 = grayTickImageView.copyView()
+    let grayTickImageView3 = grayTickImageView.copyView()
+    let grayTickImageView4 = grayTickImageView.copyView()
+    let grayTickImageView5 = grayTickImageView.copyView()
+
     let queueButtonSize = CGFloat(20)
     let editButtonSize = CGFloat(38)
     let editButtonTextSize = CGFloat(18)
@@ -270,14 +351,13 @@ class EditCardView: UIView {
     let sliderHeight = CGFloat(85)
     let spacing: CGFloat = 40
     let edgePadding: CGFloat = 20 // spacing/2
-    let editLabelHeight = CGFloat(14)
+    let editLabelHeight: CGFloat = 14
     let startEndTransitionButtonHeight: CGFloat = 12
     let transitionButtonHeight: CGFloat = 20
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        selectedCropThumbIndex = 0
-        selectedTransition = 2
+
         // MARK: Edit Card
         self.addSubview(queueButton)
         // Edit button
@@ -290,28 +370,44 @@ class EditCardView: UIView {
         self.addSubview(cropWaveFormView)
         self.addSubview(waveFormView)
         self.addSubview(progressWaveFormView)
-        // Horizontal Sldier
+        // Sldier
         self.addConstrainedSubview(waveFormSlider, constrain: .leftMargin, .rightMargin, .topMargin)
-
-        //self.addSubview(positionSlider)
-        
         self.addSubview(startLabel)
         self.addSubview(startTimeLabel)
         self.addSubview(endLabel)
         self.addSubview(endTimeLabel)
-        
+        self.addSubview(applyCropButton)
+        // Transition Controls
         self.addSubview(editTransitionsLabel)
         self.addSubview(startTransitionButton)
         self.addSubview(endTransitionButton)
         self.addSubview(fadeButton)
         self.addSubview(crossFadeButton)
         self.addSubview(cutButton)
+        // Speed
+        self.addSubview(speedLabel)
+        self.addSubview(changeBPMLabel)
+        self.addSubview(bpmSlider)
+        bpmSlider.addSubview(grayTickImageView1)
+        bpmSlider.addSubview(grayTickImageView2)
+        bpmSlider.addSubview(grayTickImageView3)
+        bpmSlider.addSubview(grayTickImageView4)
+        bpmSlider.addSubview(grayTickImageView5)
+        bpmSlider.sendSubviewToBack(grayTickImageView1)
+        bpmSlider.sendSubviewToBack(grayTickImageView2)
+        bpmSlider.sendSubviewToBack(grayTickImageView3)
+        bpmSlider.sendSubviewToBack(grayTickImageView4)
+        bpmSlider.sendSubviewToBack(grayTickImageView5)
         
         startTransitionButton.addTarget(self, action: #selector(startTransitionAction), for: .touchUpInside)
         endTransitionButton.addTarget(self, action: #selector(endTransitionAction), for: .touchUpInside)
         fadeButton.addTarget(self, action: #selector(fadeAction), for: .touchUpInside)
         crossFadeButton.addTarget(self, action: #selector(crossFadeAction), for: .touchUpInside)
         cutButton.addTarget(self, action: #selector(cutAction), for: .touchUpInside)
+        applyCropButton.addTarget(self, action: #selector(cropAction), for: .touchUpInside)
+
+        selectedCropThumbIndex = 0
+        selectedTransition = 2
     }
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
@@ -382,6 +478,12 @@ class EditCardView: UIView {
             width: 40,
             height: 15
         )
+        applyCropButton.frame = CGRect(
+            x: self.width/2-40,
+            y: waveFormSlider.bottom,
+            width: 80,
+            height: transitionButtonHeight
+        )
         editTransitionsLabel.frame = CGRect(
             x: edgePadding,
             y: endTimeLabel.bottom,
@@ -418,7 +520,58 @@ class EditCardView: UIView {
             width: 40,
             height: transitionButtonHeight
         )
-        
+        speedLabel.frame = CGRect(
+            x: edgePadding,
+            y: cutButton.bottom+spacing,
+            width: self.width-spacing,
+            height: editLabelHeight
+        )
+        changeBPMLabel.frame = CGRect(
+            x: edgePadding,
+            y: speedLabel.bottom + spacing/4,
+            width: self.width-spacing,
+            height: editLabelHeight
+        )
+        bpmSlider.frame = CGRect(
+            x: edgePadding,
+            y: changeBPMLabel.bottom + spacing/4,
+            width: self.width-spacing,
+            height: 40
+        )
+        let offset = 30
+        let bpmSliderWidth = Int(bpmSlider.width) - offset
+        let tickWidth = 2
+        grayTickImageView1.frame = CGRect(
+            x: offset/2 - tickWidth,
+            y: 10,
+            width: tickWidth,
+            height: 20
+        )
+        grayTickImageView2.frame = CGRect(
+            x: offset/2 + bpmSliderWidth/4 - tickWidth,
+            y: 10,
+            width: tickWidth,
+            height: 20
+        )
+        grayTickImageView3.frame = CGRect(
+            x: offset/2 + bpmSliderWidth/2 - tickWidth/2,
+            y: 10,
+            width: tickWidth,
+            height: 20
+        )
+        grayTickImageView4.frame = CGRect(
+            x: offset/2 + bpmSliderWidth * 3/4 - tickWidth/2,
+            y: 10,
+            width: tickWidth,
+            height: 20
+        )
+        grayTickImageView5.frame = CGRect(
+            x: offset/2 + bpmSliderWidth,
+            y: 10,
+            width: tickWidth,
+            height: 20
+        )
+
         displayWaveForm()
     }
     
@@ -454,10 +607,14 @@ class EditCardView: UIView {
         }
     }
     
-    func updateWaveforms(startCrop: CGFloat, progress: CGFloat, endCrop: CGFloat) {
-        let width = progressWaveFormView.width
+    func updateWaveforms(startCrop: CGFloat?, progress prog: CGFloat?, endCrop: CGFloat?) {
+        let start = startCrop ?? waveFormSlider.value[0]
+        let progress = prog ?? waveFormSlider.value[1]
+        let end = endCrop ?? waveFormSlider.value[2]
         
-        let startCropX = startCrop * width
+        let width = cropWaveFormView.width
+        
+        let startCropX = start * width
         let progressWidth = width * progress - startCropX
         
         let progressRect = CGRect(x: startCropX, y: 0.0, width: progressWidth, height: waveFormView.height)
@@ -465,7 +622,7 @@ class EditCardView: UIView {
         progressLayer.path = CGPath(rect: progressRect, transform: nil)
         progressWaveFormView.layer.mask = progressLayer
 
-        let endCropX = endCrop * width
+        let endCropX = end * width
         let baseX = startCropX + progressWidth
         let baseWidth = endCropX - baseX
         let baseRect = CGRect(x: baseX, y: 0.0, width: baseWidth, height: waveFormView.height)
@@ -488,5 +645,8 @@ class EditCardView: UIView {
     }
     @objc func cutAction() {
         selectedTransition = 2
+    }
+    @objc func cropAction() {
+        newCrop = false
     }
 }

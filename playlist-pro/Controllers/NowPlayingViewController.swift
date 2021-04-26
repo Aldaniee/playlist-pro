@@ -27,9 +27,11 @@ class NowPlayingViewController: UIViewController {
                     self.progressBar.alpha = 0.0
                     self.timeLeftLabel.alpha = 0.0
                     self.currentTimeLabel.alpha = 0.0
-                    
+                    self.editCardView.editButton.alpha = 0.0
+                    self.editCardView.queueButton.alpha = 0.0
+
                     self.playbackControls.transform = CGAffineTransform(translationX: 0, y: -50)
-                    self.editCardView.transform = CGAffineTransform(translationX: 0, y: -80)
+                    self.editCardView.transform = CGAffineTransform(translationX: 0, y: -160)
 
                 }
             }
@@ -41,7 +43,9 @@ class NowPlayingViewController: UIViewController {
                     self.progressBar.alpha = 1.0
                     self.timeLeftLabel.alpha = 1.0
                     self.currentTimeLabel.alpha = 1.0
-                    
+                    self.editCardView.editButton.alpha = 1.0
+                    self.editCardView.queueButton.alpha = 1.0
+
                     self.playbackControls.transform = CGAffineTransform(translationX: 0, y: 0)
                     self.editCardView.transform = CGAffineTransform(translationX: 0, y: 0)
 
@@ -68,6 +72,7 @@ class NowPlayingViewController: UIViewController {
         imgView.layer.masksToBounds = true
         return imgView
     }()
+    let albumButton = UIButton()
     let songControlPane: UIView = {
         let view = UIView()
         return view
@@ -216,7 +221,9 @@ class NowPlayingViewController: UIViewController {
     let timeLabelSize = CGFloat(10)
     let timeLabelScaleConstant = CGFloat(3.5)
     
-    
+    @objc func albumButtonAction() {
+        editMode = false
+    }
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .blackGray
@@ -229,7 +236,10 @@ class NowPlayingViewController: UIViewController {
         }
         
         // MARK: Playback Display
+        view.addSubview(albumButton)
         view.addSubview(albumCoverImageView)
+        albumButton.addTarget(self, action: #selector(albumButtonAction), for: .touchUpInside)
+
         view.addSubview(songControlPane)
         songControlPane.addSubview(backgroundAlbum)
         songControlPane.addSubview(grayOverlay)
@@ -263,6 +273,7 @@ class NowPlayingViewController: UIViewController {
             width: view.width+100,
             height: view.width+100
         )
+        albumButton.frame = albumCoverImageView.frame
         songControlPane.frame = CGRect(
             x: 0,
             y: albumCoverImageView.bottom,

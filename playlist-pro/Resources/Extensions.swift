@@ -209,6 +209,9 @@ extension UIViewController {
 
 // MARK: UIView
 extension UIView {
+    func copyView<T: UIView>() -> T {
+        return NSKeyedUnarchiver.unarchiveObject(with: NSKeyedArchiver.archivedData(withRootObject: self)) as! T
+    }
     func rotate() {
         let rotation : CABasicAnimation = CABasicAnimation(keyPath: "transform.rotation.z")
         rotation.toValue = NSNumber(value: Double.pi * 2)

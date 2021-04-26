@@ -213,15 +213,13 @@ class YoutubeManager {
     }
     
     private func buildSongForLibrary(sID: String, videoID: String?, songUrl: URL, newExtension: String, songTitle: String?, artists: NSMutableArray) -> Song {
-        let duration = LocalFilesManager.extractDurationForSong(songID: sID, songExtension: newExtension)
         let link = videoID == nil ? songUrl.absoluteString : "https://www.youtube.com/embed/\(videoID ?? "UNKNOWN_ERROR")"
-        
         let songDict = [SongValues.id: sID,
                             SongValues.title: filterSongTitle(songTitle) ?? sID,
                             SongValues.artists: artists,
                             SongValues.album: "",
                             SongValues.releaseYear: "",
-                            SongValues.duration: duration,
+                            SongValues.duration: "0:00",
                             SongValues.lyrics: "",
                             SongValues.link: link,
                             SongValues.fileExtension: newExtension] as SongDict

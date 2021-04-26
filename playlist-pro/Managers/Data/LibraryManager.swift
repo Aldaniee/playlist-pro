@@ -142,4 +142,16 @@ class LibraryManager {
         }
         return nil
     }
+    func updateDuration(song: Song, duration: String) {
+        PlaylistsManager.shared.updateDuration(song: song, duration: duration)
+        for i in 0..<songLibrary.songList.count {
+            if song == songLibrary.songList[i] {
+                songLibrary.songList[i].duration = duration
+                songLibrary.songList[i].endTime = duration
+                storeLibrary()
+                return
+            }
+        }
+        print("ERROR: Song not found")
+    }
 }

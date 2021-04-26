@@ -155,5 +155,28 @@ class PlaylistsManager {
         }
         return uniqueTitle
     }
-
+    func updateDuration(song: Song, duration: String) {
+        for j in 0..<playlists.count {
+            for i in 0..<playlists[j].songList.count {
+                if song == playlists[j].songList[i] {
+                    playlists[j].songList[i].duration = duration
+                    playlists[j].songList[i].endTime = duration
+                }
+            }
+        }
+        savePlaylistsToStorage()
+    }
+    func updateCrop(song: Song, playlist: Playlist, startTime: String, endTime: String) {
+        for j in 0..<playlists.count {
+            if playlist.title == playlists[j].title {
+                for i in 0..<playlists[j].songList.count {
+                    if song == playlists[j].songList[i] {
+                        playlists[j].songList[i].startTime = startTime
+                        playlists[j].songList[i].endTime = endTime
+                    }
+                }
+            }
+        }
+        savePlaylistsToStorage()
+    }
 }

@@ -15,7 +15,10 @@ struct Song : Codable, Equatable{
     let artists: [String]
     let album: String?
     let releaseYear: String?
-    let duration: String
+    var duration: String
+    var startTime: String = "0:00"
+    var endTime: String
+
     let lyrics: String?
     let tags: [String]?
     
@@ -33,6 +36,7 @@ struct Song : Codable, Equatable{
         self.duration = duration
         self.lyrics = lyrics
         self.tags = tags
+        self.endTime = duration
     }
     static func == (lhs: Song, rhs: Song) -> Bool {
         return lhs.id == rhs.id

@@ -63,6 +63,10 @@ class YYTAudioPlayer: NSObject, AVAudioPlayerDelegate {
 			audioPlayer.delegate = self
 			audioPlayer.enableRate = true
 			audioPlayer.prepareToPlay()
+            // WORK AROUND BECAUSE I CAN ONLY GET REAL DURATION OF SONG FROM AUDIO PLAYER
+            if song.duration == "0:00" {
+                LibraryManager.shared.updateDuration(song: song, duration: audioPlayer.duration.stringFromTimeInterval())
+            }
 			setupNowPlaying()
 			delegate?.audioPlayerPlayingStatusChanged(isPlaying: false)
 			setPlayerRate(to: oldPlaybackRate)
