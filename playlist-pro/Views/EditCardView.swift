@@ -87,38 +87,6 @@ class EditCardView: UIView {
         // Drawing code
     }
     */
-    let queueButton: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        btn.imageView!.contentMode = .scaleAspectFit
-        btn.setImage(UIImage(systemName: "list.bullet"), for: UIControl.State.normal)
-        btn.tintColor = .white
-        return btn
-    }()
-    let editButton: UIButton = {
-        let btn = UIButton()
-        btn.backgroundColor = .clear
-        btn.tintColor = .white
-        return btn
-    }()
-    let editButtonTextLabel: UILabel = {
-        let lbl = UILabel()
-        lbl.numberOfLines = 0
-        lbl.text = "EDIT TRACK"
-        lbl.textAlignment = .center
-        lbl.backgroundColor = .clear
-        lbl.textColor = .white
-        return lbl
-    }()
-    
-    let editButtonImageView: UIImageView = {
-        let imgView = UIImageView()
-        let font = UIFont.boldSystemFont(ofSize: 999) // max size so the icon scales to the image frame
-        let configuration = UIImage.SymbolConfiguration(font: font)
-        imgView.image = UIImage(systemName: "chevron.up", withConfiguration: configuration)
-        imgView.tintColor = .darkPink
-        return imgView
-    }()
     let timelineLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = "Timeline"
@@ -292,7 +260,7 @@ class EditCardView: UIView {
         btn.titleLabel!.font = .systemFont(ofSize: 12)
         btn.layer.masksToBounds = true
         btn.layer.cornerRadius = 5
-        btn.titleLabel!.textColor = .white
+        btn.titleLabel!.textColor = .darkPink
         return btn
     }()
     let speedLabel: UILabel = {
@@ -344,10 +312,6 @@ class EditCardView: UIView {
     let grayTickImageView4 = grayTickImageView.copyView()
     let grayTickImageView5 = grayTickImageView.copyView()
 
-    let queueButtonSize = CGFloat(20)
-    let editButtonSize = CGFloat(38)
-    let editButtonTextSize = CGFloat(18)
-    let editButtonImageViewSize = CGFloat(10)
     let sliderHeight = CGFloat(85)
     let spacing: CGFloat = 40
     let edgePadding: CGFloat = 20 // spacing/2
@@ -359,14 +323,8 @@ class EditCardView: UIView {
         super.init(frame: frame)
 
         // MARK: Edit Card
-        self.addSubview(queueButton)
-        // Edit button
-        editButton.addSubview(editButtonTextLabel)
-        editButtonTextLabel.font = .systemFont(ofSize: editButtonTextSize)
-        editButton.addSubview(editButtonImageView)
         // Lower Card
         self.addSubview(timelineLabel)
-        self.addSubview(editButton)
         self.addSubview(cropWaveFormView)
         self.addSubview(waveFormView)
         self.addSubview(progressWaveFormView)
@@ -414,27 +372,9 @@ class EditCardView: UIView {
     }
     override func layoutSubviews() {
         super.layoutSubviews()
-        let editButtonWidth = editButtonSize*3.5
-        editButton.frame = CGRect(x: self.center.x-editButtonWidth/2,
-                                  y: 0,
-                                  width: editButtonWidth,
-                                  height: editButtonSize)
-        editButtonTextLabel.frame = CGRect(x: 0,
-                                           y: 0,
-                                           width: editButtonWidth,
-                                           height: editButtonTextSize)
-        let editButtonImageViewWidth = editButtonImageViewSize*1.5
-        editButtonImageView.frame = CGRect(x: editButtonWidth/2-editButtonImageViewWidth/2,
-                                           y: editButtonTextLabel.bottom + spacing/4,
-                                           width: editButtonImageViewWidth,
-                                           height: editButtonImageViewSize)
-        queueButton.frame = CGRect(x: edgePadding,
-                                   y: editButtonTextSize/2-queueButtonSize/2,
-                                   width: queueButtonSize,
-                                   height: queueButtonSize)
         timelineLabel.frame = CGRect(
             x: edgePadding,
-            y: editButton.bottom + spacing,
+            y: spacing,
             width: self.width-spacing,
             height: editLabelHeight
         )

@@ -168,9 +168,9 @@ class TabBarViewController: UITabBarController {
         nowPlayingVC.previousButton.addTarget(self, action: #selector(previousButtonAction), for: .touchUpInside)
         nowPlayingVC.shuffleButton.addTarget(self, action: #selector(shuffleButtonAction), for: .touchUpInside)
         nowPlayingVC.repeatButton.addTarget(self, action: #selector(repeatButtonAction), for: .touchUpInside)
+        nowPlayingVC.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
     }
     private func linkEditCardViewButtonActions() {
-        nowPlayingVC.editCardView.queueButton.addTarget(self, action: #selector(queueButtonAction), for: .touchUpInside)
         nowPlayingVC.editCardView.waveFormSlider.addTarget(self, action: #selector(multiSliderValChanged(slider:)), for: .valueChanged)
         nowPlayingVC.editCardView.waveFormSlider.addTarget(self, action: #selector(multiSliderDragEnded(slider:)), for: .touchUpInside)
         nowPlayingVC.editCardView.applyCropButton.addTarget(self, action: #selector(cropAction), for: .touchUpInside)
@@ -359,8 +359,7 @@ extension TabBarViewController: YYTAudioPlayerDelegate, QueueManagerDelegate {
             nowPlayingVC.timeLeftLabel.text = TimeInterval(exactly: duration-currentTime)?.stringFromTimeInterval()
             nowPlayingVC.editCardView.waveFormSlider.value[1] = CGFloat(currentTime/duration)
 
-            let slider = nowPlayingVC.editCardView.waveFormSlider
-            nowPlayingVC.editCardView.updateWaveforms(startCrop: slider.value[0], progress: CGFloat(currentTime/duration), endCrop: slider.value[2])
+            nowPlayingVC.editCardView.updateWaveforms(startCrop: nil, progress: CGFloat(currentTime/duration), endCrop: nil)
         }
     }
     internal func updateDisplayedSong() {
