@@ -8,7 +8,7 @@
 import UIKit
 import MediaPlayer
 
-protocol QueueManagerDelegate: class {
+protocol QueueManagerDelegate: AnyObject {
     func updateDisplayedSong()
     func audioPlayerPeriodicUpdate(currentTime: Float, duration: Float)
     func refreshQueueVC()
@@ -144,10 +144,24 @@ public class QueueManager: NSObject {
         else {
             var playingSongPlaylistIndex = 0
             if nowPlaying != nil {
-                playingSongPlaylistIndex = NSArray(array: currentPlaylist!.songList).index(of: nowPlaying!)
+                for i in 0..<currentPlaylist!.songList.count {
+                    let song = currentPlaylist!.songList[i]
+                    if song == nowPlaying! {
+                        playingSongPlaylistIndex = i
+                        break
+                    }
+                }
             }
+            print("Index of now playing: \(playingSongPlaylistIndex)")
             playlistQueue = NSMutableArray(array: currentPlaylist!.songList)
             moveQueueForward(to: playingSongPlaylistIndex)
+            for i in 0..<playlistQueue.count {
+                let song = playlistQueue[i] as! Song
+                if song == nowPlaying! {
+                    playlistQueue.removeObject(at: i)
+                    break
+                }
+            }
         }
     }
 	func moveQueueForward() {

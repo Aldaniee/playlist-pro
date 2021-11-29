@@ -7,7 +7,7 @@
 
 import UIKit
 import WebKit
-protocol CreatePlaylistDelegate: class {
+protocol CreatePlaylistDelegate: AnyObject {
     func reloadTableView()
 }
 

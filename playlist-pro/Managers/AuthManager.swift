@@ -12,7 +12,7 @@ public class AuthManager {
     static let shared = AuthManager()
         
     init() {
-        if Auth.auth().currentUser != nil {
+        if Auth.auth().currentUser != nil && Auth.auth().currentUser?.isAnonymous == false {
             LocalFilesManager.storeEmail(email: Auth.auth().currentUser!.email!)
         }
     }
@@ -29,7 +29,7 @@ public class AuthManager {
                     case .operationNotAllowed: break
                         // Error: The given sign-in provider is disabled for this Firebase project. Enable it in the Firebase console, under the sign-in method tab of the Auth section.
                         case .emailAlreadyInUse:
-                            print("email taken")
+                            print("email already in use")
                         // Error: The email address is already in use by another account.
                         case .invalidEmail:
                             print("invalid email address")

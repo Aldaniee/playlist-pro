@@ -151,7 +151,8 @@ class SongPlaylistOptionsViewController: UIViewController {
         self.titleLabel.text = playlist.title != "library" ? playlist.title : "Music"
         self.artistLabel.text = ""
         let albumSize = CGFloat(view.width - albumSpacing)
-        self.albumCoverImageView.image = ((playlist.title != "library" ? playlist.getImage() : UIImage(named: "all.songs.artwork"))!).cropToSquare(sideLength: Double(albumSize))
+        let playlistImage = playlist.getImage() ?? UIImage(systemName: "music.note.house")
+        self.albumCoverImageView.image = ((playlist.title != "library" ? playlistImage : UIImage(named: "all.songs.artwork"))!).cropToSquare(sideLength: Double(albumSize))
     }
     
     @objc func didTapAddToPlaylist() {

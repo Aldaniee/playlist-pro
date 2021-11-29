@@ -1,5 +1,5 @@
 # Uncomment the next line to define a global platform for your project
-platform :ios, '14.4'
+platform :ios, '15.0'
 
   post_install do |installer|
     installer.pods_project.targets.each do |target|
@@ -22,7 +22,7 @@ target 'playlist-pro' do
   pod 'Firebase/Crashlytics'
   pod 'Firebase/Storage'
   pod 'CodableFirebase'
-  pod 'Alamofire', '~> 5.2'
+  pod 'Alamofire', '~> 5.4'
   pod "XCDYouTubeKit", "~> 2.15"
   pod 'MultiSlider'
 

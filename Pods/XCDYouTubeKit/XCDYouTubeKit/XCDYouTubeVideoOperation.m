@@ -89,13 +89,27 @@ static NSError *YouTubeError(NSError *error, NSSet *regionsAllowed, NSString *la
 	_videoIdentifier = videoIdentifier ?: @"";
 	_languageIdentifier = languageIdentifier ?: @"en";
 	
-	_session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]];
+	NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
 	_cookies = [cookies copy];
 	_customPatterns = [customPatterns copy];
 	
 	for (NSHTTPCookie *cookie in _cookies) {
-		[_session.configuration.HTTPCookieStorage setCookie:cookie];
+		[configuration.HTTPCookieStorage setCookie:cookie];
 	}
+	
+	NSString *cookieValue = [NSString stringWithFormat:@"f1=50000000&f6=8&hl=%@", _languageIdentifier];
+	
+	NSHTTPCookie *additionalCookie = [NSHTTPCookie cookieWithProperties:@{
+																		NSHTTPCookiePath: @"/",
+																		NSHTTPCookieName: @"PREF",
+																		NSHTTPCookieValue: cookieValue,
+																		NSHTTPCookieDomain:@".youtube.com",
+																		NSHTTPCookieSecure:@"TRUE"
+	}];
+
+	[configuration.HTTPCookieStorage setCookie:additionalCookie];
+	configuration.HTTPAdditionalHeaders = @{@"User-Agent": @"Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.0 Safari/605.1.15"};
+	_session = [NSURLSession sessionWithConfiguration:configuration];
 	_operationStartSemaphore = dispatch_semaphore_create(0);
 	
 	return self;
@@ -199,6 +213,7 @@ static NSError *YouTubeError(NSError *error, NSSet *regionsAllowed, NSString *la
 	CFStringEncoding encoding = CFStringConvertIANACharSetNameToEncoding((__bridge CFStringRef)response.textEncodingName ?: CFSTR(""));
 	// Use kCFStringEncodingMacRoman as fallback because it defines characters for every byte value and is ASCII compatible. See https://mikeash.com/pyblog/friday-qa-2010-02-19-character-encodings.html
 	NSString *responseString = CFBridgingRelease(CFStringCreateWithBytes(kCFAllocatorDefault, data.bytes, (CFIndex)data.length, encoding != kCFStringEncodingInvalidId ? encoding : kCFStringEncodingMacRoman, false)) ?: @"";
+	
 	XCDYouTubeLogVerbose(@"Response: %@\n%@", response, responseString);
 	if ([(NSHTTPURLResponse *)response statusCode] == 429)
 	{
