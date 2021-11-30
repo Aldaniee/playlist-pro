@@ -132,7 +132,6 @@ extension UIViewController {
         titleLbl.frame = CGRect(x: titleLbl.frame.minX, y: 5,
                                 width: titleLbl.frame.width, height: titleLbl.frame.height)
 
-        
         DispatchQueue.main.async {
             boxView.addSubview(titleLbl)
             boxView.addSubview(pBar)

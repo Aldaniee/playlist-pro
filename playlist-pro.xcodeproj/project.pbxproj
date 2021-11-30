@@ -128,6 +128,7 @@
 		EA77F5CC2632107D00307717 /* WaveformImageTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WaveformImageTypes.swift; sourceTree = "<group>"; };
 		EA7E3FE225A67646009A4DAE /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		EA82A54D261240520045D2D6 /* AccountSettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsCell.swift; sourceTree = "<group>"; };
+		EA8451E32756863A00F43466 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		EA8F5AD525926BC50081E9AB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA96633325E9647700C8254C /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
 		EA96634A25F161BC00C8254C /* PlaylistsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsManager.swift; sourceTree = "<group>"; };
@@ -449,6 +450,7 @@
 				EABA042925B73073000BF883 /* Controllers */,
 				EAF920EF2548DA1400D22ACF /* Info.plist */,
 				EA77F5C72632107D00307717 /* DSWaveformImage */,
+				EA8451E32756863A00F43466 /* README.md */,
 			);
 			path = "playlist-pro";
 			sourceTree = "<group>";

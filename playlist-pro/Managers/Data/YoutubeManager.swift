@@ -104,6 +104,7 @@ class YoutubeManager {
         //XCDYouTubeErrorNoStreamAvailable      = -2,
         XCDYouTubeClient.default().getVideoWithIdentifier(videoID) { (video, error) in
             guard video != nil else {
+                print("video was nil")
                 print(error?.localizedDescription as Any)
                 return
             }
