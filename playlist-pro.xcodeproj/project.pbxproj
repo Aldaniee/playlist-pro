@@ -140,6 +140,8 @@
 		EA8451ED2756A3B500F43466 /* waves-waveform.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "waves-waveform.png"; sourceTree = "<group>"; };
 		EA8451EE2756A3B500F43466 /* spotify-playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spotify-playlist.png"; sourceTree = "<group>"; };
 		EA8451EF2756A3B500F43466 /* spotify-import.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spotify-import.png"; sourceTree = "<group>"; };
+		EA8451F02756A73100F43466 /* login-screen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "login-screen.png"; sourceTree = "<group>"; };
+		EA8451F12756A73100F43466 /* home-screen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "home-screen.png"; sourceTree = "<group>"; };
 		EA8F5AD525926BC50081E9AB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA96633325E9647700C8254C /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
 		EA96634A25F161BC00C8254C /* PlaylistsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsManager.swift; sourceTree = "<group>"; };
@@ -343,6 +345,8 @@
 		EA8451E42756A3B500F43466 /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				EA8451F12756A73100F43466 /* home-screen.png */,
+				EA8451F02756A73100F43466 /* login-screen.png */,
 				EA8451E52756A3B500F43466 /* on-hold-waveform.png */,
 				EA8451E62756A3B500F43466 /* empty-room-playing.png */,
 				EA8451E72756A3B500F43466 /* on-hold-playing.png */,
