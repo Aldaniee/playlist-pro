@@ -129,6 +129,17 @@
 		EA7E3FE225A67646009A4DAE /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		EA82A54D261240520045D2D6 /* AccountSettingsCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountSettingsCell.swift; sourceTree = "<group>"; };
 		EA8451E32756863A00F43466 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
+		EA8451E52756A3B500F43466 /* on-hold-waveform.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "on-hold-waveform.png"; sourceTree = "<group>"; };
+		EA8451E62756A3B500F43466 /* empty-room-playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty-room-playing.png"; sourceTree = "<group>"; };
+		EA8451E72756A3B500F43466 /* on-hold-playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "on-hold-playing.png"; sourceTree = "<group>"; };
+		EA8451E82756A3B500F43466 /* pride-yt-search.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pride-yt-search.png"; sourceTree = "<group>"; };
+		EA8451E92756A3B500F43466 /* spotify-login.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spotify-login.png"; sourceTree = "<group>"; };
+		EA8451EA2756A3B500F43466 /* pride-playing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "pride-playing.png"; sourceTree = "<group>"; };
+		EA8451EB2756A3B500F43466 /* honey-queue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "honey-queue.png"; sourceTree = "<group>"; };
+		EA8451EC2756A3B500F43466 /* empty-room-queue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "empty-room-queue.png"; sourceTree = "<group>"; };
+		EA8451ED2756A3B500F43466 /* waves-waveform.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "waves-waveform.png"; sourceTree = "<group>"; };
+		EA8451EE2756A3B500F43466 /* spotify-playlist.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spotify-playlist.png"; sourceTree = "<group>"; };
+		EA8451EF2756A3B500F43466 /* spotify-import.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "spotify-import.png"; sourceTree = "<group>"; };
 		EA8F5AD525926BC50081E9AB /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
 		EA96633325E9647700C8254C /* RepeatType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepeatType.swift; sourceTree = "<group>"; };
 		EA96634A25F161BC00C8254C /* PlaylistsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistsManager.swift; sourceTree = "<group>"; };
@@ -329,6 +340,24 @@
 			path = Data;
 			sourceTree = "<group>";
 		};
+		EA8451E42756A3B500F43466 /* Images */ = {
+			isa = PBXGroup;
+			children = (
+				EA8451E52756A3B500F43466 /* on-hold-waveform.png */,
+				EA8451E62756A3B500F43466 /* empty-room-playing.png */,
+				EA8451E72756A3B500F43466 /* on-hold-playing.png */,
+				EA8451E82756A3B500F43466 /* pride-yt-search.png */,
+				EA8451E92756A3B500F43466 /* spotify-login.png */,
+				EA8451EA2756A3B500F43466 /* pride-playing.png */,
+				EA8451EB2756A3B500F43466 /* honey-queue.png */,
+				EA8451EC2756A3B500F43466 /* empty-room-queue.png */,
+				EA8451ED2756A3B500F43466 /* waves-waveform.png */,
+				EA8451EE2756A3B500F43466 /* spotify-playlist.png */,
+				EA8451EF2756A3B500F43466 /* spotify-import.png */,
+			);
+			path = Images;
+			sourceTree = "<group>";
+		};
 		EABA042925B73073000BF883 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
@@ -421,6 +450,7 @@
 		EAF920D52548DA1200D22ACF = {
 			isa = PBXGroup;
 			children = (
+				EA8451E42756A3B500F43466 /* Images */,
 				EA8451E32756863A00F43466 /* README.md */,
 				EAF920E02548DA1200D22ACF /* playlist-pro */,
 				EAF920F72548DA1400D22ACF /* playlist-proTests */,
