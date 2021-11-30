@@ -1,5 +1,6 @@
 #  Playlist Pro
 ===============
+
 [![Language](https://img.shields.io/badge/Swift-5-orange?logo=Swift&logoColor=white)](https://swift.org) 
 
 ## About
@@ -25,10 +26,10 @@
 - XCDYouTubeKit
 
 ## Installation
-1. Clone/Download the repo.
-2. Open `YouTag.xcodeproj` in Xcode.
-3. Configure code signing.
-4. Build & run!
+1. Clone/Download the repo
+2. Open `playlist-pro.xcodeproj` in Xcode
+3. Configure code signing
+4. Build & run
 
 ## Issues
 - XCDYouTubeKit currently facing issues downloading music
