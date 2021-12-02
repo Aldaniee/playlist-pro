@@ -19,11 +19,26 @@ This app was intended for Spotify users to use for customizing their playlists. 
 - Firebase authentication system and realtime database allows users to login on any device and download their music library.
 - Add fade transitions between songs, crop songs, change song speed
 
+## Spotify Playlist Import Feature
+1. User logs in with their Spotify account.
+2. User selects the Playlist they wish to import.
+3. App searches for every song in the playlist and downloads a YouTube equivalent audio.
+4. Playlist is remade locally in the app sourcing all media from YouTube.
+
 ## Implementation
 - UIKit driven programatic front-end
 - MVC design pattern
-- Firebase user authentication and database management
-- Alamofire networking with Youtube API
+- Data persistance with CoreData
+
+## Resources
+- Downloading and playback based on [YouTag](https://github.com/youstanzr/YouTag/blob/master/README.md?plain=1)
+- Spotify import using [Spotify-iOS](https://github.com/AfrazCodes/Spotify-iOS)
+- Slide down dismiss animation from [SlideOverTutorial](https://github.com/aivars/SlideOverTutorial)
+- User authentication and database management with [Firebase](https://firebase.google.com/)
+- Song Encoding using [CodableFirebase](https://github.com/alickbass/CodableFirebase)
+- Generation of Waveform Diagram based on [DSWaveformImage](https://github.com/dmrschmidt/DSWaveformImage)
+- Networking with YouTube API: [Alamofire](https://github.com/Alamofire/Alamofire)
+- Special thanks to the criminally underrated channel [iOSAcadamy](https://www.youtube.com/c/iOSAcademy)
 
 ## Installation
 1. Clone/Download the repo
@@ -34,19 +49,6 @@ This app was intended for Spotify users to use for customizing their playlists. 
 ## Issues
 - [XCDYouTubeKit](https://github.com/0xced/XCDYouTubeKit) currently facing an issue with downloading music
 - Google Developer API quota is very small. This app is functional to the extent of a "proof of concept".
-
-## Resources
-- Downloading and playback based on: [YouTag](https://github.com/youstanzr/YouTag/blob/master/README.md?plain=1)
-- Spotify import based on: [Spotify-iOS](https://github.com/AfrazCodes/Spotify-iOS)
-- Slide down dismiss animation based on: [SlideOverTutorial](https://github.com/aivars/SlideOverTutorial)
-- Song Encoding based on [CodableFirebase](https://github.com/alickbass/CodableFirebase)
-- Generation of Waveform Diagram based on [DSWaveformImage](https://github.com/dmrschmidt/DSWaveformImage)
-
-## Spotify Playlist Import Feature
-1. User logs in with their Spotify account.
-2. User selects the Playlist they wish to import.
-3. App searches for every song in the playlist and downloads a YouTube equivalent audio.
-4. Playlist is remade locally in the app sourcing all media from YouTube.
 
 ## Screenshots
 
