@@ -18,7 +18,6 @@
 		EA5FBE77257AAD4A00473B56 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA5FBE76257AAD4A00473B56 /* Video.swift */; };
 		EA5FBEAE257BF6D100473B56 /* SpotifyAPI in Frameworks */ = {isa = PBXBuildFile; productRef = EA5FBEAD257BF6D100473B56 /* SpotifyAPI */; };
 		EA5FBEBC257C02FA00473B56 /* KeychainAccess in Frameworks */ = {isa = PBXBuildFile; productRef = EA5FBEBB257C02FA00473B56 /* KeychainAccess */; };
-		EA637DEB254B3EF200FCC983 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637DEA254B3EF200FCC983 /* Constants.swift */; };
 		EA637DF5254B408C00FCC983 /* SearchModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637DF4254B408C00FCC983 /* SearchModel.swift */; };
 		EA637DFD254B821200FCC983 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637DFC254B821200FCC983 /* Response.swift */; };
 		EA637E022550B00200FCC983 /* SearchVideoCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA637E012550B00200FCC983 /* SearchVideoCell.swift */; };
@@ -74,6 +73,7 @@
 		EAE145E7258593A600C09FE9 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145E6258593A600C09FE9 /* LoginViewController.swift */; };
 		EAE145F52585966D00C09FE9 /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145F42585966D00C09FE9 /* DatabaseManager.swift */; };
 		EAE145FA2585970200C09FE9 /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAE145F92585970200C09FE9 /* AuthManager.swift */; };
+		EAF7AF7A2768EDAA0092F617 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF7AF792768EDAA0092F617 /* Constants.swift */; };
 		EAF920E22548DA1200D22ACF /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920E12548DA1200D22ACF /* AppDelegate.swift */; };
 		EAF920E42548DA1200D22ACF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920E32548DA1200D22ACF /* SceneDelegate.swift */; };
 		EAF920E62548DA1200D22ACF /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAF920E52548DA1200D22ACF /* SearchViewController.swift */; };
@@ -114,7 +114,6 @@
 		EA0558BB25B1191700B1FF85 /* MiniPlayerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MiniPlayerView.swift; sourceTree = "<group>"; };
 		EA5E9E8825B4BC560026E9AE /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		EA5FBE76257AAD4A00473B56 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
-		EA637DEA254B3EF200FCC983 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		EA637DF4254B408C00FCC983 /* SearchModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchModel.swift; sourceTree = "<group>"; };
 		EA637DFC254B821200FCC983 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		EA637E012550B00200FCC983 /* SearchVideoCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchVideoCell.swift; sourceTree = "<group>"; };
@@ -182,6 +181,7 @@
 		EAE145E6258593A600C09FE9 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		EAE145F42585966D00C09FE9 /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		EAE145F92585970200C09FE9 /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		EAF7AF792768EDAA0092F617 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		EAF920DE2548DA1200D22ACF /* playlist-pro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "playlist-pro.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EAF920E12548DA1200D22ACF /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EAF920E32548DA1200D22ACF /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -433,9 +433,9 @@
 				EAF920E12548DA1200D22ACF /* AppDelegate.swift */,
 				EAF920E32548DA1200D22ACF /* SceneDelegate.swift */,
 				EA8F5AD525926BC50081E9AB /* Extensions.swift */,
-				EA637DEA254B3EF200FCC983 /* Constants.swift */,
 				EADD21742609666D002AA641 /* CustomPresentationController.swift */,
 				EAF920EA2548DA1400D22ACF /* Assets.xcassets */,
+				EAF7AF792768EDAA0092F617 /* Constants.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -765,6 +765,7 @@
 				EA5FBE77257AAD4A00473B56 /* Video.swift in Sources */,
 				EA77F5D02632107E00307717 /* WaveformImageView.swift in Sources */,
 				EADD20EA2603A994002AA641 /* SpotifyAuthResponse.swift in Sources */,
+				EAF7AF7A2768EDAA0092F617 /* Constants.swift in Sources */,
 				EA5E9E8925B4BC560026E9AE /* HomeViewController.swift in Sources */,
 				EA9D945025938AA80057493D /* AuthSplashScreenViewController.swift in Sources */,
 				EADD21752609666D002AA641 /* CustomPresentationController.swift in Sources */,
@@ -801,7 +802,6 @@
 				EA77F5D12632107E00307717 /* WaveformAnalyzer.swift in Sources */,
 				EADD209226039686002AA641 /* SpotifyAuthManager.swift in Sources */,
 				EA64603B25FBBE4300B73769 /* CustomSlider.swift in Sources */,
-				EA637DEB254B3EF200FCC983 /* Constants.swift in Sources */,
 				EA0558A025B118DF00B1FF85 /* YYTAudioPlayer.swift in Sources */,
 				EAE145BC25858C5C00C09FE9 /* RegistrationViewController.swift in Sources */,
 				EADD211B260521A6002AA641 /* SpotifyPlaylist.swift in Sources */,
