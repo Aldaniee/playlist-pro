@@ -37,7 +37,7 @@ This app was intended for Spotify users to use for customizing their playlists. 
 - User authentication and database management with [Firebase](https://firebase.google.com/)
 - Song Encoding using [CodableFirebase](https://github.com/alickbass/CodableFirebase)
 - Generation of Waveform Diagram based on [DSWaveformImage](https://github.com/dmrschmidt/DSWaveformImage)
-- Networking with YouTube API: [Alamofire](https://github.com/Alamofire/Alamofire)
+- Networking with YouTube API [Alamofire](https://github.com/Alamofire/Alamofire)
 - Special thanks to the criminally underrated channel [iOSAcadamy](https://www.youtube.com/c/iOSAcademy)
 
 ## Installation
